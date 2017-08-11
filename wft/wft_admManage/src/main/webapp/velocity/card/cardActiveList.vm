@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<script type="text/javascript">
+$(function(){
+	$("#pageform").validate({
+		event: "blur",
+		rules: {
+			"begTvalue":{digits:true},
+			"endTvalue":{digits:true}
+		},
+		messages:{
+			"begTvalue":{digits:"请输入整数"},
+			"endTvalue":{digits:"请输入整数"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+	
+	var form = $("#pageform");
+	$("#btn_search").click(function(){
+		form.attr("action", "cardActiveList.do");
+		form.submit();
+	});
+	
+	$("#btn_exportAll").click(function(){
+		$("#all").val(1);
+		form.attr("action", "cardActiveExport.do");
+		form.submit();
+	});
+	
+	$("#btn_exportNow").click(function(){
+		$("#all").val(0);
+		form.attr("action", "cardActiveExport.do");
+		form.submit();
+	});
+	
+});
+
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    	
+				<form id="pageform" action="cardActiveList.do" method="post" enctype="multipart/form-data">
+					<input type="hidden" id="all" name="all" />
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td background="images/table_top_bg.jpg">        	
+								#TABLETILE("卡池卡列表")	        		       
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="tdw1">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr height="30">
+										<td>渠道
+                                        	<select name="channel">
+                                        	#foreach($ch in ${channelList})
+                                        		<option value="$!{ch.code}" #if($!{channel}==$!{ch.code}) selected #end>$!{ch.name}</option>
+                                        	#end
+                                        	</select>
+                                        </td>
+                                        <td>卡号<input type="text" name="no" value="$!{no}"/></td>
+                                        <td>类型
+											<select name="ctype">
+												<option value="" selected >全部</option>
+												<option value="2" #if($!{ctype} == 2) selected #end>不可跨月时长卡</option>
+												<option value="1" #if($!{ctype} == 1) selected #end>包月卡</option>
+												<option value="3" #if($!{ctype} == 3) selected #end>可跨月时长卡</option>
+												<option value="4" #if($!{ctype} == 4) selected #end>电子卡</option>
+												<option value="5" #if($!{ctype} == 5) selected #end>账期卡</option>
+                                            </select>
+                                        </td>
+                                        
+                                        <td>运营商
+											<select name="opid">
+												<option value="" selected>全部</option>
+												#foreach($operator in ${operatorList})
+													<option value="$!{operator.id}" #if($!{opid}==$!{operator.id}) selected #end>$!{operator.name}</option>
+												#end
+                                            </select>
+										</td>
+                                        
+                                        <td>省份
+											<select name="prvid">
+												<option value="">全部</option>
+												#foreach($province in ${provinceList})
+													<option value="$!{province.id}" #if($!{prvid}==$!{province.id}) selected="selected" #end>$!{province.name}</option>
+												#end
+                                            </select>
+										</td>
+										
+										<td>卡片状态
+											<select name="cstatus">
+												<option value="" selected >全部</option>
+                                                <option value="0" #if($!{cstatus} == 0) selected #end>未启用</option>
+												<option value="1" #if($!{cstatus} == 1) selected #end>启用</option>
+												<option value="2" #if($!{cstatus} == 2) selected #end>可用</option>
+												<option value="3" #if($!{cstatus} == 3) selected #end>占用</option>
+												<option value="4" #if($!{cstatus} == 4) selected #end>停用</option>
+												<option value="5" #if($!{cstatus} == 5) selected #end>待验证</option>
+                                            </select>
+										</td>
+										
+										<td>种类
+											<select name="">
+												<option value="" selected >全部</option>
+                                                <option value="0" #if($!{cstatus} == 0) selected #end>时长卡</option>
+												<option value="1" #if($!{cstatus} == 1) selected #end>流量卡</option>
+                                            </select>
+										</td>
+                                    </tr>
+									
+									<tr height="30">
+										<td colspan="7">调入时间
+											<input type="text" id="begIntime" name="begIntime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!{begIntime}"/>
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input type="text" id="endIntime" name="endIntime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!{endIntime}"/>
+										&nbsp;&nbsp;截止日期
+											<input type="text" id="begVetime" name="begVetime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!begVetime"/>
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input type="text" id="endVetime" name="endVetime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!endVetime"/>
+										</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                    	<td colspan="7">剩余时长(分钟)
+											<input id="begTvalue" type="text" name="begTvalue" value="$!{begTvalue}" />
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input id="endTvalue" type="text" name="endTvalue" value="$!{endTvalue}" />
+										&nbsp;&nbsp;剩余流量
+											<input id="begTvalue" type="text" name="begTvalue" value="$!{begTvalue}" />
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input id="endTvalue" type="text" name="endTvalue" value="$!{endTvalue}" />
+										</td>
+                                    </tr>
+										
+									<tr height="30">
+                                        <td colspan="6" align="center">
+											<input type="button" id="btn_search" value="查 询" />&nbsp;&nbsp;
+											<input type="button" id="btn_exportAll" value="导出全部" />&nbsp;&nbsp;
+											<input type="button" id="btn_exportNow" value="导出本页" />
+										</td>
+                                    </tr>
+									
+                                </table>
+                            </td>
+						</tr>
+						
+						<tr>
+							<td>
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td height="30" align="center" class="tdy1">卡ID</td>	
+										<td align="center" class="tdy2">卡号</td>
+										<td align="center" class="tdy2">渠道</td>	
+										<td align="center" class="tdy2">运营商</td>
+										<td align="center" class="tdy2">省份</td>
+										<td align="center" class="tdy2">漫游</td>
+										<td align="center" class="tdy2">类型</td>
+										<td align="center" class="tdy2">分配次数</td>
+										<td align="center" class="tdy2">截止日期</td>
+										<td align="center" class="tdy2">金额(元)</td>
+										<td align="center" class="tdy2">时长</td>
+										<td align="center" class="tdy2">流量</td>
+										<td align="center" class="tdy2">剩余时长</td>
+										<td align="center" class="tdy2">剩余流量</td>
+										<td align="center" class="tdy2">调入时间</td>
+										<td align="center" class="tdy2">成功率</td>
+										<td align="center" class="tdy2">最后使用时间</td>
+										<td align="center" class="tdy2">使用状态</td>
+										<td align="center" class="tdy2">卡片状态</td>
+										<td colspan="2" align="center" class="tdy2">操作</td>
+									</tr>
+									
+									#foreach($card in ${cardList})
+									<tr>
+										<td height="30" align="center" class="tdw1">$!{card.id}</td>
+										<td align="center" class="tdw2">$!{card.no}</td>
+										<td align="center" class="tdw2">$!{channelMap.get($!{channel})}</td>
+										<td align="center" class="tdw2">$!{operatorMap.get($!{card.opid})}</td>
+										<td align="center" class="tdw2">$!{provinceMap.get($!{card.prvid})}</td>
+										<td align="center" class="tdw2">漫游</td>
+										<td align="center" class="tdw2">
+											#if($!{card.ctype}==1)
+												包月卡
+											#elseif($!{card.ctype}==2)
+												不可跨月时长卡
+											#elseif($!{card.ctype}==3)
+												可跨月时长卡
+											#elseif($!{card.ctype}==4)
+												电子卡
+											#elseif($!{card.ctype}==5)
+												账期卡
+											#else
+												$!{card.ctype}
+											#end
+										</td>
+										<td align="center" class="tdw2">$!{card.ucount}</td>
+										<td align="center" class="tdw2">
+											#if($!{card.vetime})$date.format('yyyy-MM-dd HH:mm:ss', $!{card.vetime})#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.mvalue})
+												#set($mvalue=$!{card.mvalue}/100)
+												$mvalue 
+											#else 
+												0
+											#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.bvalue})
+												#set($aa=$!{card.bvalue}) 
+												#set($bb=$aa / 3600) 
+												#set($cc=$aa % 3600)
+												#set($cc=$cc/60)
+												$bb小时#if($cc!=0 )$cc分#end 
+											#end
+										</td>
+										<td align="center" class="tdw2">流量</td>
+										<td align="center" class="tdw2">
+											#if($!{card.tvalue})
+												#set($aa=$!{card.tvalue}) 
+												#set($bb=$aa / 3600) 
+												#set($cc=$aa % 3600)
+												#set($cc=$cc/60)
+												$bb小时#if($cc!=0)$cc分#end 
+											#end
+										</td>
+										<td align="center" class="tdw2">剩余流量</td>
+										<td align="center" class="tdw2">
+											#if($!{card.intime})$date.format('yyyy-MM-dd HH:mm:ss', $!{card.intime})#end
+										</td>
+										<td align="center" class="tdw2">成功率</td>
+										<td align="center" class="tdw2">
+											#if($!{card.utime})$date.format('yyyy-MM-dd HH:mm:ss', $!{card.utime})#end
+										</td>
+										<td align="center" class="tdw2">#if($!{card.ustatus}==0)正常#else异常#end</td>
+										<td align="center" class="tdw2">
+											#if($!{card.cstatus}==2)
+												可用
+											#elseif($!{card.cstatus}==3)
+												占用
+											#elseif($!{card.cstatus}==4)
+												<font color="red">停用</font>
+											#end
+										</td>
+										
+										#if($!{card.cstatus} != 4)
+											<td colspan="2" align="center" class="tdw2">
+												<a href="cardActiveStop.do?channel=$!{channel}&cid=$!{card.id}&$!{queryStr}" 
+													onclick="return confirm('确定停用该卡[$!{card.no}]?')">停用</a>&nbsp;&nbsp;
+											</td>
+										#else
+											<td align="center" class="tdw2">
+												<a href="cardActiveOpen.do?channel=$!{channel}&cid=$!{card.id}&$!{queryStr}" 
+													onclick="return confirm('确定启用该卡[$!{card.no}]?')">启用</a>&nbsp;&nbsp;
+											</td>
+											<td align="center" class="tdw2">
+												<a href="cardActiveDelete.do?channel=$!{channel}&cid=$!{card.id}&$!{queryStr}" 
+													onclick="return confirm('确定删除该卡[$!{card.no}]?')">删除</a>&nbsp;&nbsp;
+											</td>
+										#end
+									</tr>
+									#end
+								</table>
+							<td>
+						</tr>
+						
+						#if($!{cardList})
+						<tr>
+							<td height="30" class="tdw1">
+								<p style=" width:100%; height:30px; line-height:30px; text-align:center;">
+									#PageInfo($!{pager})
+								</p>
+							</td>
+						</tr>
+						#end
+    				</table>
+    			</form> 
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

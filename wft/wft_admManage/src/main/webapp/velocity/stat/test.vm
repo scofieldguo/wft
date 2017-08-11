@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<link rel="stylesheet" type="text/css" href="js/jqChart/css/jquery.jqChart.css" />
+    <link rel="stylesheet" type="text/css" href="js/jqChart/css/jquery.jqRangeSlider.css" />
+    <link rel="stylesheet" type="text/css" href="../../themes/smoothness/jquery-ui-1.10.4.css" />
+    <script src="js/jqChart/js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="js/jqChart/js/jquery.mousewheel.js" type="text/javascript"></script>
+    <script src="js/jqChart/js/jquery.jqChart.min.js" type="text/javascript"></script>
+    <script src="js/jqChart/js/jquery.jqRangeSlider.min.js" type="text/javascript"></script>
+    <!--[if IE]><script lang="javascript" type="text/javascript" src="../../js/excanvas.js"></script><![endif]-->
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+     <script type="text/javascript">
+   function constructChart(){
+   var id=$("#channelId").val();
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+		var x_data=[];
+		var data=[];
+		var udata=[];
+		var sudata=[];
+		var cn_data=[];
+		var cn_udata=[];
+		var cn_sudata=[];
+		jQuery.ajax({
+        				type:"get",
+        				url:"interval.do",
+        				dataType:'text',
+						data:{limit:20,channelId:id},
+        				cache : false,
+        				success : function(data1) {
+            				var jsonArray = eval("(" + data1 + ")");
+            				for ( var i = 0; i < jsonArray.length; i++) {
+								x_data.push(jsonArray[i].hour+":"+jsonArray[i].minute);
+            					data.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cm_chargeusingcard]);
+								udata.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cm_chargeusingcard+jsonArray[i].cm_nochargeusingcard]);
+								sudata.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cm_chargeusingcard+jsonArray[i].cm_nochargeusingcard+jsonArray[i].cm_noacesscard]);
+								
+								cn_data.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cn_chargeusingcard]);
+								cn_udata.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cn_chargeusingcard+jsonArray[i].cn_nochargeusingcard]);
+								cn_sudata.push([jsonArray[i].hour+":"+jsonArray[i].minute,jsonArray[i].cn_chargeusingcard+jsonArray[i].cn_nochargeusingcard+jsonArray[i].cn_noacesscard]);
+            				}
+							$('#cmjqChart').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 220,
+                events: {
+                    load: function () {
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+						var unseries=this.series[1];
+						var suseries=this.series[2];
+						var xaxis=this.xAxis;
+						var x,y;
+                        setInterval(function () {
+						jQuery.ajax({
+        					type:"get",
+        					url:"interval.do",
+							data:{limit:1,channelId:id},
+        					dataType:'text',
+        					cache : false,
+        					success : function(data1) {
+            					var jsonArray = eval("(" + data1 + ")");
+								x=jsonArray[0].hour+":"+jsonArray[0].minute;
+								y=jsonArray[0].cm_chargeusingcard;
+								uy=jsonArray[0].cm_chargeusingcard+jsonArray[0].cm_nochargeusingcard;
+								sy=jsonArray[0].cm_chargeusingcard+jsonArray[0].cm_nochargeusingcard+jsonArray[0].cm_noacesscard;
+								series.addPoint([x, y], true, true);
+								unseries.addPoint([x, uy], true, true);
+								suseries.addPoint([x, sy], true, true);
+							}
+	  					})
+                        }, 60000);
+                    }
+                }
+            },
+            title: {
+                text: 'Cmcc card data'
+            },
+            xAxis: {
+				categories:x_data,
+			    tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                borderWidth: 1,
+				backgroundColor:'yellow',
+				x:0,
+				y:100
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: '移动在线计费',
+                data: data
+            	},
+				{
+				name:'移动在线计费+不计费',
+				data:udata
+				},
+				{
+				name:'移动在线计费+不计费+没卡',
+				data:sudata
+				}
+			]
+        });
+		
+		$('#cnjqChart').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 220,
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+						var unseries=this.series[1];
+						var suseries=this.series[2];
+						var xaxis=this.xAxis;
+						var x,y;
+                        setInterval(function () {
+						jQuery.ajax({
+        					type:"get",
+        					url:"interval.do",
+							data:{limit:1,channelId:id},
+        					dataType:'text',
+        					cache : false,
+        					success : function(data1) {
+            					var jsonArray = eval("(" + data1 + ")");
+								x=jsonArray[0].hour+":"+jsonArray[0].minute;
+								y=jsonArray[0].cn_chargeusingcard;
+								uy=jsonArray[0].cn_chargeusingcard+jsonArray[0].cn_nochargeusingcard;
+								sy=jsonArray[0].cn_chargeusingcard+jsonArray[0].cn_nochargeusingcard+jsonArray[0].cn_noacesscard;
+								series.addPoint([x, y], true, true);
+								unseries.addPoint([x, uy], true, true);
+								suseries.addPoint([x, sy], true, true);
+							}
+	  					})
+                        }, 60000);
+                    }
+                }
+            },
+            title: {
+                text: 'ChinaNet card data'
+            },
+            xAxis: {
+				categories:x_data
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                borderWidth: 1,
+				backgroundColor:'yellow',
+				x:0,
+				y:100
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: '电信在线计费',
+                data: cn_data
+            	},
+				{
+				name:'电信在线计费+不计费',
+				data:cn_udata
+				},
+				{
+				name:'电信在线计费+不计费+没卡',
+				data:cn_sudata
+				}
+			]
+        });
+						}
+				   })
+        
+	}
+	</script>
+<body >
+	<div style="overflow:hidden">
+		<div style="float:left">
+			<span style="margin:0px 20px 20px 0px;">请选择渠道：</span>
+			<select id="channelId" name="channelId">
+				#if($!channelList && $!{channelList.size()}>0)
+					#foreach($channel in $!{channelList})
+						<option #if($!{channelId}==$!{channel.code}) selected ="selected" #end value="$!{channel.code}">${channel.name}
+                        </option>
+					#end
+				#end
+			</select>
+		</div>
+        <div style="float:left;margin-left:20px;"><input type="button" value="submit" onclick="constructChart()"/></div>
+    </div>	
+	<div id="cmjqChart"  style="width: 100%; height: 100%;">
+    </div>
+	<div id="cnjqChart" style="width: 100%; height: 100%;margin:50px auto;">
+    </div>
+</body>
+</html>
+

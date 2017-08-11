@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/case_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('case')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<!-- 案例内容 -->
+	<div id="case">
+		<div class="case_content first_case_content">
+			<div class="case_content_com">
+				<img src="${images_url}/case/case_qq.png" alt="" />
+				<h2>QQ</h2>
+				<h3>QQ WiFi</h3>
+				<p>通过手机QQ客户端</p>
+				<p>为用户连接WiFi热点</p>
+				<p>并提供上网时长</p>
+				<div class="case_access_way">
+					<span>合作模式：</span>
+					SDK接入
+				</div>
+			</div>
+<!-- 			<div class="case_data"><span>日新增访问：</span><span class="case_data_span">1万+</span></div>
+			<div class="case_data"><span>累计使用时长：</span><span class="case_data_span">18万+</span></div> -->
+		</div>
+		<div class="case_content second_case_content">
+			<div class="case_content_com">
+				<img src="${images_url}/case_360.png" alt="" />
+				<h2>360</h2>
+				<h3>360 免费WiFi</h3>
+				<p>通过360 免费WiFi</p>
+				<p>实现免费连接WiFi功能</p>
+				<p>为用户提供上网时长</p>
+				<div class="case_access_way">
+					<span>合作模式：</span>
+					SDK接入
+				</div>
+			</div>
+			<!-- <div class="case_data"><span>日平均增量：</span><span class="case_data_span">3%</span></div>
+			<div class="case_data"><span>累计使用时长：</span><span class="case_data_span">10万+</span></div> -->
+		</div>
+		<div class="case_content second_case_content">
+			<div class="case_content_com">
+				<img src="${images_url}/case_wificon.png" alt="" />
+				<div class="case_wait_add">WiFi连网神器</div>
+				<p>通过WiFi连网神器</p>
+				<p>实现免费连接WiFi功能</p>
+				<p>为用户提供上网时长</p>
+				<div class="case_access_way">
+					<span>合作模式：</span>
+					SDK接入
+				</div>
+			</div>
+		</div>
+		<div class="case_content">
+			<div class="case_content_com">
+				<img src="${images_url}/case/case_add.png" alt="" />
+				<div class="case_wait_add">等您加入……</div>
+				<p class="learn_us">如果您想了解更多，请联系我们</p>
+				<div class="case_access_way">
+					<p class="about_us">联系电话：13811163920</p>
+					<p class="about_us">联系QQ：50262809</p>
+					<p class="about_us">联系邮箱：liuly@bw30.com</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

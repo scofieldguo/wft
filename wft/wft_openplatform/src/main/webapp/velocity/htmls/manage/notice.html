@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+<script type="text/javascript">
+		function showWindow(id){
+		document.getElementById(id).style.display='block';
+				$("#popup").addClass("popup");
+		}
+</script>
+</head>
+<body onload="viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+	#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+	#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="person_title">
+					通知
+				</div>
+				#if($!noticeList && $!{noticeList.size()}>0)
+				#foreach($!notice in $!{noticeList})
+					<div class="notice_body">
+						<span class="notice_text bold font18">
+							<img class="point" style="display: none" src="${images_url}/manage/01_03.png" alt="" />$!{notice.message}
+							<a href="$!{server_url}/manage_noticeDelete.action?notice.id=$!{notice.id}"><img class="close" src="${images_url}/manage/notice_close.png" alt="" /></a>					
+						</span>
+						<span class="notice_date">$!{notice.intimeStr}</span>
+					</div>
+				#end
+				<div class="pager">
+					<span>#PAGE("manage_notice.action?q=1")</span>
+				</div>
+				#else
+				<div>
+					<span style="text-align: center;display: block;width: 7">目前您尚未收到任何通知</span>
+				</div>
+				#end
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		$(function(){
+			$("div.notice_body").hover(function(){
+			 $(this).css("background","#ebebeb");
+			 $(this).children("span").find("img").show();
+			},function(){
+			 $(this).css("background","#fff");
+			 $(this).children("span").find("img").hide();
+			});
+		});
+	</script>
+</body>
+</html>

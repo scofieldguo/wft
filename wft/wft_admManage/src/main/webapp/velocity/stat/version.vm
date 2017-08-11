@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+<script type="text/javascript">
+	$(function(){
+	$("#pageform").validate({
+		event: "blur",
+		rules: {
+			"dairy":{required:true, rangelength:[1,32]},
+			"version":{required:true,	rangelength:[0,32]},
+			"channel":{required:true,	rangelength:[0,32]}
+		},
+		messages:{
+			"dairy":{required:"日期不能为空 ", rangelength:"长度不能大于32"},
+			"version":{required:"版本不能为空",rangelength:"长度不能大于32"},
+			"channel":{required:"请选择渠道",rangelength:"长度不能大于32"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+});
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("运营数据统计")	
+			
+				<form id="pageform" action="statVersion.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="31" background="images/table_top_bg.jpg">        	
+								#TABLETILE("版本数据")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="31" align="center" class="tdw1">
+								日期：<input id="start" name="dairy" type="text" value="$!{dairy}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd '})" />&nbsp;&nbsp
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="31" align="center" class="tdw1">
+								版本：<input id="version" name="version" type="text" value="$!{version}" />&nbsp;&nbsp
+							</td>
+						</tr>
+						<tr >
+							<td height="30" colspan="30" align="center" class="tdw1">
+								渠道：
+								<select id="channel" name="channel">
+									<option value="">全部</option>
+								#if($!channelList && $!{channelList.size()}>0)
+									#foreach($ch in ${channelList})
+									<option #if($!{channel}==$!{ch.code}) selected="selected" #end value="${ch.code}">$!{ch.name}</option>
+								    #end
+								#end	
+								</select>
+							</td>
+                        </tr>
+						<tr >
+							<td height="30" colspan="31" align="center" class="tdw1">
+								<input type="submit" value="查询">
+							</td>
+                        </tr>
+						<tr>
+							<td height="30" align="center" class="tdy1">日期</td>	
+							<td align="center" class="tdy2">渠道</td>
+							<td align="center" class="tdy2">版本</td>
+							<td align="center" class="tdy2">电信连接成功次数</td>
+							<td align="center" class="tdy2">电信连接失败次数</td>
+							<td align="center" class="tdy2">电信连接成功人数</td>
+							<td align="center" class="tdy2">电信连接失败人数</td>
+							<td align="center" class="tdy2">移动连接成功次数</td>
+							<td align="center" class="tdy2">移动连接失败次数</td>
+							<td align="center" class="tdy2">移动连接成功人数</td>
+							<td align="center" class="tdy2">移动连接失败人数</td>
+							<td align="center" class="tdy2">移动连接成功热点数</td>
+							<td align="center" class="tdy2">移动连接失败热点数</td>
+							<td align="center" class="tdy2">电信连接成功热点数</td>
+							<td align="center" class="tdy2">电信连接失败热点数</td>
+						</tr>
+						#if($!list && $!{list.size()}>0)
+						#foreach($stat in ${list})
+						<tr>
+							<td height="40"  align="center" class="tdw1">$!{stat.dairy}</td>
+							<td align="center"   class="tdw2">$!{stat.channel}</a></td>
+							<td align="center"   class="tdw2">$!{stat.version}</td>
+							<td align="center"   class="tdw2">$!{stat.cn_succcnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cn_failcnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cn_succper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cn_failper}</td>
+							<td align="center"   class="tdw2">$!{stat.cm_succcnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cm_failcnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cm_succper}</td>
+							<td align="center"   class="tdw2">$!{stat.cm_failper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cm_succmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cm_failmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cn_succmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cn_failmac}</td>
+						</tr>
+						#end
+						
+						<tr>
+							<td height="30" colspan="31" class="tdw1"><p style=" width:100%; height:30px; line-height:30px; text-align:center;">#PageInfo($!{pager})</p></td>
+						</tr>
+						#else
+                            <tr>
+								<td colspan="31" align="center" class="tdw1" >无数据
+                                </td>
+							</tr>
+							#end
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

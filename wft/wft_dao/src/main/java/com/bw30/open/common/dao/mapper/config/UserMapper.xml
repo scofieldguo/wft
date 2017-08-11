@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.UserMapper">
+	<sql id="table">
+		open_platform_user
+	</sql>
+	<sql id="userSelect">
+		id,mail,pwd,qq,phone,name,company,address,ctime,status,code,opids,channelcode
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="where">
+		<where>
+			<if test="email!=null">
+				mail = #{email}
+			</if>
+			<if test="pwd!=null">
+				and pwd = #{pwd}
+			</if>
+			<if test="code!=null">
+				and code = #{code}
+			</if>
+		</where>
+	</sql>
+	
+	<resultMap type="user" id="wftUserResultMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="pwd" column="pwd" />
+		<result property="channelcode" column="channelcode" />
+		<result property="company" column="company" />
+		<result property="mail" column="mail" />
+	</resultMap>
+
+	<resultMap type="user" id="user_channelResultMap"
+		extends="wftUserResultMap">
+		<association property="wftchannel" column="code" javaType="wftChannel">
+			<id property="code" column="code" />
+			<result property="name" column="c_name" />
+		</association>
+	</resultMap>
+
+	<resultMap type="user" id="user_account_channelResultMap"
+		extends="user_channelResultMap">
+		<association property="openPlatformAccount" column="a_id" javaType="account">
+			<id property="id" column="a_id" />
+			<result property="usetime" column="usetime" />
+			<result property="buytime" column="buytime" />
+		</association>
+	</resultMap>
+	
+	<select id="count" resultType="Integer">
+		select count(*) 
+		from
+		<include refid="table"/>
+	</select>	
+	
+	<select id="findUser" resultType="user">
+		select 
+		<include refid="userSelect"/>
+		from
+		<include refid="table"/>
+		<include refid="where"/>
+	</select>
+	
+	<insert id="insert" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+		insert into
+		<include refid="table"/>
+		(mail,pwd,qq,phone,name,company,address,ctime,code,opids)
+		<![CDATA[
+		values(
+			#{mail},#{pwd},#{qq},#{phone},#{name},#{company},#{address},#{ctime},#{code},#{opids}
+		)
+		]]>
+		<selectKey resultType="int" keyProperty="id">  
+  				SELECT LAST_INSERT_ID()  as id
+  		</selectKey>  
+	</insert>
+	
+	<update id="updateByMap">
+		update
+		<include refid="table" />
+		<set>
+			<if test="paramMap.password != null">
+				pwd = #{paramMap.password},
+			</if>
+			<if test="paramMap.status != null">
+				status = #{paramMap.status},
+			</if>
+			<if test="paramMap.code != null">
+				code = #{paramMap.code},
+			</if>			
+		</set>
+		where
+		id = #{id}
+	</update>
+	
+	<update id="updateByMail">
+		update
+		<include refid="table" />
+		<set>
+			<if test="paramMap.password != null">
+				pwd = #{paramMap.password},
+			</if>
+			<if test="paramMap.code != null">
+				code = #{paramMap.code},
+			</if>
+		</set>
+		where
+			mail = #{mail}
+	</update>
+	
+	<update id="update" parameterType="user">
+		update
+		<include refid="table" />
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="company != null">
+				company = #{company},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="qq != null">
+				qq = #{qq},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="opids != null">
+				opids = #{opids},
+			</if>
+			<if test="channelcode != null">
+				channelcode = #{channelcode},
+			</if>
+			<if test="code!=null">
+				code=#{code}
+			</if>
+		</set>
+		where 
+			mail = #{mail} 
+	</update>
+	<select id="findAll" resultType="user">
+		select * from 
+		<include refid="table"/>
+	</select>
+	
+	<select id="findByPage" resultMap="user_account_channelResultMap">
+		select u.id as id,u.mail as mail,u.name as name,u.company as company,pwd,channelcode,a.id as a_id,usetime,buytime,c.code as code,c.name as c_name 
+		from open_platform_user u left join open_platform_account a on u.id = a.id left join wft_channel c on u.channelcode = c.code
+		<include refid="pager"/>
+	</select>
+	
+	<select id="findById" resultType="user">
+		select * from <include refid="table"/>
+		where id=#{id}
+	</select>
+</mapper>

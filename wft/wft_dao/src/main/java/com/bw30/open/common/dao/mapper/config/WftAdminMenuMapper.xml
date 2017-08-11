@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftAdminMenuMapper">
+	<sql id="table">
+		wft_admin_menu
+	</sql>
+
+	<select id="getAdminMenuList" resultType="wftAdminMenu">
+		select
+		*
+		from
+		<include refid="table" />
+		order by parent_id, menu_sequence asc
+	</select>
+
+	<resultMap type="wftAdminMenu" id="withSubMenuList">
+	<result property="id" column="id"/>
+	<result property="url" column="url"/>
+	<result property="parent_id"  column="parent_id"/>
+	<association property="subMenuList" javaType="List" column="{id=id}" select="com.bw30.open.common.dao.mapper.WftAdminMenuMapper.selectSubMenuByParentId"></association>
+	</resultMap>
+
+	<select id="getMenuList" resultMap="withSubMenuList">
+		select * from <include refid="table"/> where parent_id=0
+		order by parent_id, menu_sequence asc
+	</select>
+	
+	<select id="selectSubMenuByParentId" resultType="wftAdminMenu">
+		select * from <include refid="table"/> where parent_id=#{id}
+	</select>
+	
+	<update id="update">
+		update <include refid="table"/>
+		<set>
+			<if test="name!=null">
+			 name=#{name},
+			</if>
+			<if test="url!=null">
+			url =#{url}
+			</if>
+		</set>
+	    where id=#{id}
+	</update>
+	<delete id="delete">
+	delete from <include refid="table"/> where id=#{id}
+	</delete>
+	<insert id="insert">
+	insert into <include refid="table"/>(name,url,menu_sequence,parent_id) values(#{name},#{url},#{menu_sequence},#{parent_id})
+	
+	</insert>
+</mapper>

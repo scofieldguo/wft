@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="wftApTypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftApTypeMapper" />
+	</bean>
+	<bean id="wftTotalStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftTotalStatMapper" />
+	</bean>
+	<bean id="wftMacStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftMacStatMapper"></property>
+	</bean>
+	<bean id="wftHotspotMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftHotspotMapper" />
+	</bean>
+
+	<bean id="wftProvinceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftProvinceMapper" />
+	</bean>
+
+	<bean id="wftChannelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftChannelMapper" />
+	</bean>
+
+	<bean id="wftOperatorMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftOperatorMapper" />
+	</bean>
+
+	<bean id="wftCardTypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftCardTypeMapper" />
+	</bean>
+
+	<bean id="wftCardActiveMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftCardActiveMapper" />
+	</bean>
+
+	<bean id="wftCardStoreMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftCardStoreMapper" />
+	</bean>
+	<bean id="wftConnSessionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftConnSessionMapper" />
+	</bean>
+	<bean id="wftOpenStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftOpenStatMapper"></property>
+	</bean>
+	<bean id="wftOpenMacStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftOpenMacStatMapper"></property>
+	</bean>
+	<bean id="wftAcessCardMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftAcessCardMapper"></property>
+	</bean>
+	<bean id="wftOpenTopCardUseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftOpenTopCardUseMapper"></property>
+	</bean>
+	
+	<bean id="wftConsumeStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftConsumeStatMapper"></property>
+	</bean>
+	<bean id="wftAdminMenuMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftAdminMenuMapper"></property>
+	</bean>
+	<bean id="wftAdminUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftAdminUserMapper"></property>
+	</bean>
+	<bean id="wftOpenHourSuccessStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftOpenHourSuccessStatMapper"></property>	
+	</bean>
+	<bean id="wftOpenVersionStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftOpenVersionStatMapper"></property>	
+	</bean>
+	<bean id="wftOpenVersionMacStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftOpenVersionMacStatMapper"></property>	
+	</bean>
+	
+	<bean id="wftEveryHalfHourWarnStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftEveryHalfHourWarnStatMapper"></property>	
+	</bean>
+	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.UserMapper" />
+	</bean>
+	<bean id="accountMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.AccountMapper" />
+	</bean>
+	<bean id="appMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.AppMapper" />
+	</bean>
+	<bean id="appTypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.AppTypeMapper" />
+	</bean>
+	<bean id="noticeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.NoticeMapper"></property>
+	</bean>
+	
+	<bean id="chargeRecordMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.ChargeRecordMapper" />
+	</bean>
+	<bean id="wftTenMinLoginStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftTenMinLoginStatMapper" />
+	</bean>
+	<bean id="cardCacheInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.CardCacheInfoMapper"></property>	
+	</bean>
+	<bean id="wftOpenPlatFormStatMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.bw30.open.common.dao.mapper.WftOpenPlatFormStatMapper" />
+	</bean>
+	<bean id="billCompareMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.BillCompareMapper" />
+	</bean>
+	<bean id="wftSaleCardRecord" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftSaleCardRecordMapper" />
+	</bean>
+	<bean id="wftSaleCardRecord10011Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftSaleCardRecord10011Mapper" />
+	</bean>
+	<bean id="wftSaleCardOperationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="com.bw30.open.common.dao.mapper.WftSaleCardOperationMapper" />
+	</bean>
+</beans>

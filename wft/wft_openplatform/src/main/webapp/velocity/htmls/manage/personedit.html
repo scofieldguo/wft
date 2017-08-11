@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+	$(function(){
+			var strs=new Array();
+			var opids=$("#opid").val();
+			strs=opids.split(",");
+			var opids=$("input[name=user.opids]");
+			for(var i=0;i<strs.length;i++){
+				for(var j=0;j<opids.length;j++){
+					if(jQuery.trim(strs[i])==opids[j].value){
+					var op="check_"+jQuery.trim(strs[i]);
+					 $("#"+op).attr("checked",true);
+					}
+				}
+			}
+	
+	});
+	
+	
+	function showConfirmForm(id){
+		document.getElementById(id).style.display='block';
+	}
+</script>
+</head>
+<body onload="manageleftNav('userinfo');viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+		#parse("/WEB-INF/velocity/common/managehead.html")
+		<input type="hidden" value="${user.opids}" id="opid"/>
+		<div class="producer_content">
+		#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="person_title">
+					个人信息
+				</div>
+				
+				<div id="change">
+					<form action="manage_changeInfo" method="post">
+						<input type="hidden" value="${user.id}" name="user.id"/>
+						<input type="hidden" name="user.mail" value="$!{user.mail}"/>
+						<div class="change_item">
+							<span class="change_name">邮箱：<span></span>
+							</span>
+							<span class="change_input">
+								<span class="op">$!{user.mail}</span>
+							</span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">姓名：<span></span>
+							</span>
+							<span class="change_input">
+								<input id="" name="user.name" value="$!{user.name}" type="text"/>
+							</span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">公司名称：<span>*</span>
+							</span>
+							<span class="change_input">
+								<input id="company" name="user.company" value="$!{user.company}" type="text"/>
+							</span>
+							<span class="item_desc" id="company_desc"></span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">手机：<span>*</span>
+							</span>
+							<span class="change_input">
+								<input id="phone" name="user.phone" value="$!{user.phone}" type="text"/>
+							</span>
+							<span class="item_desc" id="phone_desc"></span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">QQ：<span>*</span>
+							</span>
+							<span class="change_input">
+								<input id="qq" name="user.qq" value="$!{user.qq}" type="text"/>
+							</span>
+							<span class="item_desc" id="qq_desc"></span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">联系地址：<span></span>
+							</span>
+							<span class="change_input">
+								<input id="" name="user.address" value="$!{user.address}" type="text"/>
+							</span>
+						</div>
+						<div class="change_item">
+							<span class="change_name">运营商：<span>*</span></span>
+							<span class="change_input">
+								#if($!opList && $!{opList.size()}>0)
+									#foreach($op in $!{opList})
+									<input id="check_$!{op.id}" type="checkbox" value="$!{op.id}" name="user.opids" /><span class="op">$!{op.name}</span>
+									#end
+								#end
+							</span>	
+							<span class="item_desc" id="opid_desc"></span>
+						</div>
+						<div class="change_item"><span class="change_name"><span></span></span><span class="change_input"><input class="submit" type="submit" value="确认"/> <input class="cancel" type="button" value="取消" onclick="history.go(-1)" /></span></div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	
+	<script type="text/javascript">
+		function checkForm(){
+			var a = checkQQ()?0:1;
+			var b = checkPhone()?0:1;
+			var c=checkOp()?0:1;
+			var e=checkCompany()?0:1;
+			if(a==0&&b==0&&c==0&&e==0){
+				return true;
+			}
+			return false;
+		}
+		
+		function checkQQ(){
+			var qq=checkNumber("qq",10000,99999999999);
+			if(!qq){
+				$("#qq_desc").html("QQ号码不正确");
+	  			return false;
+	  		}else{
+	  			$("#qq_desc").html("");	
+	  			return true;
+	  		}
+		}
+		
+		function checkPhone(){
+			if(!checkMobile("phone")){
+				$("#phone_desc").html("手机号码不正确");
+	  			return false;
+	  		}else{
+	  			$("#phone_desc").html("");	
+	  			return true;
+	  		}
+		}
+		
+		function checkCompany(){
+			if(!checkCnString("company",1,40)){
+				$("#company_desc").html("公司名称不正确");
+	  			return false;
+	  		}else{
+	  			$("#company_desc").html("");	
+	  			return true;
+	  		}
+		}	
+			
+		
+		function checkOp(){
+			if($("input[name=user.opids][checked]").size()<1){
+    			$("#opid_desc").html("至少选择一个运营商");
+    			return false;
+    		}else{
+    			$("#opid_desc").html("");
+    			return true;
+    		}
+	
+		}
+			
+		$(document).ready(function(){
+		  	var phone=$("#phone");
+		  	var qq=$("#qq");
+		  	var company=$("#company");
+		  	phone.blur(function(){
+		  		checkPhone();
+		  	});
+		  	
+		  	qq.blur(function(){
+				checkQQ();
+			});
+			
+			company.blur(function(){
+				checkCompany();
+			});
+			
+			$("#change").submit(function(){				
+		  		return checkForm();
+		    });
+		});
+	</script>
+		
+</body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOpenStatMapper">
+	<sql id="table">
+		wft_stat_open
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="column">
+		dairy,channel,cmutvalue,cmutvalueop,cnutvalue,cnutvalueop,sdkcnt,sdkper,cmcnfailcnt,cmcnsucccnt,
+		cncnfailcnt,cncnsucccnt,cncnfailper,cncnsuccper,cmcnfailper,cmcnsuccper,cmaccesscardfail,cnaccesscardsucc,cmsuccmac,cmfailmac,cnsuccmac,cnfailmac,cmfaovthree,cnfaovthree
+	</sql>
+	<sql id="insertValues">
+		#{dairy},#{channel},#{cmutvalue},#{cmutvalueop},#{cnutvalue},#{cnutvalueop},#{sdkcnt},#{sdkper},#{cmcnfailcnt},#{cmcnsucccnt},
+		#{cncnfailcnt},#{cncnsucccnt},#{cncnfailper},#{cncnsuccper},#{cmcnfailper},#{cmcnsuccper},#{cmaccesscardfail},#{cnaccesscardsucc},
+		#{cmsuccmac},#{cmfailmac},#{cnsuccmac},#{cnfailmac},#{cmfaovthree},#{cnfaovthree}
+	</sql>
+	<insert id="insert">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="column" />
+		)
+		values(
+		<include refid="insertValues" />
+		) on duplicate key update
+		cmutvalue=cmutvalue+#{cmutvalue},cmutvalueop=cmutvalueop+#{cmutvalueop},cnutvalue=cnutvalue+#{cnutvalue},cnutvalueop=cnutvalueop+#{cnutvalueop},sdkcnt=sdkcnt+#{sdkcnt},
+		sdkper=sdkper+#{sdkper},cmcnfailcnt=cmcnfailcnt+#{cmcnfailcnt},cmcnsucccnt=cmcnsucccnt+#{cmcnsucccnt},
+		cncnfailcnt=cncnfailcnt+#{cncnfailcnt},cncnsucccnt=cncnsucccnt+#{cncnsucccnt},cncnfailper=cncnfailper+#{cncnfailper},cncnsuccper=cncnsuccper+#{cncnsuccper},cmcnfailper=cmcnfailper+#{cmcnfailper},
+		cmcnsuccper=cmcnsuccper+#{cmcnsuccper},cmaccesscardfail=cmaccesscardfail+#{cmaccesscardfail},cnaccesscardsucc=cnaccesscardsucc+#{cnaccesscardsucc},cmsuccmac=cmsuccmac+#{cmsuccmac},cmfailmac=cmfailmac+#{cmfailmac},
+		cnsuccmac=cnsuccmac+#{cnsuccmac},cnfailmac=cnfailmac+#{cnfailmac},cmfaovthree=cmfaovthree+#{cmfaovthree},cnfaovthree=cnfaovthree+#{cnfaovthree}
+	</insert>
+	<select id="countByParam" resultType="Integer">
+		SELECT count(*) from(
+		SELECT * FROM wft_stat_open GROUP BY channel) as A
+	</select>
+		
+	<resultMap type="wftOpenStat" id="getConsume">
+	 	<result property="dairy" column="dairy"/>
+		<association  property="wftConsumeStat"  column="{dairy=dairy,channel=channel}" 
+			select="com.bw30.open.wftDao.mapper.WftConsumeStatMapper.findByCondition">
+		</association>
+	</resultMap>
+	<select id="findPagerByParam" resultMap="getConsume">
+		select A.channel as channel,B.name as channelName,A.dairy as dairy,sum(A.cmutvalue) as
+		cmutvalue,sum(A.cmutvalueop) as cmutvalueop,sum(A.cnutvalue) as
+		cnutvalue,sum(A.cnutvalueop) as cnutvalueop, sum(A.sdkcnt) AS
+		sdkcnt,sum(A.sdkper) AS sdkper,sum(A.cmcnfailcnt) AS
+		cmcnfailcnt,sum(cmcnsucccnt) as cmcnsucccnt,
+		sum(A.cncnfailcnt) AS
+		cncnfailcnt,sum(A.cncnsucccnt) AS cncnsucccnt,sum(A.cncnfailper)
+		AS
+		cncnfailper,sum(A.cncnsuccper) AS cncnsuccper,sum(A.cmcnfailper) AS
+		cmcnfailper,SUM(A.cmcnsuccper) AS cmcnsuccper,
+		sum(A.cmaccesscardfail)
+		AS cmaccesscardfail,SUM(A.cnaccesscardsucc) as
+		cnaccesscardsucc,SUM(A.cmsuccmac) AS cmsuccmac,sum(A.cmfailmac) AS
+		cmfailmac,SUM(A.cnsuccmac) as cnsuccmac,sum(A.cnfailmac) AS
+		cnfailmac,SUM(A.cmfaovthree) as cmfaovthree,sum(A.cnfaovthree) AS
+		cnfaovthree
+		from
+		<include refid="table" />
+		A join wft_channel B on A.channel=B.code
+		<where>
+			<if test="paramMap.start!=null and paramMap.end!=null">
+			 <![CDATA[
+			 	#{paramMap.start}<=DATE_FORMAT(A.dairy,"%Y-%m-%d")
+			  and #{paramMap.end}>=DATE_FORMAT(A.dairy,"%Y-%m-%d")
+			 ]]>
+			</if>
+		</where>
+		group by A.channel
+		<include refid="pager" />
+	</select>
+
+	<select id="findWithParam" resultMap="getConsume">
+		select A.channel as channel,B.name as channelName,A.dairy as
+		dairy,sum(A.cmutvalue) as cmutvalue,sum(A.cmutvalueop) as
+		cmutvalueop,sum(A.cnutvalue) as cnutvalue,sum(A.cnutvalueop) as
+		cnutvalueop, sum(A.sdkcnt) AS sdkcnt,sum(A.sdkper) AS
+		sdkper,sum(A.cmcnfailcnt) AS cmcnfailcnt,sum(cmcnsucccnt) as
+		cmcnsucccnt,
+		sum(A.cncnfailcnt) AS cncnfailcnt,sum(A.cncnsucccnt) AS
+		cncnsucccnt,sum(A.cncnfailper)
+		AS cncnfailper,sum(A.cncnsuccper) AS
+		cncnsuccper,sum(A.cmcnfailper) AS
+		cmcnfailper,SUM(A.cmcnsuccper) AS
+		cmcnsuccper,
+		sum(A.cmaccesscardfail) AS
+		cmaccesscardfail,SUM(A.cnaccesscardsucc) as
+		cnaccesscardsucc,SUM(A.cmsuccmac) AS cmsuccmac,sum(A.cmfailmac) AS
+		cmfailmac,SUM(A.cnsuccmac) as cnsuccmac,sum(A.cnfailmac) AS
+		cnfailmac,SUM(A.cmfaovthree) as cmfaovthree,sum(A.cnfaovthree) AS
+		cnfaovthree
+		from
+		<include refid="table" />
+		A join wft_channel B on A.channel=B.code
+		<where>
+			<if test="paramMap.start!=null and paramMap.end!=null">
+			 <![CDATA[
+			 	#{paramMap.start}<=DATE_FORMAT(A.dairy,"%Y-%m-%d")
+			  and #{paramMap.end}>=DATE_FORMAT(A.dairy,"%Y-%m-%d")
+			 ]]>
+			</if>
+		</where>
+		group by A.channel
+	</select>
+
+	<select id="countByChannel" resultType="Integer">
+		select count(*) from
+		<include refid="table" />
+		<where>
+			<if test="start!=null and end!=null">
+			 <![CDATA[
+			 	#{start}<=DATE_FORMAT(dairy,"%Y-%m-%d")
+			  and #{end}>=DATE_FORMAT(dairy,"%Y-%m-%d")
+			 ]]>
+			</if>
+			<if test="channel!=null">
+				and channel=#{channel}
+			</if>
+		</where>
+	</select>
+
+	<select id="findPagerByChannel" resultMap="getConsume">
+		select * from
+		<include refid="table" />
+		<where>
+			<if test="start!=null and end!=null">
+			 <![CDATA[
+			 	#{start}<=DATE_FORMAT(dairy,"%Y-%m-%d")
+			  and #{end}>=DATE_FORMAT(dairy,"%Y-%m-%d")
+			 ]]>
+			</if>
+			<if test="channel!=null">
+				and channel=#{channel}
+			</if>
+		</where>
+		<include refid="pager" />
+	</select>
+	<select id="findByChannel" resultMap="getConsume">
+		select * from
+		<include refid="table" />
+		<where>
+			<if test="start!=null and end!=null">
+			 <![CDATA[
+			 	#{start}<=DATE_FORMAT(dairy,"%Y-%m-%d")
+			  and #{end}>=DATE_FORMAT(dairy,"%Y-%m-%d")
+			 ]]>
+			</if>
+			<if test="channel!=null">
+				and channel=#{channel}
+			</if>
+		</where>
+
+	</select>
+	
+	<select id="findByCondition" resultType="wftOpenStat">
+		select * from <include refid="table"/>
+		where dairy=#{dairy} and channel=#{channel}
+	</select>
+	
+</mapper>

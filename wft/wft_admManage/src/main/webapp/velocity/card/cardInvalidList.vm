@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<script type="text/javascript">
+$(function(){
+	var form = $("#form1");
+	
+	$("#btn_search").click(function(){
+		form.attr("action", "cardInvalidList.do");
+		form.submit();
+	});
+	
+	$("#btn_export").click(function(){
+		form.attr("action", "cardInvalidExport.do");
+		form.submit();
+	});
+	
+});
+
+function openCard(channel, cid, cno){
+	alert("13234");
+	if(confirm("确定启用卡[" + cno + "]?")){
+		var dataStr = "channel=" + channel + "&id=" + cid;
+		jQuery.ajax({type: "POST",url: "cardInvalidOpen.do",
+			data: dataStr, 
+			dataType: "json",
+			success:function(json){
+				if(json.flag==1){
+					$("#" + cid).remove();
+				}else{
+					alert("启用卡[" + cno + "]失败！");
+				}
+			}
+		});
+	}
+}
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    	
+				<table id="dataTable" width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="7" background="images/table_top_bg.jpg">        	
+							#TABLETILE("问题卡查询")	        		       
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td colspan="7" align="center" class="tdw1">
+						<form id="form1" action="cardInvalidList.do" method="post" enctype="multipart/form-data">
+							日期：
+							<input type="text" id="begStoptime" name="begStoptime" value="$!{begStoptime}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})" />-
+							<input type="text" id="endStoptime" name="endStoptime" value="$!{endStoptime}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})" />&nbsp;&nbsp;
+							
+							渠道:
+                            <select id="channel" name="channel">
+                            #foreach($ch in ${channelList})
+                            	<option value="$!{ch.code}" #if($!{channel}==$!{ch.code}) selected #end>$!{ch.name}</option>
+                            #end
+                            </select>&nbsp;&nbsp;
+                            
+                                                                                    运营商:
+							<select id="opid" name="opid">
+								<option value="" selected>全部</option>
+								#foreach($operator in ${operatorList})
+									<option value="$!{operator.id}" #if($!{opid}==$!{operator.id}) selected #end>$!{operator.name}</option>
+								#end
+                             </select>&nbsp;&nbsp;
+                             
+							<input type="button" id="btn_search" value=" 查 询 " />&nbsp;&nbsp;
+							<input type="button" id="btn_export" value=" 导 出 " />
+						</form>
+						</td>
+					</tr>
+						
+					<tr height="30">
+						<td align="center" class="tdy1">卡号</td>	
+						<td align="center" class="tdy2">渠道</td>
+						<td align="center" class="tdy2">运营商</td>
+						<td align="center" class="tdy2">密码</td>
+						<td align="center" class="tdy2">错误码</td>
+						<td align="center" class="tdy2">停卡时间</td>
+						<td align="center" class="tdy2">操作</td>
+					</tr>
+					
+					#foreach($card in ${cardList})
+					<tr height="30" id="$!{card.id}">
+						<td align="center" class="tdw1">$!{card.no}</td>
+						<td align="center" class="tdw2">$!{channelMap.get($!{channel})}</td>
+						<td align="center" class="tdw2">$!{operatorMap.get($!{card.opid})}</td>
+						<td align="center" class="tdw2">$!{card.pwd}</td>
+						<td align="center" class="tdw2">$!{card.stopcode}</td>
+						<td align="center" class="tdw2">$date.format('yyyy-MM-dd HH:mm:ss', $!{card.stoptime})</td>
+						<td align="center" class="tdw2">
+							<input type="button" value="启 用" onclick="openCard('$!{channel}', '$!{card.id}', '$!{card.no}')"/>
+						</td>
+					#end
+    			</table>
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+	<script type="text/javascript">
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("运营数据统计")	
+			
+				<form id="pageform" action="acessCard.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="30" background="images/table_top_bg.jpg">        	
+								#TABLETILE("每小时请卡数据")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="30" align="center" class="tdw1">
+								日期：<input id="start" name="start" type="text" value="$!{start}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd '})" />&nbsp;&nbsp
+							</td>
+						</tr>
+						<tr >
+							<td height="30" colspan="30" align="center" class="tdw1">
+								渠道：
+								<select name="channel">
+									<option value="">全部</option>
+								#if($!channelList && $!{channelList.size()}>0)
+									#foreach($ch in ${channelList})
+									<option #if($!{channel}==$!{ch.code}) selected="selected" #end value="${ch.code}">$!{ch.name}</option>
+								    #end
+								#end	
+								</select>
+							</td>
+                        </tr>
+						<tr >
+							<td height="30" colspan="30" align="center" class="tdw1">
+								<input type="submit" value="查询">
+							</td>
+                        </tr>
+						<tr>
+							<td height="30" align="center" class="tdy1">日期</td>	
+							<td align="center" class="tdy2">渠道</td>
+							<td align="center" class="tdy2">小时</td>
+							<td align="center" class="tdy2">CMCC请卡次数</td>	
+							<td align="center" class="tdy2">ChinaNet请卡次数</td>	
+					
+						</tr>
+						#if($!list && $!{list.size()}>0)
+						#foreach($stat in ${list})
+						<tr>
+							<td height="40"  align="center" class="tdw1">$!{stat.dairy}</td>
+							<td align="center"   class="tdw2">$!{stat.channel}</td>
+							<td align="center"   class="tdw2">$!{stat.hour}</td>
+							<td align="center"   class="tdw2">$!{stat.cmcccnt}</td>
+							<td align="center"   class="tdw2">$!{stat.chcnt}</td>
+						</tr>
+						#end
+						
+						<tr>
+							<td height="30" colspan="30" class="tdw1"><p style=" width:100%; height:30px; line-height:30px; text-align:center;">#PageInfo($!{pager})</p></td>
+						</tr>
+						#else
+                            <tr>
+								<td colspan="30" align="center" class="tdw1" >无数据
+                                </td>
+							</tr>
+							#end
+	  
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

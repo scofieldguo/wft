@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftCardTypeMapper">
+	<sql id="table">
+		wft_card_type
+	</sql>
+	<sql id="column">
+		id, code, codeop, opid, balance, standby
+	</sql>
+	<sql id="insertValues">
+		#{id}, #{code}, #{codeop}, #{opid}, #{balance}, #{standby}
+	</sql>
+	
+	<insert id="insert" parameterType="wftCardType">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="column" />
+		)
+		values(
+		<include refid="insertValues" />
+		)
+	</insert>
+	
+	<select id="findById" resultType="wftCardType">
+		select * from
+		<include refid="table" />
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	
+	<select id="findCardType" resultType="wftCardType">
+		select * from <include refid="table"/> 
+		<where>
+			<if test="opid!=null">
+				opid = #{opid}
+			</if>
+			<if test="code!=null">
+				and code = #{code}
+			</if>
+		</where>
+	</select>
+	<select id="findCardCodeop" resultType="wftCardType">
+		select * from <include refid="table"/> 
+		where codeop = #{codeop}
+	</select>
+
+	<update id="update">
+		update <include refid="table"/>
+	 	<set>
+	 		<if test="code!=null">
+	 		 	code =#{code},
+	 		</if>
+	 		<if test="codeop!=null">
+				codeop=#{codeop},	 		
+	 		</if>
+	 		<if test="balance!=null">
+	 			balance=#{balance},
+	 		</if>
+	 		<if test="standby!=null">
+	 			standby=#{standby},
+	 		</if>
+	 	</set>
+	  	<where>
+	  		id=#{id}
+	  	</where>
+	</update>
+	
+</mapper>

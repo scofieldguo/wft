@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  default-autowire="byName" default-lazy-init="false"
+ 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="statTask" class="com.bw30.open.stat.controller.WftOpenStatController"></bean>
+	<bean id="warnTask" class="com.bw30.open.stat.service.impl.WarnServiceImpl">
+		<property name="qqCTCCConnSucNum" value="45"></property>
+		<property name="qqCMCCConnSucNum" value="35"></property>
+		<property name="cmccConnCnt" value="10"></property>
+	</bean>
+	<bean id="loginWarnTask" class="com.bw30.open.stat.service.impl.LoginWarnServiceImpl">
+		<property name="ctccConnSucNum" value="45"></property>
+		<property name="cmccConnSucNum" value="30"></property>
+		<property name="connCntNum" value="10"></property>
+	</bean>
+	
+	<bean id="wftTotalStatService" class="com.bw30.open.stat.service.impl.WftTotalStatServiceImpl"></bean>
+	<bean id="statJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="wftTotalStatService"/>
+	    <property name="targetMethod" value="statAppDataAuto"/>	    
+	    <property name="concurrent" value="false" />
+    </bean>
+    <bean id="acessCardJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="statTask"/>
+	    <property name="targetMethod" value="statCardUse"/>	    
+	    <property name="concurrent" value="false" />
+    </bean>
+    <bean id="cardTopJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="statTask"/>
+	    <property name="targetMethod" value="statTopCardUseSituation"/>	    
+	    <property name="concurrent" value="false" />
+    </bean>
+   	<bean id="warnTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="warnTask"/>
+	    <property name="targetMethod" value="doWarn"/>	    
+	    <property name="concurrent" value="false" />
+    </bean>
+    
+    <bean id="loginWarnTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="loginWarnTask"/>
+	    <property name="targetMethod" value="doWarn"/>	    
+	    <property name="concurrent" value="false" />
+    </bean>
+     <bean id="statJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="statJob"/>
+	    <property name="cronExpression" value="0 45 11 * * ?"/>
+	</bean>
+	 <bean id="statAcessCardJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="acessCardJob"/>
+	    <property name="cronExpression" value="0 0 */1 * * ?"/>
+	</bean>
+	 <bean id="statTopCardUseJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cardTopJob"/>
+	    <property name="cronExpression" value="0 */1 * * * ?"/>
+	</bean>
+    <bean id="warnTaskJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="warnTaskJob"/>
+	    <property name="cronExpression" value="0 5,15,25,35,45,55 * * * ?"/>
+	</bean>
+	<bean id="loginWarnTaskJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="loginWarnTaskJob"/>
+	    <property name="cronExpression" value="0 5,15,25,35,45,55 * * * ?"/>
+	</bean>
+	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">  
+		<property name="triggers">  
+			<list>
+				<ref bean="statJobTrigger" />
+				<ref bean="statAcessCardJobTrigger"/>
+				<ref bean="statTopCardUseJobTrigger"/>
+				<!-- <ref bean="warnTaskJobTrigger"/>
+				<ref bean="loginWarnTaskJobTrigger"/> -->
+			</list>  
+		</property>  
+	</bean>  
+</beans>

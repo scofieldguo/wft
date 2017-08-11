@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="wftProvince" type="com.bw30.open.common.model.WftProvince" />
+		<typeAlias alias="wftApType" type="com.bw30.open.common.model.WftApType" />
+		<typeAlias alias="wftHotspot" type="com.bw30.open.common.model.WftHotspot" />
+		<typeAlias alias="wftChannel" type="com.bw30.open.common.model.WftChannel"/>
+		<typeAlias alias="wftOperator" type="com.bw30.open.common.model.WftOperator" />
+		<typeAlias alias="wftUser" type="com.bw30.open.common.model.WftUser" />
+		<typeAlias alias="wftCardType" type="com.bw30.open.common.model.WftCardType"/>
+		<typeAlias alias="wftCardActive" type="com.bw30.open.common.model.WftCardActive" />
+		<typeAlias alias="wftCardStore" type="com.bw30.open.common.model.WftCardStore"/>
+		<typeAlias alias="wftConnSession" type="com.bw30.open.common.model.WftConnSession"/>
+		<typeAlias alias="cardCacheBean" type="com.bw30.open.common.model.CardCacheBean"/>
+		<typeAlias alias="wftOpenStat" type="com.bw30.open.common.model.stat.WftOpenStat"/>
+		<typeAlias alias="wftOpenMacStat" type="com.bw30.open.common.model.stat.WftOpenMacStat"/>
+		<typeAlias alias="wftOpenAcessCardStat" type="com.bw30.open.common.model.stat.WftOpenAcessCardStat"/>
+		<typeAlias alias="wftOpenTopCardUse" type="com.bw30.open.common.model.stat.WftOpenTopCardUse"/>
+		<typeAlias alias="wftConsumeStat" type="com.bw30.open.common.model.stat.WftConsumeStat"/>
+		<typeAlias alias="wftAdminMenu" type="com.bw30.open.common.model.login.AdminMenu"/>
+		<typeAlias alias="wftAdminUser" type="com.bw30.open.common.model.login.WftAdminUser"/>
+		<typeAlias alias="wftOpenHourSuccStat" type="com.bw30.open.common.model.stat.WftOpenHourSuccessStat"/>
+		<typeAlias alias="wftOpenVersionMacStat" type="com.bw30.open.common.model.versionstat.WftOpenVersionMacStat"/>
+		<typeAlias alias="wftOpenVersionStat" type="com.bw30.open.common.model.versionstat.WftOpenVersionStat"/>
+		<typeAlias alias="wftEveryHalfHourWarnStat" type="com.bw30.open.common.model.warn.WftEveryHalfHourWarnStat"/>
+		<typeAlias alias="cardCacheInfo" type="com.bw30.open.common.model.CardCacheInfo"/>
+		<typeAlias alias="user" type="com.bw30.open.common.model.OpenPlatformUser"/>
+		<typeAlias alias="account" type="com.bw30.open.common.model.OpenPlatformAccount"/>
+		<typeAlias alias="app" type="com.bw30.open.common.model.OpenPlatformApp"/>
+		<typeAlias alias="chargeRecord" type="com.bw30.open.common.model.OpenPlatformChargeRecord"/>
+		<typeAlias alias="wftTotalStat" type="com.bw30.open.common.model.stat.WftTotalStat"/>
+		<typeAlias alias="wftMacStat" type="com.bw30.open.common.model.stat.WftOpenStat"/>
+		<typeAlias alias="apptype" type="com.bw30.open.common.model.OpenPlatformAppType"/>
+		<typeAlias alias="wftOldTotalStat" type="com.bw30.open.common.model.stat.WftOldTotalStat"/>
+		<typeAlias alias="wftTenMinLoginStat" type="com.bw30.open.common.model.stat.WftTenMinLoginStat"/>
+		<typeAlias alias="notice" type="com.bw30.open.common.model.OpenPlatformNotice"/>
+		<typeAlias alias="wftOpenPlatFormStat" type="com.bw30.open.common.model.stat.WftOpenPlatFormStat"/>
+		<typeAlias alias="billCompare" type="com.bw30.open.common.model.BillCompare" />
+		<typeAlias alias="wftSaleCardRecord" type="com.bw30.open.common.model.sale.WftSaleCardRecord" />
+		<typeAlias alias="wftSaleCardRecord10011" type="com.bw30.open.common.model.sale.WftSaleCardRecord10011" />
+		<typeAlias alias="wftSaleCardOperation" type="com.bw30.open.common.model.sale.WftSaleCardOperation"/>
+	</typeAliases>
+</configuration>

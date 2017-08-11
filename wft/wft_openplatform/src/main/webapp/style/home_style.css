@@ -1,0 +1,29 @@
+@charset "utf-8";
+#slides{height:400px;position:relative;}
+.slide_content{width:1002px;margin:0 auto;overflow:hidden;}
+.slide_content .d1{width:100%;height:400px;display:block;position:absolute;left:0px;top:0px;}
+.slide_content .d2{width:100%;height:30px;clear:both;position:absolute;z-index:100;left:0px;top:360px;}
+.slide_content .d2 ul{float:left;position:absolute;left:50%;top:0;margin:0 0 0 -50px;display:inline;}
+.slide_content .d2 li{width:17px;height:15px;overflow:hidden;cursor:pointer;background:url(../images/slides/img1.png) no-repeat center;float:left;margin:0 3px;display:inline;}
+.slide_content .d2 li.nuw{background:url(../images/slides/img1_1.png) no-repeat center;}
+
+#topic{height:auto !important;height:200px;min-height:200px;}
+.topic_content{width:1002px;margin:0 auto;}
+.topic_title{padding:40px 0;text-align:center;color:#4b4b4b;}
+.topic_content_item1{width:334px;text-align:center;float:left;}
+.item_title{margin-top:30px;color:#575757}
+.item_desc{margin-top:20px;color:#6a6a6a}
+.join_us{width:273px;height:56px;margin:0 auto;margin-top:40px;margin-bottom:60px;line-height:56px;display:block;background:url("../images/join_us.png") no-repeat center;text-align:center;color:#fff;}
+.join_us:hover{background: url("../images/join_us_slid.png") no-repeat center;}
+.join_us:active{background: url("../images/join_us_click.png") no-repeat center;}     
+.topic_content_item2{width:104px;text-align:center;float:left;}
+.step_arrow{width:44px;height:120px;background:url("../images/step_arrow.png") no-repeat center;float:left;margin:0 38px;}
+
+#partners{width:1002px;margin:0 auto;margin-top:65px;}
+.partners_title{padding:40px 0;text-align:center;color:#4b4b4b;position:relative;}
+.partners_title img{vertical-align:middle;}
+ul.partners_ico{margin-top:10px;float:left;margin-left: 50px;margin-right: 80px}
+ul.partners_ico li{float:left;height:47px;overflow:hidden;}
+ul.partners_ico li.auto{margin-right:122px;margin-left: 140px;}
+.partners_more{height:45px;line-height:55px;position:absolute;right:0;top:40px;font-weight:normal;}
+.partners_more a:hover{text-decoration:underline;}

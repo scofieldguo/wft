@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<!-- 合作方接口请求解密 -->
+	<bean id="rsaDecrypterForPartner" class="com.bw30.open.wft.common.cardpool.RsaDecrypter" init-method="initPrivateKey">
+		<property name="privateKeyPath" value="${rsa.privatekey.path}"></property>
+	</bean>
+	
+	<!-- 合作方接口响应加密 -->
+	<bean id="aesEncrypterForPartner" class="com.bw30.open.wft.common.cardpool.AesEncrypter" />
+	
+	<bean id="apiTest" class="com.bw30.open.cardpool.test.ApiTest" />
+	
+	<bean id="remoteLogoutTaskThreadPool" class="com.bw30.open.wft.common.TaskThreadPool" init-method="init">
+		<property name="corePoolSize" value="10"></property>
+		<property name="maximumPoolSize" value="20"></property>
+		<property name="queueSize" value="1000"></property>
+	</bean>
+	
+	<bean id="wftConnSessionService" class="com.bw30.open.cardpool.service.WftConnSessionService" />
+	
+	<bean id="cardService" class="com.bw30.open.cardpool.service.CardService" />
+	
+	<bean id="offlineCallbackService" class="com.bw30.open.cardpool.service.OfflineCallbackService">
+		<property name="url" value="${qq.wifiQueryCgiServer.url}" />
+		<property name="appid" value="${qq.appid}" />
+		<property name="md5Key" value="${qq.wifiQueryCgiServer.md5key}" />
+	</bean>
+	
+	<bean id="connSessionService" class="com.bw30.open.cardpool.service.ConnSessionService">
+		<property name="url" value="${cmcc.url}"></property>
+		<property name="remoteLogoutThreadPool" ref="remoteLogoutTaskThreadPool"></property>
+	</bean>
+	
+	<bean id="openCardService" class="com.bw30.open.cardpool.service.api.impl.OpenCardServiceImpl" />
+	
+	<bean id="queryBalanceService" class="com.bw30.open.cardpool.service.api.impl.QueryBalanceServiceImpl"/>
+	
+	<bean id="queryValidityService" class="com.bw30.open.cardpool.service.api.impl.QueryValidityServiceImpl"/>
+	
+	<bean id="rechargeService" class="com.bw30.open.cardpool.service.api.impl.RechargeServiceImpl"/>
+	
+	<bean id="updatePwdService" class="com.bw30.open.cardpool.service.api.impl.UpdatePwdServiceImpl"/>
+	
+	<bean id="queryRecordService" class="com.bw30.open.cardpool.service.api.impl.QueryRecordServiceImpl" />
+	
+	<bean id="queryOnlineService" class="com.bw30.open.cardpool.service.api.impl.QueryOnlineServiceImpl"/>
+	
+	<bean id="queryUserOnlineService" class="com.bw30.open.cardpool.service.api.impl.QueryUserOnlineServiceImpl" />
+	
+	<bean id="queryUserRecordService" class="com.bw30.open.cardpool.service.api.impl.QueryUserRecordServiceImpl" />
+	
+	<bean id="onlineNotifyService" class="com.bw30.open.cardpool.service.api.impl.OnlineNotifyServiceImpl">
+		<property name="md5key" value="${qq.wifiQueryCgiServer.md5key}"></property>
+	</bean>
+	
+	<bean id="offlineNotifyService" class="com.bw30.open.cardpool.service.api.impl.OfflineNotifyServiceImpl">
+		<property name="md5key" value="${qq.wifiQueryCgiServer.md5key}"></property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="wftOpenStatService" class="com.bw30.open.stat.service.impl.WftOpenStatServiceImpl"></bean>
+	<bean id="wftAcessCardStatService" class="com.bw30.open.stat.service.impl.WftAcessCardServiceImpl"></bean>
+	<bean id="wftTopCardUseSituationService" class="com.bw30.open.stat.service.impl.WftTopCardUseSituationServiceImpl"></bean>
+	<!-- <bean id="sendWarn" class="com.bw30.open.stat.util.SendWarn" init-method="initWarn"></bean> -->
+   </beans>

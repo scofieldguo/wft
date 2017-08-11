@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css?t=11"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css?t=11"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="$!{js_url}/ajaxupload.js"></script>
+<script type="text/javascript">
+	function showConfirmForm(id){
+		document.getElementById(id).style.display='block';
+		$("#popup").addClass("popup");
+	}
+	function changeInfo(){
+		window.location.href="manage_userInfo.action";
+	}
+	
+	$(function(){
+		$("input[name='chargetype']").click(function(){
+			var v=$("input[name='chargetype']:checked").val();
+			if(v==0){
+				$("#excel_charge").show();
+				$("#cno_charge").hide();
+			}else{
+				$("#excel_charge").hide();
+				$("#cno_charge").show();
+			}
+		})
+	})
+	
+</script>
+</head>
+<body onload="manageleftNav('wifi-charge');viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+		#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+		#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="person_title" style="height: 40px">
+					充值
+					<p>您可以对开出的时长卡进行充值！充值可以将您的卡有效期重置为30天</p> 
+				</div>
+				<div style="margin-top: 20px;">
+					<span style="text-align: right;display:inline-block;width: 150px;vertical-align: top; ">充值方式：</span>
+					<span style="display:inline-block;width: 200px;vertical-align: top">
+						<input type="radio" value="1" checked="checked" name="chargetype"/>卡号充值
+						<input type="radio" value="0" name="chargetype"/>excel 
+					</span>
+				</div>
+				<div style="width: 100%;float: left">
+					<div id="cno_charge" style="margin-top:15px"> 
+						<span style="text-align: right;display:inline-block;width: 150px;vertical-align: top; ">输入卡号：</span>
+						<span style="display:inline-block;width: 200px;">
+								<input type="text"  placeholder="请输入时长卡号" id="cno" value="$!{cno}"/>
+						</span>
+				 	</div>
+				 	<div id="excel_charge" style="margin-top:15px;display: none"> 
+						<span style="text-align: right;display:inline-block;width: 150px;vertical-align: top;margin-top: 10px; ">导入excel：</span>
+						<span style="display:inline-block;width: 200px;">
+								<input type="button" id="uploadExcel" value="导入excel"/>
+						</span>
+				 	</div>
+					<div style="margin-top: 15px;">
+						<span style="text-align: right;display:inline-block;width: 150px;vertical-align: top;margin-top: 10px; ">选择时长：</span>
+						<span style="display:inline-block;width: 200px;">
+							<ul>
+								<li style="float: left;margin-right: 15px;"><input id="card_0h"  type="button" value="15分钟" style="background-color:#3772A6;cursor:pointer;width:50px;border:1px solid #3772A6;height:28px;line-height:25px;color:#fff" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_1h"  type="button" value="1小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_2h" type="button" value="2小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_5h" type="button" value="5小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_10h" type="button" value="10小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_20h" type="button" value="20小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+								<li style="float: left;margin-right: 15px;"><input id="card_50h" type="button" value="50小时" style="background-color:#fff;cursor:pointer;width:50px;border:1px solid #C0C0C0;height:28px;line-height:25px;" onclick="flag(this.id)"/></li>
+							</ul>
+							<input type="hidden" value="1" id="card_0h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_1h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_2h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_5h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_10h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_20h_hide" name="cardhide"/>
+							<input type="hidden" value="" id="card_50h_hide" name="cardhide"/>
+						</span>
+					</div>
+					<div style="margin-top: 15px;">
+						<span style="text-align: right;display:inline-block;width: 150px;vertical-align: top;">充值次数：</span>
+						<span style="display:inline-block;width: 200px;">
+							<input type="text" name="chargeCount" id="chargeCount" value="1"/>
+						</span>
+					
+					</div>	
+					<div style="margin-top: 15px;"> 
+						<span style="text-align: right;display:inline-block;width: 150px; "></span>
+						<span>
+							<input class="change_bt" type="button" onclick="openConfirm();" value="确认"/>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" id="excel_file"/>
+		<div id="popup" >
+			<div id="opencard_fail" class="alertWindow">
+				<div style="height: 40px;line-height:40px;;text-align: center;font-size: 18px;background-color: rgb(59, 180, 191);position: absolute;width: 100%;left:0;top:0">
+					充值失败
+				</div>
+				<div style="text-align: center;margin: 40px;">
+					<p id="error" style="font-size: 16px;">余额不足,开卡失败,请您充值！</p>
+					<input class="submit" type="button" value="确认" onclick="cancel('opencard_fail')"/>
+				</div>
+			</div>
+			<div id="opencard_succ" class="alertWindow">
+				<div style="height: 40px;line-height:40px;;text-align: center;font-size: 18px;background-color: rgb(59, 180, 191);position: absolute;width: 100%;left:0;top:0">
+					充值成功
+				</div>
+				<div style="text-align: center;margin: 40px;">
+					<p style="font-size: 16px;" >您的充值成功个数<span id="succ"></span >&nbsp;失败个数<span id="fail"></span></p>
+					<br />
+					<input class="submit" type="button" value="导出" onclick="exportExcel()" id="export"/>
+					<input class="submit" type="button" value="确认" onclick="cancel('opencard_succ')"/>
+				</div>
+				<input type="hidden" id="order"/> 
+			</div>
+		</div>
+	</div>
+	<div id="loading" style="z-index: 9999; display: none; position: fixed; top: 200px; left: 50%; margin-top: 0px; margin-left: -150px;"><img src="$!{server_url}/images/loading.gif"/>&nbsp;文件加载中…</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		 function flag(id){
+	    	var flag = $("#"+id+"_hide").val();
+	    	if(flag == 1){
+	    		$("#"+id+"_hide").val("");
+	    		$("#"+id).css({"border-color":"#c0c0c0","background":"#fff","color":"#000"});
+	    	}else{
+	    		$("#"+id+"_hide").val(1);
+	   			$("#"+id).css({"border-color":"#3772A6","background":"#3772A6","color":"#fff"});
+	   			$("#"+id).parent().siblings().children('input').css({"border-color":"#c0c0c0","background":"#fff","color":"#000"});
+	   			$("#"+id+"_hide").siblings().val("");
+	    	}
+	    }
+	    
+	    function openConfirm(){
+	    	var hour;
+	    	var cno;
+	    	var excel;
+	    	var flag;
+	    	$("input[name='cardhide']").each(function(){
+	    		if($(this).val()==1){
+	    			hour= $(this).attr('id').split("_")[1].replace("h","");
+	    			if(hour==0){
+	    				hour=0.25;
+	    			}
+	    		}
+	    	})
+	    	var v=$("input[name='chargetype']:checked").val();
+    		var chargeCount=$("#chargeCount").val();
+	    	if(v==1){
+	    		cno=$("#cno").val();
+	    		flag=1;
+	    		if(checkEmpty("cno")==false){
+		 		 	alert("卡号不能为空");
+		 			return false;
+	 	    	}
+	 	    	if(chargeCount<1){
+	    			alert("充值次数不能小于1");
+	    			return false;
+	    	}
+	    	}else{
+	    		if(checkEmpty("excel_file")==false){
+		 		 	alert("请上传文件");
+		 			return false;
+	 	    	}
+	    		excel=$("#excel_file").val();
+	    		flag=0;
+	    	}
+	    	
+	    	jQuery.ajax({
+	    		url:"wifi_chargeCard.action",
+	    		data:{"cno":cno,"excelname":excel,"flag":flag,"time":hour,"chargeCount":chargeCount},
+	    		dataType:"json",
+	    		success:function(json){
+	    		 if(json.flag==1){
+	    		 	if(json.succ==0){
+	    		 		$("#export").hide();
+	    		 	}
+	    		 		$("#succ").html(json.succ);
+	    				$("#fail").html(json.fail);
+	    				$("#order").val(json.order);
+	    				showConfirmForm("opencard_succ");
+	    		 }
+	    		 if(json.flag==0){
+	    		 alert(json.error);
+	    		 	$("#error").html(json.error);
+	    			 showConfirmForm("opencard_fail");
+	    		 }
+	    		
+	    		}
+	    	})
+	  //  	showConfirmForm("confirm_window");
+	    }
+	    
+	    function cancel(id){
+	    	$("#"+id).hide();
+	    	$("#popup").removeClass("popup");
+	    }
+	    function confrim(){
+	    	var number=$("#number").val();
+	    	var chargeCount=$("#chargeCount").val();
+	    	var time;
+	    	$("input[name='cardhide']").each(function(){
+	    		if($(this).val()==1){
+	    			time= $(this).attr('id').split("_")[1].replace("h","");
+	    		}
+	    	})
+	    	jQuery.ajax({
+	    		url:"wifi_chargeCard.action",
+	    		data:{"number":number,"time":time},
+	    		dataType:'json',
+	    		cache:false,
+	    		success:function(json){
+	    			$("#confirm_window").hide();
+	    			if(json.flag=='0'){
+	    				showConfirmForm("opencard_fail");
+	    			}
+	    			if(json.flag=='1'){
+	    				$("#succ").html(json.succ);
+	    				$("#fail").html(json.fail);
+	    				$("#order").val(json.order);
+	    				showConfirmForm("opencard_succ");
+	    			
+	    			}
+	    		
+	    		
+	    		}
+	    	})
+	    }
+	    
+	    function exportExcel(){
+	    	var order=$("#order").val();
+	    	location.href="wifi_exportChargeCard.action?order="+order;
+	    }
+	    
+	    	new AjaxUpload(
+			"uploadExcel",
+			{
+				action : 'wifi_upload.action',
+				autoSubmit : true,
+				name : 'source',// 文件对象名称（不是文件名）
+				dataType:'text',
+				onSubmit : function(file, ext) {
+					if (ext&& /^(xlsx|XLSX)$/.test(ext)) {
+						$("#loading").html("请稍候，正在上传文件…");
+						$("#loading").show();
+						$("#loading").css("top","200px");
+						this.setData( {
+							'fileType' : ext
+						});
+					} else {
+						alert('文件类型错误:正确格式为: .xlsx ,请重新上传!');
+						return false;
+					}
+				},
+				onComplete : function(file, response) {
+					var reg = /<pre/;
+					if (reg.exec(response)) {/* fiefox */
+						var tempVal = response.substring(
+								response.indexOf('>') + 1, response
+										.lastIndexOf('<'));
+					} else {/* IE */
+						var tempVal = response;
+					}
+					alert("导入成功,请点击发送！");
+					$("#uploadExcel").val("导入成功");
+					$("#excel_file").val(tempVal);
+					$("#loading").hide();
+				}
+			});
+	
+	</script>
+</body>
+</html>

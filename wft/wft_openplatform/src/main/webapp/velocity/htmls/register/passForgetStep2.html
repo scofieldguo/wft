@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;忘记密码</div>
+	<div id="register">
+		<div class="verification_step"><img src="${images_url}/verification_step2.png"/></div>
+		<div class="register_title">
+			<img src="${images_url}/register_ico.png" alt="" />
+			<h3>发送成功</h3>
+		</div>
+		#if($!{findType}!='' && $!{findType}==1)
+			<div class="send_email">
+				<h5>密码重置邮件已发送至您的邮箱：$!{email}</h5>
+				<p>请访问邮件中的链接，根据提示完成密码重置。</p>
+			</div>
+			
+			<div class="login_email"><a href="$!{loginMailServer}">登录邮箱</a></div>
+			<div class="no_email">
+				<p>如果您没有收到邮件：</p>
+				<p>1、请检查您的垃圾邮件箱</p>
+				<p>2、请检查您的邮箱是否正确&nbsp;&nbsp;&nbsp;&nbsp;<a href="user_findPWDStep1.action">返回修改邮箱</a></p>
+				<p>3、请您重新尝试发送&nbsp;&nbsp;&nbsp;&nbsp;<a href="user_findPWDStep2.action?email=$!{email}&verification=$!{verification}&findType=1">重新发送</a></p>
+			</div>
+		#elseif($!{findType}!='' && $!{findType} == 2)
+			<form action="user_findPWDStep3" method="post" id="changePass">
+				<div class="send_email">
+					<h5>验证码已发送至您的电话：$!{phoneNum}</h5>
+					<!--<p>请访问邮件中的链接，根据提示完成密码重置。</p>-->
+				</div>
+				<div class="regist_item">
+					<input type="hidden" id="phoneNum" name="phoneNum" value="$!{phoneNum}" />
+					<input type="hidden" id="findType" name="findType" value="2">
+					<input type="hidden" id="email" name="email" value="$!{email}" />
+					<span class="item_name">请填写手机校验码：<span> </span></span>
+					<span class="item_input">
+						<input type="text" name="verification" value="" class="verification" id="verification" />						
+						<a href="javascript:phoneValidateReset();" id="sendMobileCode" style="font-size:1.1em;padding:5px;"> 重新获取短信校验码</a>
+					</span>
+				</div>
+				<div class="no_phone">					
+					<p>校验码已发出，请注意查收短信，如果没有收到，你可以在<strong></strong>秒要求系统重新发送</p>
+				</div>
+				<div id="find_error_desc"></div>
+				<div class="regist_opr">
+					<input type="button" value="下一步" onclick=validate() /> <span> <a href="$!{server_url}/top.action">取消找回</a></span> 
+				</div>				
+			</form>
+		#end		
+		
+		
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		function validate(){
+			if(checkCode()){
+				$("#changePass").submit();
+			}
+			else{
+				return false;
+			}
+		}
+		
+		function checkCode(){
+			var len=getStringLength(jQuery.trim($("#verification").val()));
+			if(len!=6){
+				$("#find_error_desc").html("请正确填写验证码");
+				return false;
+			}else{
+				var result=false;
+				jQuery.ajax({
+					url: 'user_checkPhoneVerityCode.action',
+					data: 'verification='+jQuery.trim($("#verification").val())
+						+ '&phoneNum='+$("#phoneNum").val()
+						+ '&email='+$("#email").val(),
+					type: 'POST',
+					dataType: "text",
+					async: false,
+					cache : false,
+					success: function(text){
+						if('0'==text){
+							$("#find_error_desc").html("");
+							result=true;
+						}
+						else{
+						  	$("#find_error_desc").html("验证码错误");
+						  	result=false;
+						} 
+					}
+				});
+				return result;
+			}
+		}
+		
+		function phoneValidateReset(){
+			if($("#sendMobileCode").attr("disabled")) {
+				return;
+			}			
+			jQuery.ajax({
+					url: 'user_phoneValidateReset.action',
+					data: 'phoneNum='+jQuery.trim($("#phoneNum").val())+'&email='+jQuery.trim($("#email").val()),
+					type: 'POST',
+					dataType: "text",
+					async: false,
+					cache : false,
+					success: function(data){
+					}
+				});
+			$(".no_phone strong").text(119);
+			$(".no_phone").show();	
+			setTimeout(countDown, 1000);		
+			$("#sendMobileCode").attr("disabled","disabled");
+			}
+			
+		function countDown(){
+			var time = $(".no_phone strong").text();
+			$(".no_phone strong").text(time - 1);
+			if (time == 1) {
+				$("#sendMobileCode").removeAttr("disabled");
+				$(".no_phone").hide();
+			} else {
+				setTimeout(countDown, 1000);
+			}
+		}
+			
+		$(document).ready(function(){
+			$("#verification").blur(function(){
+				checkCode();
+				});
+				
+			$(".no_phone").hide();	
+			$(".no_phone strong").text(119);
+			$(".no_phone").show();	
+			setTimeout(countDown, 1000);		
+			$("#sendMobileCode").attr("disabled","disabled");
+		});
+	</script>
+</body>
+</html>

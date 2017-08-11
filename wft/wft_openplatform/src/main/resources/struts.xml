@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.i18n.encoding" value="utf-8" />
+	<package name="base" extends="json-default">
+		<!-- 声明拦截器 -->
+		<interceptors>
+			<interceptor name="authorizationInterceptor"
+				class="com.bw30.openplatform.interceptor.AuthorizationInterceptor" />
+			<interceptor-stack name="authStack">
+				<interceptor-ref name="authorizationInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 默认启动的拦截器 -->
+		<default-interceptor-ref name="authStack" />
+		<global-results>
+			<result name="loginfail">/WEB-INF/velocity/htmls/login.html</result>
+		</global-results>
+	</package>
+	<include file="config/struts/*-action.xml" />
+	<constant name="struts.multipart.maxSize" value="1129145600" />
+</struts>

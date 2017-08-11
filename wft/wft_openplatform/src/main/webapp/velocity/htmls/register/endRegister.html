@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript">
+	function sendMail(mail){
+	 jQuery.ajax({
+	 	url:'user_sendMailAgain.action',
+	 	type:'GET',
+	 	data:{email:mail},
+	 	dataType:"text",
+	 	success:function(data){
+	 		if(data=='1'){
+	 			alert("邮件发送成功！！！");
+	 		}else{
+	 			alert("邮件发送失败！！！");
+	 		}
+	 	
+	 	}
+	 });
+	}
+</script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;注册</div>
+	<div id="register">
+		<div class="register_title">
+			<img src="${images_url}/register_ico.png" alt="" />
+			<h3>感谢注册</h3>
+		</div>
+		
+		<div class="send_email">
+			<h5>确认邮件已发送至您的邮箱：$!{user.mail}</h5>
+			<p>请登录邮箱查看邮件并激活您的开放平台账号</p>
+		</div>
+		
+		<div class="login_email"><a href="$!{loginMailServer}" target="_blank">登录邮箱</a></div>
+		<div class="no_email">
+			<p>如果您没有收到邮件：</p>
+			<p>1、请检查您的垃圾邮件箱</p>
+			<p>2、请检查您的邮箱是否正确&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)">返回修改邮箱</a></p>
+			<p>3、请您重新尝试发送&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="sendMail('$!{user.mail}')">重新发送</a></p>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

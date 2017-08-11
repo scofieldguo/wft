@@ -1,0 +1,55 @@
+@charset "utf-8";
+#register{width:1002px;height:auto !important;height:200px;min-height:200px;margin:0 auto;border:1px #999 solid;padding-top:25px;}
+#login{width:1002px;height:auto !important;height:200px;min-height:200px;margin:0 auto;border:1px #999 solid;padding-top:25px;}
+#login div{text-align: center;margin: 0 auto;display:block;margin-bottom: 10px;}
+#login div span{display: inline-block;margin-left: 30px;font-size:18px;font-weight: bold; }
+#login img{vertical-align: middle;}
+#login img.img2{margin-left: -43px;margin-top: 10px;}
+#login span{display: block;}
+#login span span{display: inline-block;margin-left: 20px;}
+#login span span.remenber{margin-left: -2px;margin:0px auto 30px;}
+span.remenber span{vertical-align: middle;}
+#error_desc_html{color: red;font-size: 14px;height: 20px;line-height: 20px;margin: 0 auto;text-align: center;}
+.regist_item{margin-top:15px;width:100%;text-align:c}
+.regist_item input[type=text]{width:250px;height:30px;}
+.regist_item input[type=password]{width:250px;height:30px;}
+.regist_item textarea{width:252px;}
+.regist_item span{display:inline-block;line-height:30px;}
+span.item_name{width:400px;text-align:right;font-size:16px;color:#4b4b4b;}
+span.item_name span{color:red;width:15px;text-align:center;}
+span.item_input input[type!=checkbox]{width:250px;}
+span.item_desc{width:330px;text-align:left;padding-left:10px;font-size:14px;color:red;}
+.line{font-size:14px;color:#979797;text-align:center;margin:25px 0;}
+.regist_agree{text-align:center;margin:20px 0 30px 0;font-size:16px;color:#575757;}
+span.item_input input.verification{width:100px;margin-right: 20px;}
+span.item_input img{cursor:pointer;float:right;}
+span.item_input a{vertical-align:middle;}
+span.item_input span{font-size: 14px;color: #4b4b4b;margin:0 10px;}
+span.item_input input[type=checkbox]::after {content: url("../images/remember_off.png");display: block;}
+span.item_input input[type=checkbox]:checked::after {content: url("../images/remember_on.png");display: block;}
+#opid_desc{width: auto;}
+.regist_opr{text-align:center;font-size:16px;color:#575757;margin-top:50px;}
+.regist_opr input{width:100px;height:40px;background:url("../images/join_us.png") no-repeat center -16px;border:none;font-size:16px;color:#fff;margin-bottom:40px;cursor:pointer;}
+
+.register_title{text-align: center;}
+.register_title img{vertical-align:middle;}
+.register_title h3{display:inline-block;font-size:24px;color:#4b4b4b;margin-left:10px;}
+.send_email{text-align:center;margin-top:20px;}
+.send_email h5{font-size:18px;color:#575757;}
+.send_email p{font-size:14px;color:#6a6a6a;padding:5px 0;}
+.login_email{text-align: center;margin-top:30px;font-size:16px;}
+.no_email{width:300px;margin:0 auto;margin-bottom:60px;margin-top:60px;}
+.no_email p{font-size:14px;color:#6a6a6a;padding:2px 0;}
+.no_phone{width:520px;margin:0 auto;margin-top:5px;}
+.no_phone p{font-size:14px;color:#999;}
+.no_phone strong{color:#3CB4BF;}
+
+.verification_step{width:600px;margin:0 auto;margin-bottom:40px;}
+
+span.find_pass_method{width:248px;height:48px;border:1px #999 solid;line-height:48px;font-size:14px;color:#6a6a6a;cursor:pointer;}
+span.change_border{border:2px #3cb4bf solid;}
+span.find_pass_method span{width:60px;text-align:center;}
+span.find_pass_method span img{vertical-align:middle;}
+
+#find_error_desc{height:20px;line-height:20px;text-align:center;color:red;}
+#changePass #find_error_desc{height:20px;line-height:20px;text-align:left;color:red; margin:5px 5px 5px 405px;}

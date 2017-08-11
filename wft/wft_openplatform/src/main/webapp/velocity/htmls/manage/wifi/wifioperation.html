@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css?t=11"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css?t=11"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/My97DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript">
+</script>
+</head>
+<body onload="manageleftNav('wifi-operation');viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+		#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+		#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="person_title" style="height: 40px">
+					WiFi-记录
+				</div>
+				<div class="options">
+					<form action="wifi_operation.action" id="form1" name="form" method="post">
+					 	<span class="option_line">
+					 		<span class="bold">日期:<input style="margin-left: 23px;" type="text" id="startDateId" name="startDate" value="$!{startDate}" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})"  readonly="readonly"/>至<input type="text" id="endDateId" name="endDate" value="$!{endDate}" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})" readonly="readonly" /></span>
+					 		<span class="bold">账号:
+					 			<input type="text" value="$!{cno}" name="cno" id="cno"/>
+					 		</span>	
+					 	</span>
+					 	<span class="option_line">
+					 		<span class="bold">
+					 		 操作: <select name="type"  id="type">
+					 		         <option selected="selected" value="-1">请选择</option>
+					 		         <option value="0" #if($!{type}==0) selected="selected" #end>充值</option>
+					 		         <option value="1" #if($!{type}==1) selected="selected" #end>开卡</option>
+					 		     </select>
+					 		</span>
+					 		<span class="bold">
+					 		状态: <select name="status" id="status">
+					 				 <option selected="selected" value="-1">请选择</option>
+					 		         <option value="0" #if($!{type}==0) selected="selected" #end>失败</option>
+					 		         <option value="1" #if($!{type}==1) selected="selected" #end>成功</option>
+					 		
+					 		      </select>
+					 		</span>
+					 	</span>	
+					 	<span class="option_line bottom">
+					 		<span class="bold">	
+					 		 总时长: <input type="text" value="$!{time}" name="time" id="time"/>
+					 		</span>
+					 		<span id="message" class="item_desc"></span>
+					 		<span class="operate_but">
+						 		<input class="blue_74_29" type="button" value="Excel导出" onclick="exportExcel()"/>
+						 		<input class="blue_74_29" type="submit" value="搜索" style="margin-right: 10px;"/>
+					 		</span>
+					 	</span>
+					 </form>
+				</div>
+				<div class="tablelist">
+					<table>
+						<tr>
+							<th >账号</th>	
+							<th >时长</th>	
+							<th >日期</th>	
+							<th >操作</th>	
+							<th >状态</th>
+						</tr>
+						#set($count=0)
+							#if($!opList && $!{opList.size()}>0)
+								#foreach($record in $!{opList})
+									#if($count%2==0)
+						<tr class="back">
+									#else
+						<tr>
+									#end
+							<td>$!{record.cno}</td>
+							<td>$!{record.duration}</td>	
+							<td>$!{record.optimestr}</td>	
+							<td>#if($!{record.type}==1) 开卡 #else 充值 #end</td>	
+							<td>#if($!{record.status}==0)失败 #else 成功 #end</td>	
+						</tr>
+								#set($count=$count +1)
+							#end
+							#else
+						<tr>
+						 <td colspan="11" style="height: 300px;">
+							无数据
+							</td>
+						</tr>
+						#end
+					</table>
+				</div>
+				#if($!opList && $!{opList.size()}>0)
+				<div class="pager">
+					<span>#PAGE("wifi_operation.action?q=1&startDate=$!{startDate}&endDate=$!{endDate}&cno=$!{cno}&time=$!{time}&status=$!{status}&type=$!{type}")</span>
+				</div>
+				#end
+	<script type="text/javascript">
+			function exportExcel(){
+				 var start=$("#startDateId").val();
+				 var end=$("#endDateId").val();
+				 var time=$("#time").val();
+				 var cno=$("#cno").val();
+				 var status=$("#status").val();
+				 var type=$("#type").val();
+				 location.href="wifi_operationExport.action?startDate="+start+"&endDate="+end+"&cno="+cno+"&time="+time+"&status="+status+"&type="+type;
+		   }
+	</script>			
+</body>
+</html>

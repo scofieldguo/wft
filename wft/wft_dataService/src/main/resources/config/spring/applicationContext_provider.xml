@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">       
+    <dubbo:application name="dataServer" />       
+    <dubbo:registry  protocol="zookeeper" address="172.16.10.100:2181" />  
+    <dubbo:protocol name="dubbo" port="20880" />   
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IApTypeService"  
+        ref="apTypeService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IHotspotService"  
+        ref="hotspotService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IOperatorService"  
+        ref="operatorService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IProvinceService"  
+        ref="provinceService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.ICardActiveService"  
+        ref="cardActiveService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.ICardStoreService"  
+        ref="cardStoreService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IChannelService"  
+        ref="channelService" >
+    </dubbo:service>
+    
+    <dubbo:service interface="com.bw30.open.common.rmi.service.IConnSessionService"  
+        ref="connSessionService" >
+  	</dubbo:service>
+	  
+  	<dubbo:service interface="com.bw30.open.common.rmi.service.IPlatformUserService"  
+        ref="platformUserService" >
+    </dubbo:service>
+    
+  	<dubbo:service interface="com.bw30.open.common.rmi.service.ISaleCardRecord10011Service"  
+        ref="saleCardRecord10011Service" >
+    </dubbo:service>
+</beans>

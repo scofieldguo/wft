@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  default-autowire="byName" default-lazy-init="false"
+ 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<!-- 定时任务：连接超时会话价差-->
+	<bean id="connTimeout100MSHTask" class="com.bw30.open.wftAdm.task.ConnTimeout100MSHTask"></bean>
+    <bean id="connTimeout100MSHTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connTimeout100MSHTask"/>
+	    <property name="targetMethod" value="doConn"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connTimeout100MSHTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connTimeout100MSHTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.timeout.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：电信连接 超时会话检查， 多线程 -->
+	<bean id="connTimeoutCtccTask" class="com.bw30.open.wftAdm.task.ConnTimeoutCtccTask">
+		<property name="threadNum" value="10"></property>
+	</bean>
+    <bean id="connTimeoutCtccTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connTimeoutCtccTask"/>
+	    <property name="targetMethod" value="doConn"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connTimeoutCtccTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connTimeoutCtccTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.timeout.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：检查电信计费会话， 多线程 -->
+	<bean id="connActiveCtccTask" class="com.bw30.open.wftAdm.task.ConnActiveCtccTask">
+		<property name="threadNum" value="10"></property>
+	</bean>
+	<bean id="connActiveCtccTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connActiveCtccTask"/>
+	    <property name="targetMethod" value="doConn"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connActiveCtccTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connActiveCtccTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.active.ctcc.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：移动连接超时会话检查 -->
+	<bean id="connTimeoutCmccTask" class="com.bw30.open.wftAdm.task.ConnTimeoutCmccTask">
+	</bean>
+    <bean id="connTimeoutCmccTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connTimeoutCmccTask"/>
+	    <property name="targetMethod" value="doConnCmcc"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connTimeoutCmccTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connTimeoutCmccTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.close.cmcc.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：检查移动使用超时会话，计费时长大于2小时，多线程 -->
+	<bean id="connActiveCmccTask" class="com.bw30.open.wftAdm.task.ConnActiveCmccTask">
+		<property name="remotelogoutUrl" value="${remote.logout.url}"></property>
+		<property name="threadNum" value="10"></property>
+		<property name="minute" value="120"></property>
+	</bean>
+	<bean id="connActiveCmccTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connActiveCmccTask"/>
+	    <property name="targetMethod" value="doConn"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connActiveCmccTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connActiveCmccTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.active.cmcc.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：检查移动已关闭的会话 -->
+	<bean id="connCloseCmccTask" class="com.bw30.open.wftAdm.task.ConnCloseCmccTask">
+	</bean>
+	<bean id="connCloseCmccTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connCloseCmccTask"/>
+	    <property name="targetMethod" value="doConn"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connCloseCmccTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connCloseCmccTaskJob"/>
+	    <property name="cronExpression" value="${job.conn.close.cmcc.cronExpression}"/>
+	</bean>
+	
+	
+	<!-- 定时任务：电信开卡 -->
+	<bean id="cardOpenTask" class="com.bw30.open.wftAdm.task.CardOpenTask">
+	</bean>
+	<bean id="cardOpenTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="cardOpenTask"/>
+	    <property name="targetMethod" value="runTask"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="cardOpenTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cardOpenTaskJob"/>
+	    <property name="cronExpression" value="${job.card.open.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：电信卡充值 -->
+	<bean id="cardRechargeTask" class="com.bw30.open.wftAdm.task.CardRechargeTask">
+		<property name="threadNum" value="10"></property>
+	</bean>
+	 <bean id="cardRechargeTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="cardRechargeTask"/>
+	    <property name="targetMethod" value="runTask"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="cardRechargeTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cardRechargeTaskJob"/>
+	    <property name="cronExpression" value="${job.card.recharge.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：晚上十二点写关闭会话日志 -->
+	<bean id="connLogTask" class="com.bw30.open.wftAdm.task.ConnLogTask"></bean>
+    <bean id="connLogTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="connLogTask"/>
+	    <property name="targetMethod" value="writeLog"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="connLogTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="connLogTaskJob"/>
+	    <property name="cronExpression" value="${job.connLog.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：移动卡使用记录对账 -->
+	<bean id="opConsumeCMCCTask" class="com.bw30.open.wftAdm.task.OpConsumeCMCCTask"></bean>
+    <bean id="opConsumeCMCCTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="opConsumeCMCCTask"/>
+	    <property name="targetMethod" value="cardRecordOp"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="opConsumeCMCCTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="opConsumeCMCCTaskJob"/>
+	    <property name="cronExpression" value="${job.opConsume.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：检查卡库并启用到预启用时间的卡，调入卡池 -->
+	<bean id="cardEnableTask" class="com.bw30.open.wftAdm.task.CardEnableTask" />
+	 <bean id="cardEnableTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="cardEnableTask"/>
+	    <property name="targetMethod" value="runEnable"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="cardEnableTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cardEnableTaskJob"/>
+	    <property name="cronExpression" value="${job.card.enable.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：生成QQ账单文件 -->
+	<bean id="billTaskForQQ" class="com.bw30.open.wftAdm.task.BillTaskForQQ">
+		<property name="billFilePath" value="${bill.file.path}"></property>
+	</bean>
+	<bean id="billTaskForQQJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="billTaskForQQ"/>
+	    <property name="targetMethod" value="bill"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="billTaskForQQTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="billTaskForQQJob"/>
+	    <property name="cronExpression" value="${job.bill.qq.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：生成QQ账单文件 -->
+	<bean id="billTaskFor360" class="com.bw30.open.wftAdm.task.BillTaskFor360">
+		<property name="billFilePath" value="${bill.file.path}"></property>
+	</bean>
+	<bean id="billTaskFor360Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="billTaskFor360"/>
+	    <property name="targetMethod" value="bill"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="billTaskFor360Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="billTaskFor360Job"/>
+	    <property name="cronExpression" value="${job.bill.360.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：生成360等账单文件 -->
+	<bean id="billTask" class="com.bw30.open.wftAdm.task.BillTask">
+		<property name="billFilePath" value="${bill.file.path}"></property>
+		<property name="channelList">
+			<list>
+				<value>10009</value>
+				<value>10010</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="billTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="billTask"/>
+	    <property name="targetMethod" value="bill"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="billTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="billTaskJob"/>
+	    <property name="cronExpression" value="${job.bill.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：从电信ftp抓取清单，统计电信消耗时长 -->
+	<bean id="grapCtccRecordTask" class="com.bw30.open.wftAdm.task.GrapCtccRecordTask">
+		<property name="ftpUrl" value="${ctcc.ftp.url}"></property>
+		<property name="username" value="${ctcc.ftp.username}"></property>
+		<property name="password" value="${ctcc.ftp.password}"></property>
+		<property name="filePath" value="${ctcc.record.path}"></property>
+		<property name="billFilePath" value="${bill.file.path}"></property>
+		<property name="emails">
+			<list>
+				<value>wyx@bw30.com</value>
+				<value>zhouwei@bw30.com</value>
+				<value>wuxb@bw30.com</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="grapCtccRecordTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="grapCtccRecordTask"/>
+	    <property name="targetMethod" value="grapRecord"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="grapCtccRecordTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="grapCtccRecordTaskJob"/>
+	    <property name="cronExpression" value="${job.grap.ctcc.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务：比对卡库与卡池，将不在卡池中的电信卡调入相应渠道的卡池 -->
+	<bean id="checkCardPoolTask" class="com.bw30.open.wftAdm.task.CheckCardPoolTask"></bean>
+	<bean id="checkCardPoolTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="checkCardPoolTask"/>
+	    <property name="targetMethod" value="check"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="checkCardPoolTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="checkCardPoolTaskJob"/>
+	    <property name="cronExpression" value="${job.checkcardpool.cronExpression}"/>
+	</bean>
+
+	<!-- 定时任务：移动卡启用定时任务 -->
+	<bean id="restartCmccCardTask" class="com.bw30.open.wftAdm.task.RestartCmccCardTask">
+		<property name="minute" value="60" />
+	</bean>
+	<bean id="restartCmccCardTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="restartCmccCardTask"/>
+	    <property name="targetMethod" value="reStart"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="restartCmccCardTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="restartCmccCardTaskJob"/>
+	    <property name="cronExpression" value="${job.restartCmcc.cronExpression}"/>
+	</bean>
+	<!-- 定时任务:根据卡使用时间，有效期，状态来重置卡 -->
+	<bean id="resetCardTask" class="com.bw30.open.wftAdm.task.ResetCardTask"></bean>
+	<bean id="resetCardTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="resetCardTask"/>
+	    <property name="targetMethod" value="reSetCardStatusAndCache"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="resetCardTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="resetCardTaskJob"/>
+	    <property name="cronExpression" value="${job.resetcard.cronExpression}"/>
+	</bean>
+	
+	<!-- 定时任务:针对平安（10009）,检查前一天开的卡，累加之后更新open_platform_account中的usetime -->
+	<bean id="cardOpenBalanceStatTask" class="com.bw30.open.wftAdm.task.CardOpenBalanceStatTask"></bean>
+	<bean id="cardOpenBalanceStatJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="cardOpenBalanceStatTask"/>
+	    <property name="targetMethod" value="runTask"/>	    
+	    <property name="concurrent" value="false" />	    
+	</bean>
+	<bean id="cardOpenBalanceStatTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cardOpenBalanceStatJob"/>
+	    <property name="cronExpression" value="${job.cardOpenBalanceStat.cronExpression}"/>
+	</bean>
+	
+	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">  
+		<property name="triggers">  
+			<list>
+				<ref bean="connTimeout100MSHTaskTrigger"/>
+				
+				<ref bean="connTimeoutCtccTaskTrigger" />
+				<ref bean="connActiveCtccTaskTrigger" />
+				
+				<ref bean="connTimeoutCmccTaskTrigger" />
+				<ref bean="connActiveCmccTaskTrigger"/>
+				<ref bean="connCloseCmccTaskTrigger"/>
+				<ref bean="restartCmccCardTaskTrigger"/>
+				<ref bean="cardOpenTaskTrigger"/>
+				<ref bean="cardRechargeTaskTrigger"/>
+				<ref bean="cardEnableTaskTrigger"/>
+				<ref bean="checkCardPoolTaskTrigger"/>
+				
+				<ref bean="connLogTaskTrigger"/>
+				<ref bean="billTaskForQQTrigger"/>
+				<ref bean="billTaskFor360Trigger"/>
+				<ref bean="billTaskTrigger"/>
+				
+				<ref bean="opConsumeCMCCTaskTrigger"/>
+				<ref bean="grapCtccRecordTaskTrigger"/>
+				<ref bean="resetCardTaskTrigger"/>
+				<ref bean="cardOpenBalanceStatTrigger"/>
+			</list>  
+		</property>  
+	</bean>  
+</beans>

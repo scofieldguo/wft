@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.AccountMapper">
+	<sql id="table">
+		open_platform_account
+	</sql>
+	<sql id="userSelect">
+		id,usetime,buytime,retime
+	</sql>
+	<update id ="update" parameterType="account">
+		update 
+		<include refid="table"/>
+		<set>			
+			<if test="usetime != null">
+				usetime = #{usetime},	
+			</if>			
+			<if test="buytime != null">
+				buytime = #{buytime},	
+			</if>
+		</set>
+		where id = #{id}
+	</update> 
+	<select id="getAccountByUserId" resultType="account">
+		select * from <include refid="table"/>
+		where id=#{id}
+	</select>
+	<insert id="insert">
+	insert into <include refid="table"/>(id,usetime,buytime,retime)
+	values(#{id},#{usetime},#{buytime},#{retime})
+	</insert>
+</mapper>

@@ -1,0 +1,117 @@
+  	<script type="text/javascript">
+    	function logout(){
+    	location.href="user_logout.action";
+    	}
+    	function notice(){
+    	location.href="manage_notice.action";
+    	}
+    </script>
+    <div class="producer_info">
+    		<input type="hidden" value="${imgflag}" id="flag">
+			<div class="baseinfo f">
+				<div class="content">
+					<span class="normal_size">欢迎</span>
+					<span class="normal_size">
+						#if($!{user.name} && $!{user.name}!='')
+							$!{user.name}
+						#else
+							$!{mail}
+						#end
+					</span>
+					<div class="butrange">
+						<div class="f">
+							<input class="button_in" type="button" value="通知" onclick="notice()"/>
+							#if($!{unnoticecount}>0)
+						 	<img src="${images_url}/account_circle.png" alt="" />
+						 	<p style="margin-left: 78px;margin-top:-27px;font-size: 18px;font-weight: bold;color: #fff">$!{unnoticecount}</p>
+						 	#end 
+							</div >
+						<div class="r"><input class="button_out" type="button" value="安全退出" onclick="logout()"/></div>
+					</div>
+				</div>
+			</div>
+			<div class="baseinfo f">
+				<span class="number">
+					<span id="balace" style="position: relative;color: #3cb4bf">$!{balace}
+						#if(${flag_detail}==1)
+						<span style="display: none;position: absolute;top:30px;left:90px;font-size: 14px;background-color:#fff;height: 16px;border: 1px solid #3cb4bf; " id="balace_show">$!{balace_hour}</span>
+						#end
+					</span>
+					<img id="img_balace" class="img_account_balace" src="${images_url}/manage/03.png" alt="" />
+				</span>
+				<span class="text_center font18">剩余时长/h</span>
+			</div>
+			<div class="baseinfo f">
+				<span class="number">
+					#if($!{wftTotalStat.outvaluetrueshow})
+						$!{wftTotalStat.outvaluetrueshow}
+					#else
+						0.0
+					#end
+					#if($!{wftTotalStat.utvaluetrue}-$!{wftTotalStat.outvaluetrue}>0) 
+					<span class="up"><img src="${images_url}/manage/account_up.png" alt="" />$!{wftTotalStat.daylv}%</span>
+					#else
+					<span class="down"><img src="${images_url}/manage/account_down.png" alt="" />$!{wftTotalStat.daylv}%</span>
+					#end
+				</span>
+				<span class="text_center font18">昨日消耗时长/h</span>
+			</div>
+			<div class="baseinfo f">
+				<span class="number">
+					#if($!{wftTotalStat.ococcsucshow})
+					$!{wftTotalStat.ococcsucshow}
+					#else
+					0
+					#end
+					#if($!{wftTotalStat.connsuc}-$!{wftTotalStat.oconnsuc}>0) 
+					<span class="up"><img src="${images_url}/manage/account_up.png" alt="" />$!{wftTotalStat.dayconnlv}%</span>
+					#else
+					<span class="down"><img src="${images_url}/manage/account_down.png" alt="" />$!{wftTotalStat.dayconnlv}%</span>
+					#end
+				</span>
+				<span class="text_center font18">昨日成功连接次数</span>
+			</div>
+			<div class="baseinfo f" style="border: none">
+				<span class="number">
+					#if($!{wftTotalStat.opersucshow})
+						$!{wftTotalStat.opersucshow}
+					#else
+						0
+					#end
+					#if($!{wftTotalStat.persuc}-$!{wftTotalStat.opersuc}>0) 
+					<span class="up"><img src="${images_url}/manage/account_up.png" alt="" />$!{wftTotalStat.dayperlv}%</span>
+					#else
+					<span class="down"><img src="${images_url}/manage/account_down.png" alt="" />$!{wftTotalStat.dayperlv}%</span>
+					#end
+				</span>
+				<span class="text_center font18">昨日成功连接人数</span>
+			</div>
+		</div>
+		<img id="remain_img" class="remain_img" alt="" src="${images_url}/manage/account_remain.png">
+  	<script type="text/javascript">
+  		$(function(){
+	  		var flag=$("#flag").val();
+	  		if(flag==1){
+	  			$("#img_balace").show();
+	  		}
+	  		$("#img_balace").mouseover(function(){
+	  			$("#remain_img").show();
+	  		});
+	  		$("#img_balace").mouseout(function(){
+	  			$("#remain_img").hide();
+	  		});
+	  		$("#balace").hover(function(e){
+				timer=setTimeout(function(){
+					timer=0;
+					$("#balace_show").show("fast");
+				},1000);	  		
+	  		},function(){
+	  			if(timer){
+	  				clearTimeout(timer);
+	  				timer=0;
+	  				return;
+	  			 }
+	  			 $("#balace_show").hide();
+	  		});
+  		});
+	</script>

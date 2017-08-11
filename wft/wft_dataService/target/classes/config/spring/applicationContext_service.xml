@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="apTypeService" class="com.bw30.open.data.rmi.service.impl.ApTypeServiceImpl"/>
+	<bean id="hotspotService" class="com.bw30.open.data.rmi.service.impl.HotspotServiceImpl"/>
+	<bean id="operatorService" class="com.bw30.open.data.rmi.service.impl.OperatorServiceImpl"/>
+	<bean id="provinceService" class="com.bw30.open.data.rmi.service.impl.ProvinceServiceImpl"/>
+	<bean id="cardActiveService" class="com.bw30.open.data.rmi.service.impl.CardActiveServiceImpl"/>
+	<bean id="cardStoreService" class="com.bw30.open.data.rmi.service.impl.CardStoreServiceImpl"/>
+	<bean id="channelService" class="com.bw30.open.data.rmi.service.impl.ChannelServiceImpl"/>
+	<bean id="connSessionService" class="com.bw30.open.data.rmi.service.impl.ConnSessionServiceImpl"/>
+	<bean id="platformUserService" class="com.bw30.open.data.rmi.service.impl.PlatformUserServiceImpl"/>
+	<bean id="saleCardRecord10011Service" class="com.bw30.open.data.rmi.service.impl.SaleCardRecord10011ServiceImpl"/>
+	
+</beans>

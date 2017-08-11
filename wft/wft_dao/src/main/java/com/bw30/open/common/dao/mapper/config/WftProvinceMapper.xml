@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftProvinceMapper">
+	<sql id="table">
+		wft_province
+	</sql>
+	<sql id="insertColumn" >
+    	id, name, sname
+  	</sql>
+	
+	<sql id="insertValues">
+		#{id},#{name},#{sname}
+	</sql>
+	<insert id="insert" parameterType="wftProvince">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftProvince">
+		select * from <include refid="table"/>
+		<where>
+			id = #{id}
+		</where>
+	</select>
+	
+	<select id="findByName" resultType="wftProvince">
+		select * from <include refid="table"/>
+		<where>
+			name = #{name}
+		</where>
+	</select>
+	
+	<select id="findByParam" resultType="wftProvince">
+		select * from <include refid="table"/>
+		<where>
+			<if test="paramMap.name !=null">
+				 and name = #{paramMap.name}
+			</if>
+			<if test="paramMap.sname !=null">
+				 and sname = #{paramMap.sname} 
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAll" resultType="wftProvince">
+		select * from <include refid="table"/> 
+		order by id asc
+	</select>
+	
+	<select id="findByNameRegx" resultType="wftProvince">
+		select * from <include refid="table"/> 
+		<where>
+			name like CONCAT(#{name},'%') 
+		</where>
+	</select>
+	
+</mapper>

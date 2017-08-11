@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftSaleCardOperationMapper">
+	<sql id="table">
+		wft_sale_card_operation_${channel_id}
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	
+	<insert id="insert">
+		insert into
+		<include refid="table" />
+		(cno,duration,optime,type,status,order_id) values(#{cno},#{duration},#{optime},#{type},#{status},#{order_id})
+	</insert>
+	<sql id="whereParam">
+		<where>
+		<if test="paramMap.startDate!=null and paramMap.startDate!=''">
+				and date_format(optime,'%Y-%m-%d') > #{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate!=null and paramMap.endDate!=''">
+				and #{paramMap.endDate} >= date_format(optime,'%Y-%m-%d')
+			</if>
+			<if test="paramMap.cno!=null and paramMap.cno!=''">
+				and cno=#{paramMap.cno}
+			</if>
+			<if test="paramMap.status!=null">
+				and status=#{paramMap.status}
+			</if>
+			<if test="paramMap.type!=null">
+				and type=#{paramMap.type}
+			</if>
+			<if test="paramMap.duration!=null and paramMap.duration!=''">
+				and duration=#{paramMap.duration}
+			</if>
+			<if test="paramMap.order_id!=null">
+				and order_id=#{paramMap.order_id}
+			</if>
+		</where>
+	</sql>
+	<select id="pageFindByParam" resultType="wftSaleCardOperation">
+		select * from <include refid="table"/>
+		<include refid="whereParam"/>
+		order by optime
+		<include refid="pager"/>
+	</select>
+	<select id="findByParam" resultType="wftSaleCardOperation">
+		select * from <include refid="table"/>
+		<include refid="whereParam"/>
+	</select>
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="whereParam"/>
+	</select>
+</mapper>

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('doc');leftNav('api','intro')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div class="doc_nav">资料中心&gt;API接入-API接口说明</div>
+		<div class="doc_left">
+			
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+			<div class="apply_key">申请KEY</div>
+		</div>
+		
+		<div class="doc_right">
+			<div class="doc_right_nav_title">API接入说明</div>
+			<div class="doc_right_nav_content">
+				<h4>1.接入参数</h4>
+				<p>接入接口时，需要和时长卡业务相关人员申请以下信息：</p>
+				<p>1)合作方标识partner</p>
+				<p>2)RSA公钥，AES密钥和IV</p>
+				<h4>2.接口调用方式</h4>
+				<p>接口需采用http post的方式调用，字符串编码为UTF-8，请求及响应数据均采用json格式，请求数据需采用RSA加密，填充模式为：RSA/ECB/PKCS1Padding；获取到请求响应后需用AES解密，填充模式为：AES/CBC/PKCS5Padding。</p>
+				<h4>3.接口测试</h4>
+				<p>测试环境：http://119.254.108.50:8080/cardPoolApi-open<br/>接口测试阶段，开的卡也可正常使用，但开卡数目有限制。</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

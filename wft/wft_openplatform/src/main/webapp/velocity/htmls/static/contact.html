@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/contact_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body >
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="${server_url}/top.action">首页</a>&gt;联系我们</div>
+	<div id="contact">
+		<div class="contact_online">
+			<div class="contact_ico"><img src="${images_url}/contact_online.png" /></div>
+			<div class="contact_title">
+				<h3>在线客服</h3>
+				<p>联系QQ在线客服<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=122016646&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:1849711913:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a></p>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="contact_online">
+			<div class="contact_ico"><img src="${images_url}/support.png" /></div>
+			<div class="contact_title">
+				<h3>技术支持</h3>
+				<p>邮箱：commobile_ts@bw30.com</p>
+			</div>
+			<div class="contact_title">
+				<h3>商业合作</h3>
+				<p>邮箱：commobile@bw30.com</p>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="contact_online">
+			<div class="contact_ico"><img src="${images_url}/focus.png" /></div>
+			<div class="contact_title">
+				<h3>关注我们</h3>
+				<img src="${images_url}/foucs_code.png" alt="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="contact_online">
+			<div class="contact_ico"><img src="${images_url}/address.png" /></div>
+			<div class="contact_title">
+				<h3>公司地址</h3>
+				<div class="contact_address">
+					<div class="pro_logo"><img src="${images_url}/pro_logo.png"/></div>
+					<div class="adress_text">
+						<h5>北京北纬通信科技股份有限公司</h5>
+						<p>北京市海淀区首体南路22号国兴大厦5层</p>
+						<p>邮编：100044</p>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftSaleCardRecordMapper">
+	<sql id="table">
+		wft_sale_card_record
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="insertColumn" >
+		cno, pwd, shop_name, open_time, card_type, duration, order_id, start_time, end_time
+	</sql>
+	
+	<sql id="insertValues">
+		#{cno}, #{pwd}, #{shop_name}, #{open_time}, #{card_type}, #{duration}, #{order_id}, #{start_time}, #{end_time}
+	</sql>
+	
+	<sql id="where">
+		<where>
+			<if test="paramMap.startDate!=null and paramMap.startDate!=''">
+				and date_format(open_time,'%Y-%m-%d') > #{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate!=null and paramMap.endDate!=''">
+				and #{paramMap.endDate} >= date_format(open_time,'%Y-%m-%d')
+			</if>
+			<if test="paramMap.cardNo!=null and paramMap.cardNo!=''">
+				and cno like CONCAT('%',#{paramMap.cardNo},'%')  
+			</if>
+		</where>
+	</sql>
+	
+	<insert id="insert" parameterType="wftSaleCardRecord">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="pageFindByParam" resultType="wftSaleCardRecord">
+		select * from <include refid="table"/>
+		<include refid="where" />
+		<include refid="pager" />
+	</select>
+	
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="where" />
+	</select>
+	
+	<update id="update" parameterType="wftSaleCardRecord">
+		update <include refid="table" />
+		<set>
+			<if test="duration!=null">
+				duration =#{duration},
+			</if>
+			<if test="end_time !=null">
+				end_time =#{end_time},
+			</if>
+			<if test="pwd!=null">
+				pwd =#{pwd},
+			</if>
+		</set>
+		<where>
+			cno =#{cno}
+		</where>
+	</update>
+</mapper>

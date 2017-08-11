@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="wifi" extends="base">
+		<action name="wifi_*" class="com.bw30.openplatform.action.WifiAction"
+			method="{1}">
+			<result name="cardIndex">/WEB-INF/velocity/htmls/manage/wifi/opencard.html</result>
+			<result name="chargeIndex">/WEB-INF/velocity/htmls/manage/wifi/chargecard.html</result>
+			<result name="record">/WEB-INF/velocity/htmls/manage/wifi/wificard.html</result>
+			<result name="operation">/WEB-INF/velocity/htmls/manage/wifi/wifioperation.html</result>
+		</action>
+	</package>
+</struts>

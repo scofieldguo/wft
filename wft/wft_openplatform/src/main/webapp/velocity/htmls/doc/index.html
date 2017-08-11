@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#doc_right_nav ul li a").click(function(){
+		$(this).parent().addClass("current").siblings().removeClass("current");
+	});
+	
+	$("a").each(function (){
+   		 var link = $(this);
+   		 var href = link.attr("href");
+   		 if(href && href[0] == "#")
+	    {
+     	 var name = href.substring(1);
+        $(this).click(function() {
+     		var nameElement = $("[name='"+name+"']");
+        	var idElement = $("#"+name);
+       		var element = null;
+        if(nameElement.length > 0) {
+           element = nameElement;
+        } else if(idElement.length > 0) {
+           element = idElement;
+        }
+        if(element) {
+          var offset = element.offset();
+          window.parent.scrollTo(offset.left, offset.top);
+        }
+        return false;
+      });
+    }
+  });
+});
+</script>
+</head>
+<body onload="viewNavTab('doc');leftNav('platForm','intro')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div id="top"></div>
+		<div class="doc_nav"><a href="$!{server_url}/html_doc_index.action">文档中心</a>&gt;平台介绍-简介</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+		</div>
+		
+		<div class="doc_right">
+			<div id="doc_right_nav" >
+				<ul>
+					<li style="display: none;"></li>
+					<li class="current"><a href="#top1">什么是蜂巢开放平台</a></li>
+					<li><a href="#top2">平台核心优势</a></li>
+					<li><a href="#top3">平台接入方式</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div class="doc_right_nav_title" id="top1">什么是蜂巢开放平台</div>
+			<div class="doc_right_nav_content">
+				<p>蜂巢互联开放平台是为广大开发者提供优质的WiFi时长资源接入的平台，开发者可以借助平台提供的SDK或Open API进行功能对接和资源池的调用，实现其产品的WiFi连网等个性化需求。</p>
+				<img src="$!{images_url}/platform001.png" alt="" />
+			</div>
+			<div class="doc_right_nav_title" id="top2">平台核心优势</div>
+			<div class="doc_right_nav_content">
+				<h4>优质的网络资源</h4>
+				<p>支持中国移动CMCC、中国电信Chinanet两大运营商的600万WiFi热点，占全国免费公共热点的80%以上，覆盖范围遍布校园、交通枢纽、娱乐场所、办公场所、政府机构等区域。</p>
+				<h4>灵活的接口资源</h4>
+				<p>我们提供完善、灵活的接口资源供合作方选择，可以根据合作方的个性需求进行产品的灵活对接，并提供完善的技术支持服务。</p>
+				<h4>完善的数据服务</h4>
+				<p>为合作方提供连接成功率分析、时长对账等数据服务，不断完善产品功能提升用户体验。</p>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top3">平台接入方式</div>
+			<div class="doc_right_nav_content">
+				<h4>SDK接入</h4>
+				<p>由蜂巢互联提供SDK，合作方APP嵌入该SDK将WiFi资源提供给用户使用，SDK可集成功能：用户界面、搜寻WiFi信号、连接WiFi、计费、查询、下线等。</p>
+				<img src="$!{images_url}/platform002.png" alt="" />
+			</div>
+		</div>
+		<a href="#top" target="_self"><img class="gotop" src="${images_url}/go_top.png" alt="" /></a>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		$("#doc_right_nav").smartFloat(); 
+	</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<title>菜单列表</title>  
+#HEARD()
+<script type="text/javascript">
+
+function showSubMenu(id){
+alert(id);
+window.showModalDialog("location.href=getSubMenu.action?id=+id",'height=100,width=400');
+
+
+}
+</script>
+</head>
+<body>
+	<div id="main_body">
+		<div id="title">
+				#MENUADDRESS("菜单管理")
+        </div>
+		<div id="content">
+			<form action="menuUpdate.action" method="post">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4" background="images/table_top_bg.jpg">        	
+								#TABLETILE("当日数据")	        		       
+					</td>
+				</tr>
+				<tr >
+					<td class="tdy1" align="center">序号</td>
+					<td class="tdy2" align="center">名称</td>
+					<td class="tdy2" align="center">url</td>
+					<td class="tdy2" align="center">删除</td>
+                </tr>
+				#if($!menuList && $!{menuList.size()}>0)
+				#foreach($menu in ${menuList})
+				<tr >
+					<td class="tdw1" align="center">$!{menu.id}</td>
+					<td class="tdw2" align="center">$!{menu.name}</td>
+					<td class="tdw2" align="center"><input type="text" value="$!{menu.url}"/></td>
+					<td class="tdw2" align="center"><a href="loaction.href=deleteMenuById.do?id=$!{menu.id}" >删除</a></td>
+                </tr>
+				#end
+				#end
+				<tr >
+					<td >
+						<input type="submit" value="保存">
+					</td>
+                </tr>
+            </table>
+			        </form>
+        </div>
+	</div>
+		#FOOT()
+</body>  
+</html>  

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOperatorMapper">
+	<sql id="table">
+		wft_operator
+	</sql>
+	<sql id="insertColumn">
+		id, name, sname, ssid
+	</sql>
+	<sql id="insertValues">
+		#{id},#{name},#{sname},#{ssid}
+	</sql>
+	<insert id="insert" parameterType="wftOperator">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftOperator">
+		select * from <include refid="table"/>
+		<where>
+			id = #{id}
+		</where>
+	</select>
+	
+	<select id="findBySsid" resultType="wftOperator">
+		select * from <include refid="table"/>
+		<where>
+			ssid = #{ssid}
+		</where>
+	</select>
+	
+	<select id="findByName" resultType="wftOperator">
+		select * from <include refid="table"/>
+		<where>
+			name = #{name}
+		</where>
+	</select>
+	
+	<select id="findAll" resultType="wftOperator">
+		select * from <include refid="table"/> where status=1
+		order by id asc 
+	</select>
+	
+</mapper>

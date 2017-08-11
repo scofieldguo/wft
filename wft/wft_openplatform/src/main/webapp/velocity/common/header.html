@@ -1,0 +1,207 @@
+<script type="text/javascript" src="${js_url}/validate.js"></script>
+<script type="text/javascript" src="${js_url}/common.js"></script>
+<script type="text/javascript">
+	var lis = new Array('home_li', 'case_li', 'doc_li', 'manager_li');
+	function viewNavTab(id) {
+		for (var i = 0; i < lis.length; i++) {
+			var lisValue = document.getElementById(lis[i]);
+			var idValue = id + '_li';
+			if (lisValue) {
+				if (idValue == lis[i]) {
+					lisValue.className = "current";
+				} else {
+					lisValue.className = "";
+				}
+			}
+		}
+	}
+
+	function login() {
+		if (!checkemailformat("user_email")) {
+			$("#error_desc").html("请正确填写邮箱");
+			$("#login_panel").shake(2, 10, 400);
+			return false;
+		} else if (!checkString("user_pwd_true", 6, 14)) {
+			$("#error_desc").html("请正确填写登录密码");
+			$("#login_panel").shake(2, 10, 400);
+			return false;
+		} else {
+			var result = false;
+			var rem = "no";
+			if ($("#remenber").attr("checked") == true) {
+				rem = $("#remenber").val();
+			}
+			jQuery.ajax({
+				url : 'user_login.action',
+				data : 'email=' + jQuery.trim($("#user_email").val()) + '&pwd='
+						+ jQuery.trim($("#user_pwd_true").val()) + '&auto=' + rem,
+				type : 'POST',
+				dataType : "text",
+				async : false,
+				cache : false,
+				success : function(text) {
+					if ('0' == text) {
+						$("#error_desc").html("账号还为激活");
+						$("#login_panel").shake(2, 10, 400);
+					} else if ('1' == text) {
+						location.href = "$!{server_url}/manage_account.action";
+					} else {
+						$("#error_desc").html("账号或密码错误");
+						$("#login_panel").shake(2, 10, 400);
+					}
+				}
+			});
+			return result;
+		}
+	}
+</script>
+<!--header-->
+<div id="header">
+	<div class="header_content">
+		<div class="header_logo">
+			<a href="$!{server_url}/top.action"><img src="${images_url}/open_logo.png" width="291" height="52" /></a>
+		</div>
+		<ul class="header_nav">
+			<li id="home_li"><a href="$!{server_url}/top.action">首页</a></li>
+			<li id="case_li"><a
+				href="$!{server_url}/html_static_case.action">合作案例</a></li>
+			<li id="doc_li"><a href="$!{server_url}/html_doc_index.action">文档中心</a></li>
+			<li id="manager_li"><a
+				href="$!{server_url}/manage_account.action">管理中心</a></li>
+		</ul>
+		<div class="header_user_info">
+			#if((!${userData}) || (${userData.is_activate}==0))
+				<div id="header_offline">
+					 <span	class="header_login">
+					 	<a href="javascript:;" onclick="showLogin()">登录</a>
+				 	</span>| 
+				 	<span class="header_register">
+				 		<a href="$!{server_url}/user_registUI.action">注册</a>
+				 	</span> 
+				</div>
+		 	#else 
+			 	<div class="login_after">
+			 		<div class="login_account">
+				 		#if($!{userData.name} && $!{userData.name}!='')
+				 		 	$!{userData.name}
+				 		#else
+				 		    $!{mail}
+				 		#end
+				 		<img id="down_img"  alt="" src="${images_url}/head_down3.png">
+				 		<img id="up_img"  alt="" src="${images_url}/head_up3.png">
+			 		</div>
+			 		<div class="header_user_nav">
+						<ul>
+							<li style="position: relative;"><a href="${server_url}/manage_notice.action">通知</a>
+							#if($!{unnoticecount}>0)
+								<img alt="" src="${images_url}/account_circle.png">
+								<span>$!{unnoticecount}</span>
+							#end
+							</li>
+							<li><a href="${server_url}/manage_user.action">个人信息</a></li>
+							<li style="border: none"><a href="${server_url}/user_logout.action">安全退出</a></li>
+						</ul>
+		 			</div>
+	 			</div>
+			#end
+		</div>
+	</div>
+
+</div>
+<div id="panel_body">
+	<div id="login_panel">
+		<div class="login_title font26 weight_bold">登录</div>
+		<div class="login_body">
+			<form action="user_login.action" method="post" autocomplete="off">
+				<input type="text" name="email" value="请填写登录邮箱" id="user_email" class="login_input account_input font16"
+					onblur="if(value ==''){value='请填写登录邮箱'}"	onclick="if(this.value=='请填写登录邮箱')this.value=''" />
+				<input type="text" name="pwd" value="请填写登录密码" id="user_pwd" class="login_input password_input font16"
+					onblur="if(value ==''){value='请填写登录密码'}" onclick="if(this.value=='请填写登录密码')this.value=''" /> 
+				<input type="password" name="pwd" id="user_pwd_true" class="login_input password_input font16" />
+				<div id="error_desc"></div>
+				<div class="operation_panel">
+					<input id="remenber" type="checkbox" value="Y"
+						name="remember_account" class="remember_account" /><span
+						class="font16">记住账号</span> <a
+						href="$!{server_url}/user_findPWDStep1.action"
+						class="forget_pass font16">忘记密码?</a>
+				</div>
+				<div class="login_button_panel">
+					<input type="button" value="登录" id="user_login"
+						class="login_button font18 weight_bold" /> <a
+						href="$!{server_url}/user_registUI.action"
+						class="go_regist font16">立即注册</a>
+				</div>
+			</form>
+		</div>
+		<div id="closePanel">X</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		$(document).keydown(function(event) {
+			if (event.keyCode == 13) {
+				login();
+			}
+		});
+		$("#user_pwd").focus(function() {
+			$(this).hide();
+			$("#user_pwd_true").show();
+			$("#user_pwd_true").focus();
+		});
+		$("#user_pwd_true").blur(function() {
+			if ($(this).val() == "") {
+				$(this).hide();
+				$("#user_pwd").show();
+			}
+		});
+		$("#user_pwd_true").hide();
+		
+		$(".login_after").mouseover(function(){
+			//$("div .header_user_nav").animate({height:'show',opacity:'show'}, 'normal',function(){$("div .header_user_nav").show(500);});
+			$("div .header_user_nav").show();
+			$("#up_img").show();
+			$("#down_img").hide();
+		});
+		
+		$(".login_after").mouseout(function(){
+			$("div .header_user_nav").hide();
+			$("#up_img").hide();
+			$("#down_img").show();
+		});
+		
+		$(".login_after li").mouseover(function(){
+			$(this).addClass("current_li");
+			$(this).siblings().removeClass("current_li");
+		});
+	
+	});
+	function showLogin() {
+		jQuery.ajax({
+			url : 'user_getUserFromCookie.action',
+			type : 'GET',
+			dataType : 'text',
+			async : false,
+			cache : false,
+			success : function(data) {
+				var text = data.split(',');
+				if (text[0] != 'null') {
+					$("#user_email").val(text[0]);
+				}
+				if (text[1] == $("#remenber").val()) {
+					$("#remenber").attr("checked", true);
+				}
+			}
+		});
+		$("#panel_body").show();
+		$("#user_email").focus();
+	}
+
+	$("#closePanel").click(function() {
+		$("#panel_body").hide();
+	});
+
+	$("#user_login").click(function() {
+		login();
+	});
+</script>

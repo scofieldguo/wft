@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftTotalStatMapper">
+	<sql id="table">
+		wft_total_stat
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="column">
+		dairy,opid,ssid,channel,prvid,connsuc,connfail,persuc,perfail,utvalue,
+		utvalueop,macsuc,macfail,overnfail,sdkcnt,sdkper,nocard
+	</sql>
+	<sql id="insertValues">
+		#{dairy},#{opid},#{ssid},#{channel},#{prvid},#{connsuc},#{connfail},#{persuc},#{perfail},#{utvalue},
+		#{utvalueop},#{macsuc},#{macfail},#{overnfail},#{sdkcnt},#{sdkper},#{nocard}
+	</sql>
+	<insert id="insert">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="column" />
+		)
+		values(
+		<include refid="insertValues" />
+		) on duplicate key update
+		connsuc=connsuc+#{connsuc},connfail=connfail+#{connfail},persuc=persuc+#{persuc},perfail=perfail+#{perfail},utvalue=utvalue+#{utvalue},
+		utvalueop=utvalueop+#{utvalueop},macsuc=macsuc+#{macsuc},macfail=macfail+#{macfail},
+		overnfail=overnfail+#{overnfail},sdkcnt=sdkcnt+#{sdkcnt},sdkper=sdkper+#{sdkper},nocard=nocard+#{nocard}
+	</insert>
+	
+	<select id="pageFindByParamGroupByOp" resultMap="totalMap">
+		select channel,dairy,opid,sum(utvalue)as utvalue,sum(utvalueop) as utvalueop,sum(connsuc) as connsuc,sum(connfail) as connfail,SUM(persuc) as
+		persuc,SUM(perfail) as perfail, sum(macsuc) as macsuc, sum(macfail) as macfail,
+		sum(overnfail) as overnfail,sum(sdkcnt) as sdkcnt ,sum(sdkper) as sdkper ,sum(nocard) as nocard
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel order by dairy desc,opid
+		<include refid="pager"/>
+	</select>
+	<select id="findByParamMapByOpidDairyChannel"  resultType="wftOldTotalStat" >
+		select sum(persuc) as opersuc,sum(connsuc) as oconnsuc
+		from <include refid="table"/> 
+		<where>
+			<if test="opid!=null">
+				and opid = #{opid}
+			</if>
+			<if test="channel !=null">
+				and channel = #{channel}
+			</if>
+			<if test="dairy !=null">
+				and dairy=DATE_ADD(#{dairy},INTERVAL -1 DAY)
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel
+	</select>
+	<resultMap type="wftTotalStat" id="totalMap">
+		<id column="dairy" property="dairy"/>
+		<id column="opid" property="opid"/>
+		<id column="channel" property="channel"/>
+		<association property="wftOldTotalStat" column="{dairy=dairy,opid=opid,channel=channel}" javaType="wftOldTotalStat" select="findByParamMapByOpidDairyChannel" >
+			<result column="opersuc" property="opersuc"/>
+			<result column="oconnsuc" property="oconnsuc"/>
+		</association>
+		<association property="utvaluetrue" column="{dairy=dairy,opid=opid,channel=channel}" javaType="Long" select="com.bw30.open.common.dao.mapper.WftConsumeStatMapper.findUtvalueByParam" >
+			<result column="tvalue" property="tvalue"/>
+		</association>
+		<association property="outvaluetrue" column="{dairy=dairy,opid=opid,channel=channel}" javaType="Long" select="com.bw30.open.common.dao.mapper.WftConsumeStatMapper.findOUtvalueByParam" >
+			<result column="tvalue" property="tvalue"/>
+		</association>
+	</resultMap>
+	<select id="findByParamGroupByOp" resultMap="totalMap">
+		select channel,dairy,opid,sum(utvalue)as utvalue,sum(utvalueop) as utvalueop,sum(connsuc) as connsuc,sum(connfail) as connfail,SUM(persuc) as
+		persuc,SUM(perfail) as perfail, sum(macsuc) as macsuc, sum(macfail) as macfail,
+		sum(overnfail) as overnfail,sum(sdkcnt) as sdkcnt ,sum(sdkper) as sdkper ,sum(nocard) as nocard
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel order by dairy desc,opid 
+	</select>
+	
+	<select id="countByParamGroupByOp" resultType="Integer">
+		SELECT count(*) from (select opid,dairy,channel
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel
+		) as A
+	</select>
+	
+	<select id="pageFindMacByParamGroupByOp" resultType="wftTotalStat">
+		select channel,dairy,opid,sum(macsuc) as macsuc,sum(macfail) as macfail,SUM(overnfail) as
+		overnfail
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel order by dairy desc,opid
+		<include refid="pager"/>
+	</select>
+	
+	<select id="findMacByParamGroupByOp" resultType="wftTotalStat">
+		select channel,dairy,opid,sum(macsuc) as macsuc,sum(macfail) as macfail,SUM(overnfail) as
+		overnfail
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel order by dairy desc,opid
+	</select>
+	
+	<select id="countMacByParamGroupByOp" resultType="Integer">
+		SELECT count(*) from (select opid,dairy,channel
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel
+		) as A
+	</select>
+	
+	<select id="findByParamGroupByPrv" resultType="wftTotalStat">
+		select ssid,prvid,sum(connsuc) as connsuc,sum(connfail) as connfail,sum(persuc) as persuc,sum(perfail) as perfail     
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.ssid !=null">
+				and ssid = #{paramMap.ssid}
+			</if>
+			<if test="paramMap.start !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.start}
+			</if>
+			<if test="paramMap.end !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.end}]]>
+			</if>
+		</where>
+		GROUP BY prvid, ssid order by prvid,ssid 
+	</select>
+	
+	<select id="findByDairy" resultType="wftTotalStat">
+		select channel,dairy,opid,sum(macsuc) as macsuc,sum(macfail) as macfail,SUM(overnfail) as overnfail,
+		sum(utvalue)as utvalue,sum(utvalueop) as utvalueop,sum(connsuc) as connsuc,sum(connfail) as connfail,SUM(persuc) as persuc,
+		SUM(perfail) as perfail,sum(sdkcnt) as sdkcnt ,sum(sdkper) as sdkper ,sum(nocard) as nocard
+		from <include refid="table"/> 
+		<where>
+			<if test="dairy !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')=#{dairy}
+			</if>
+		</where>
+		GROUP BY opid,dairy,channel
+	</select>
+		
+	<select id="getLastDayStat" resultMap="totalMap">
+		select channel,dairy,opid,sum(utvalue)as utvalue,sum(utvalueop) as utvalueop,sum(connsuc) as connsuc,sum(connfail) as connfail,SUM(persuc) as
+		persuc,SUM(perfail) as perfail, sum(macsuc) as macsuc, sum(macfail) as macfail,
+		sum(overnfail) as overnfail,sum(sdkcnt) as sdkcnt ,sum(sdkper) as sdkper ,sum(nocard) as nocard
+		from <include refid="table"/> 
+		<where>
+			<if test="paramMap.opid!=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+			<if test="paramMap.startDate !=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{paramMap.endDate}]]>
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<title>菜单列表</title>  
+#HEARD()
+<style type="text/css" >
+.mydiv {
+background-color: #fff;
+border: 1px solid #f90;
+text-align: center;
+line-height: 40px;
+font-size: 12px;
+font-weight: bold;
+z-index:99;
+width: 620px;
+height:300px;
+overflow:auto;;
+left:50%;/*FF IE7*/
+top: 50%;/*FF IE7*/
+
+margin-left:-150px!important;/*FF IE7 该值为本身宽的一半 */
+margin-top:-60px!important;/*FF IE7 该值为本身高的一半*/
+
+margin-top:0px;
+
+position:fixed!important;/*FF IE7*/
+
+
+}
+
+.mydiv .title ul li{float:left;border-bottom:2px solid  #ffffb5;text-align:center;width:150px;background:rgb(255,189,15)}
+.border-left{border-left:1px solid rgb(221,221,221)}
+.mydiv .content ul li{float:left;border-bottom:2px solid  rgb(221,221,221);width:150px;text-align:center;}
+
+.addDiv{background-color: #fff;
+border: 2px solid #f90;
+text-align: center;
+line-height: 40px;
+font-size: 12px;
+font-weight: bold;
+position:absolute;
+left:50%;
+top:50%;
+}
+#addtitle{background:rgb(255,189,15)}
+</style>
+<script type="text/javascript">
+	$(function(){
+	 var id="sub_"+"${menuId}";
+    document.getElementById(id).style.display='block';
+	});
+
+    function showSubMenu(id){
+    var id="sub_"+id;
+    document.getElementById(id).style.display='block';
+    }
+    function update(id,paid){
+    $("#name_"+id+"").removeAttr("disabled");
+    $("#url_"+id+"").removeAttr("disabled");
+    }
+    function cancel(id){
+    document.getElementById(id).style.display='none';
+    }
+    function confir(id,paid){
+    var id =id;
+    var name=$("#name_"+id+"").val();
+    var url=$("#url_"+id+"").val();
+    location.href="updateMenu.do?id="+id+"&name="+name+"&url="+url+"&paId="+paid;
+    }
+	function deleteMenu(id,paid){
+	location.href="deleteMenu.do?id="+id+"&paId="+paid;
+	}
+	function addSubMenu(id){
+	$("#parent_id").val(id);
+	document.getElementById("add").style.display='block';
+	}
+</script>
+</head>
+<body>
+	<div id="main_body">
+		<div id="title">
+				#MENUADDRESS("菜单管理")
+        </div>
+		<div id="content" style="position:relative;">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="4" background="images/table_top_bg.jpg">        	
+								#TABLETILE("编辑菜单")	        		       
+					</td>
+				</tr>
+				<tr >
+					<td class="tdy1" align="center">序号</td>
+					<td class="tdy2" align="center">名称</td>
+					<td class="tdy2" align="center">显示子菜单</td>
+					<td class="tdy2" align="center">添加子菜单</td>
+                </tr>
+				#if($!menuList && $!{menuList.size()}>0)
+				#foreach($menu in ${menuList})
+				<tr >
+					<td class="tdw1" align="center">$!{menu.id}</td>
+					<td class="tdw2" align="center">$!{menu.name}</td>
+					<td class="tdw2" align="center"><a href="#" onclick="showSubMenu('$!{menu.id}')">点击查看</a></td>
+					<td class="tdw2" align="center"><a href="#" onclick="addSubMenu('$!{menu.id}')">添加</a></td>
+                </tr>
+				      <tr >
+				<td >
+			<form action="menuSave.do" method="post">
+              <div id="sub_$!{menu.id}" style="display:none;" class="mydiv">
+					<div class="title">
+						<ul >
+							<li >名称</li>
+							<li class="border-left">URL</li>
+							<li class="border-left">编辑</li>
+							<li class="border-left">删除 </li>
+                        </ul>
+                    </div>
+						#if($!{menu.subMenuList} && $!{menu.subMenuList.size()}>0)
+							#foreach($subMenu in $!{menu.subMenuList})
+								<input type="hidden" value="$!{subMenu.id}" name="subMenu.id"/>
+                                <div class="content">
+									<ul >
+										<li ><input id="name_$!{subMenu.id}" type="text" disabled ="disabled" name="subMenu.name" value=" $!{subMenu.name}"/></li>
+										<li class="border-left"><input id="url_$!{subMenu.id}" type="text" disabled ="none"  name="subMenu.url" value=" $!{subMenu.url}"/></li>	
+										<li class="border-left"><input type="button" value="编辑" onclick="update('$!{subMenu.id}','$!{menu.id}')"/><input type="button" value="保存" onclick="confir('$!{subMenu.id}','$!{menu.id}')"/></li>	
+										<li class="border-left"><input type="button" value="删除" onclick="deleteMenu('$!{subMenu.id}','$!{menu.id}')"/></li>	
+                                    </ul>
+								</div>
+							#end
+						#end
+						<div >
+							<input type="button" value="关闭" onclick="cancel('sub_$!{menu.id}')"/>
+                        </div>
+				</div>
+				        </form>
+				    </td>
+				  </tr>
+				#end
+				#end
+            </table>
+		</div>
+	</div>
+		#FOOT()
+	<div id="add" style="display:none" class="addDiv">
+        <div id="addtitle">
+			<p >添加子菜单
+            </p>
+		</div>
+	 <form action="addMenu.do" method="post">
+		<input type="hidden" name="parent_id" id="parent_id">
+		<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+			<tr >
+				<td style="border:1px solid rgb(221,221,221)">名称</td>
+				<td style="border:1px solid rgb(221,221,221)"><input type="text" name="name"/></td>
+            </tr>
+			<tr >
+				<td style="border:1px solid rgb(221,221,221)">Url</td>
+				<td style="border:1px solid rgb(221,221,221)"><input type="text" name="url"/></td>
+            </tr>
+			<tr >
+				<td colspan="2"style="align:center;">
+					<input type="submit" value="提交"/>
+					<input type="button" value="关闭" onclick="cancel('add')"/>
+                </td>
+            </tr>
+        </table>
+	 </form>
+    </div>
+</body>  
+</html>  

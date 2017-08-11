@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    	
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="6" background="images/table_top_bg.jpg">        	
+							#TABLETILE("电信卡池最低额度调整")	        		       
+						</td>
+					</tr>
+						
+					<tr>
+						<td height="30" align="center" class="tdy1">渠道</td>	
+						<td align="center" class="tdy2">最低卡片数量</td>
+						<td align="center" class="tdy2">开卡卡品</td>
+						<td align="center" class="tdy2">最低分卡时长/秒</td>
+						<td align="center" class="tdy2">充值卡品</td>
+						<td align="center" class="tdy2">操作</td>
+					</tr>
+						
+					#foreach($ch in ${channelList})
+					<tr>
+						<td height="30" align="center" class="tdw1">$!{ch.name}</td>
+						<td align="center" class="tdw2">$!{ch.ctccnum}</td>
+						<td align="center" class="tdw2">$!{ctMap.get($!{ch.ctypeforopenctcc})}</td>
+						<td align="center" class="tdw2">$!{ch.ctccbalance}</td>
+						<td align="center" class="tdw2">$!{ctMap.get($!{ch.ctypeforrechargectcc})}</td>
+						<td align="center" class="tdw2">
+							<a href="toConfig.do?id=$!{ch.code}">修改</a>
+						</td>
+					</tr>
+					#end
+    			</table>
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

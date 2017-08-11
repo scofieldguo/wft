@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#doc_right_nav_other ul li a").click(function(){
+		$(this).parent().addClass("current").siblings().removeClass("current");
+	});
+	
+	$("a").each(function (){
+   		 var link = $(this);
+   		 var href = link.attr("href");
+   		 if(href && href[0] == "#")
+	    {
+     	 var name = href.substring(1);
+        $(this).click(function() {
+     		var nameElement = $("[name='"+name+"']");
+        	var idElement = $("#"+name);
+       		var element = null;
+        if(nameElement.length > 0) {
+           element = nameElement;
+        } else if(idElement.length > 0) {
+           element = idElement;
+        }
+        if(element) {
+          var offset = element.offset();
+          window.parent.scrollTo(offset.left, offset.top);
+        }
+        return false;
+      });
+    }
+  });
+	
+});
+</script>
+</head>
+<body onload="viewNavTab('doc');leftNav('sdk','doc')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div id="top"></div>
+		<div class="doc_nav"><a href="$!{server_url}/html_doc_index.action">文档中心</a>&gt;<a href="$!{server_url}/html_doc_sdkdoc.action">SDK接入-SDK接口文档</a>&gt;WiFiSupplier</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+		</div>
+		
+		<div class="doc_right">
+			<div id="doc_right_nav_other" >
+				<ul>
+					<li class="current"><a href="#top1">接口说明</a></li>
+					<li><a href="#top2">方法目录</a></li>
+					<li><a href="#top3">方法详情</a></li>
+					<li><a href="#top4">示例代码</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div class="doc_right_nav_title" id="top1">1.接口说明</div>
+			<div class="doc_right_nav_content">
+				<p>该接口为抽象类接口，需要合作方APP根据自身需求和产品形态自行并有选择性的实现，该接口的所有方法都由SDK主动发起，APP被动接收。</p>
+			</div>
+			<div class="doc_right_nav_title" id="top2">2.方法目录</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>方法名称</th>
+						<th>方法说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >init</td>
+						<td>SDK初始化</td>
+					</tr>
+					<tr>
+						<td >getSupportSsid</td>
+						<td>获取SDK支持的SSID列表</td>
+					</tr>
+					<tr class="tr_line">
+						<td >checkWiFiAvailable</td>
+						<td>监测当前是否有可用WiFi</td>
+					</tr>
+					<tr>
+						<td >setDebug</td>
+						<td>设置debug状态</td>
+					</tr>
+					<tr class="tr_line">
+						<td >checkWiFiState</td>
+						<td>当前WiFi连接状态</td>
+					</tr>
+					<tr>
+						<td >connect</td>
+						<td>连接WiFi功能接口</td>
+					</tr>
+					<tr class="tr_line">
+						<td >disconnect</td>
+						<td>断开连接</td>
+					</tr>
+					<tr>
+						<td >release</td>
+						<td>释放内存</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top3">3.方法详情</div>
+			<div class="doc_right_nav_content">
+				<h3 id="skdTop1">.init</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void init(Context context,WiFiConnectCallback callback);</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>SDK初始化</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>无</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>APP在setDebug方法之后调用本方法，完成内部的初始化工作，并设置APP的回调接口callback。</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>是否必填</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >context</td>
+						<td>Context</td>
+						<td>Y</td>
+						<td>调用该方法时的Activity</td>
+					</tr>
+					<tr>
+						<td >callback</td>
+						<td>WiFiConnectCallback</td>
+						<td>Y</td>
+						<td>回调接口句柄 </td>
+					</tr>
+				</table>
+				
+				<h3 id="skdTop2">.getSupportSsid</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public String[] getSupportSsid();</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>获取SDK支持的SSID列表</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>字符串数组（String[]）</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>调用该方法，返回SDK所支持链接的SSID列表，APP只能连接该接口返回的SSID列表中WiFi热点。返回结果是以字符串数组的形式返回，如：{“cmcc”,”chinanet”}。</td>
+					</tr>
+				</table>
+				<h3  id="skdTop3">.checkWiFiAvailable</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public int checkWiFiAvailable();</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>监测当前是否有可用WiFi</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>整型(int)</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>调用该方法，返回当前可用的WiFi信号强度。如果有多个支持的SSID热点，返回的是信号最好的SSID的信号强度。这个扫描的结果依赖于getSupportSsid()接口所支持的SSID。<br/>【0】无可用WIFI； 【1-5】有可用WIFI，强度从弱到强分1-5,5个等级。</td>
+					</tr>
+				</table>
+				<h3 id="skdTop4">.setDebug</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void setDebug(boolean debug);</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>设置debug状态</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>-</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>开启关闭日志，在init之前调用。如果设置为false，需要拥有读写SD卡的权限：<br/>android.permission.WRITE_EXTERNAL_STORAGE<br/>android.permission.READ_EXTERNAL_STORAGE</td>
+					</tr>
+				</table>
+				
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>是否必填</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >debug</td>
+						<td>Boolean</td>
+						<td>Y</td>
+						<td>设置是否开启日志模式<br/>true：开启,false：关闭</td>
+					</tr>
+				</table>
+				
+				<h3 id="skdTop5">.checkWiFiState</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public int checkWiFiState();</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>当前WiFi连接状态</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>整型(int)</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>获取当前的WiFi连接状态：【0】未连接 【1】正在连接 【2】已连接</td>
+					</tr>
+				</table>
+				<h3 id="skdTop6">.connect</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void connect(String openId,String openKey,String ssid);</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>连接WiFi功能接口</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>-</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>openId与openKey是为鉴权而设置的参数；如果不需要鉴权，需要保证openId的唯一性，openKey设置为NULL。连接过程会通过onConnectStateChange()回调函数通知。<br/>
+						SSID值可以根据APP的产品形式而定：<br/>
+						1）如果APP只是需要连接WiFi，并不要求连接指定WiFi热点（如产品形式为一键连接），这时SSID可以指定为NULL，SDK根据自身逻辑自动选择热点连接。<br/>
+						2）如果APP自行扫描并根据getSupportSsid()返回的结果进行过滤（如产品形式为一个WiFi列表，有用户自行选择连接某个WiFi热点），这时就要把指定的SSID作为参数传入，此时SSID不能为NULL。</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>是否必填</th>
+						<th>参数说明</th>
+					</tr>
+					<tr>
+						<td>openId</td>
+						<td>String</td>
+						<td>Y</td>
+						<td>要保证其唯一</td>
+					</tr>
+					<tr class="tr_line">
+						<td >openKey</td>
+						<td>String</td>
+						<td>N</td>
+						<td>不需要鉴权，设为NULL</td>
+					</tr>
+					<tr>
+						<td >ssid</td>
+						<td>String</td>
+						<td>N</td>
+						<td>要连接的WiFi的名称，如果不指定，SDK根据自身逻辑自动选择热点连接</td>
+					</tr>
+				</table>
+				
+				<h3 id="skdTop7">.disconnect</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void disconnect();</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>断开连接</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>-</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>当不在使用WiFi时调用该方法断开当前连接的运营商热点。通过onDisconnectResult()回调函数降结果通知给APP。</td>
+					</tr>
+				</table>
+				<h3 id="skdTop8">.release</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void release();</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>释放内存</td>
+					</tr>
+					<tr>
+						<th>返回类型</th>
+						<td>-</td>
+					</tr>
+					<tr class="tr_line">
+						<th>说明</th>
+						<td>该方法对应init方法，当APP结束对SDK的使用，调用本方法释放内存，置空callback。需要注意的是，调用本方法时，如果WiFi为连接状态，则断开连接，如果为正在连接状态，则会取消继续连接。所以，只有在确定不再使用SDK时，在去调用这个方法。</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top4">4.示例代码</div>
+			<div class="doc_right_nav_content">
+				<div class="doc_dash_text">
+					<p>//创建WiFiSupplier实例</p>
+					<p>WiFiSupplier wiFiTongSupplier = new WiFiSupplierImpl();</p>
+					<p>//使用各个方法（例）</p>
+					<p>wiFiTongSupplier.setDebug(true);</p>
+					<p>wiFiTongSupplier.init(mContext, mCallback);</p>
+				</div>
+			</div>
+		</div>
+		<a href="#top" target="_self"><img class="gotop" src="${images_url}/go_top.png" alt="" /></a>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		$("#doc_right_nav_other").smartFloat(); 
+	</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;忘记密码</div>
+	<div id="register">
+		<div class="verification_step"><img src="${images_url}/verification_step1.png"/></div>
+		<form action="user_findPWDStep2.action" method="post" id="passForm">
+			<div class="regist_item">
+				<span class="item_name">用户名（邮箱）：<span>*</span></span>
+				<span class="item_input"><input type="text" name="email" value="" id="user_regEmail"/></span>
+			</div>
+			<div class="regist_item">
+				<span class="item_name">密码找回方式：<span>*</span></span>
+				<span class="find_pass_method change_border" id="findByMail">
+					<span><img src="${images_url}/email_ico.png" alt="" /></span>使用注册邮箱找回密码
+				</span>
+			</div>
+			<div class="regist_item">
+				<span class="item_name"></span>
+				<span class="find_pass_method"  id="findByPhone">
+					<span><img src="${images_url}/phone_ico.png" alt="" /></span>使用手机号找回密码
+				</span>
+			</div>
+			<input type="hidden" name="findType" value="1" id="findType"/>
+			<div class="regist_item">
+				<span class="item_name">验证码：<span> </span></span>
+				<span class="item_input">
+					<input type="text" name="verification" value="" class="verification" id="verityCodeInput"/>
+					<img src="$!{server_url}/verify.action" id="verityCode" title="点击刷新验证码"/>
+				</span>
+			</div>
+			<div id="find_error_desc"></div>
+			<div class="regist_opr">
+				<input type="submit" value="下一步"/> <span> <a href="$!{server_url}/top.action">取消找回</a></span> 
+			</div>
+		</form>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		function checkemail(){
+			if(!checkemailformat("user_regEmail")){
+				$("#find_error_desc").html("请填写正确的邮箱");
+				return false;
+			}else{
+				var result=false;
+				jQuery.ajax({
+					url: 'user_checkEmail.action',
+					data: 'email='+jQuery.trim($("#user_regEmail").val()),
+					type: 'POST',
+					dataType: "text",
+					async: false,
+					cache : false,
+					success: function(text){
+						if('0'==text){
+							result=true;
+							$("#find_error_desc").html("");
+						}else{
+							$("#find_error_desc").html("该邮箱没有注册");
+						}
+					}
+				});
+				return result;
+			}
+		}
+		
+		function chcekCode(){
+			var len=getStringLength(jQuery.trim($("#verityCodeInput").val()));
+			if(len!=4){
+				$("#find_error_desc").html("请正确填写验证码");
+				return false;
+			}else{
+				var result=false;
+				jQuery.ajax({
+					url: 'user_checkVerityCode.action',
+					data: 'verityCode='+jQuery.trim($("#verityCodeInput").val()),
+					type: 'POST',
+					dataType: "text",
+					async: false,
+					cache : false,
+					success: function(text){
+						if('1'==text){
+							$("#find_error_desc").html("验证码不正确");
+						}
+						else{
+						  	$("#find_error_desc").html("");	
+						  	result=true;
+						} 
+					}
+				});
+				return result;
+			}
+		}
+		
+		function checkForm(){			
+			var a = checkemail()?0:1;
+			if(a==1){
+				return false;
+			}
+			var b = chcekCode()?0:1;
+			if(b==1){
+				return false;
+			}				
+			return true;			
+		}
+		
+		$(document).ready(function(){			
+		  	$("#user_regEmail").blur(function(){
+		  		checkemail();
+		  	});
+		  	
+			$("#passForm").submit(function(){
+		  		return checkForm();
+		    });
+		    
+		    $("#verityCode").click(function(){
+		      	$(this).attr("src","$!{server_url}/verify.action?t="+new Date().getTime());
+		   	});
+		   	
+		   	$("#findByMail").click(function(){
+		   		$(this).addClass("change_border");
+		   		$("#findByPhone").removeClass("change_border");
+		   		$("#findType").val(1);
+		   	});
+		   	$("#findByPhone").click(function(){
+		   		$(this).addClass("change_border");
+		   		$("#findByMail").removeClass("change_border");
+		   		$("#findType").val(2);
+		   	});
+		   	
+		   	$("#verityCodeInput").blur(function(){
+			chcekCode();
+		  	});
+		});
+	</script>
+</body>
+</html>

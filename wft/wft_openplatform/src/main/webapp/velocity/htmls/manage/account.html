@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="${js_url}/highcharts.js"></script>
+<script type="text/javascript">
+    $(function(){
+    	 Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        document.getElementById('30day').style.backgroundColor='rgb(225,225,225)';
+        document.getElementById('conn_30day').style.backgroundColor='rgb(225,225,225)';
+        constrcutchart(-30);
+    	$("#30day").click(function(){
+    		constrcutchart(-30);
+    		document.getElementById('30day').style.backgroundColor='rgb(225,225,225)';
+    		 document.getElementById('7day').style.backgroundColor='';
+    	});
+    	$("#7day").click(function(){
+    		constrcutchart(-7);
+		    document.getElementById('7day').style.backgroundColor='rgb(225,225,225)';
+		    document.getElementById('30day').style.backgroundColor='';
+    	});
+   		conn_constrcutchart(-30,1);
+   		var conn_flag;
+		$("#conn_30day").click(function(){
+    		document.getElementById('conn_30day').style.backgroundColor='rgb(225,225,225)';
+    		document.getElementById('conn_7day').style.backgroundColor='';
+			conn_flag=$("#connnection").val();
+    		conn_constrcutchart(-30,conn_flag);
+    	});
+    	$("#conn_7day").click(function(){
+    	  	document.getElementById('conn_7day').style.backgroundColor='rgb(225,225,225)';
+		    document.getElementById('conn_30day').style.backgroundColor='';
+    		conn_flag=$("#connnection").val();
+    		conn_constrcutchart(-7,conn_flag);
+    	});
+    });
+    
+    function constrcutchart(day){
+  	  var interday=day;
+      var x_data=[];
+      var data=[];
+      var x_interval=1;
+      if(day==-30){
+      x_interval=5;
+      }
+      var y_interval=0;
+      jQuery.ajax({
+     				url:"manage_consumeTimeChart.action",
+   					type:"GET",
+     				data:'interday='+interday+'&t='+(new Date()).getTime(),
+     				dataType:'text',
+     				cache : true,
+     				success : function(data1) {
+         				var jsonArray = eval("(" + data1 + ")");
+         				for ( var i = 0; i < jsonArray.length; i++) {
+							x_data.push(jsonArray[i].dairy);
+	       					data.push([jsonArray[i].dairy,jsonArray[i].utvaluel]);
+	       					if((parseInt(jsonArray[i].utvaluel)/10)>(y_interval)){
+	       						y_interval=Math.round(jsonArray[i].utvaluel/10);
+	       					}
+       					}
+       					$('#account_appuse').highcharts({
+				             title: {
+				               enabled:false
+				             },
+				             chart: {
+							 type:'areaspline',
+							 },
+				             xAxis: {
+								categories:x_data,
+								tickInterval:x_interval
+				             },
+				             yAxis: {
+				                title: {
+				                    text: ''
+				                }
+				            },
+				            legend:{
+				            	enabled:false
+				            },
+				             plotOptions: {
+          						  areaspline: {
+	          						  color:'#87ceff',
+	                				  fillOpacity: 0.6
+            						},
+       						 },
+				            credits:{
+				           		 enabled:false
+				            },
+				            series: [{
+				                name: '消耗时长',
+				                data: data
+				            	}]
+        				});
+        		 }
+     });   
+    }
+    
+     function selectChange(){
+         var conn_flag=$("#connnection").val();
+         var rgb30=document.getElementById("conn_30day").style.backgroundColor;
+         if("rgb(225, 225, 225)"==rgb30){
+        	 conn_constrcutchart(-30,conn_flag);
+         }else{
+        	 conn_constrcutchart(-7,conn_flag);
+         }
+     }
+     function conn_constrcutchart(day,conn_flag){
+  	  var interday=day;
+      var x_data=[];
+      var data=[];
+      var x_interval=1;
+      var name="连接次数";
+      if(day==-30){
+      x_interval=5;
+      }
+      var y_interval=0;
+      jQuery.ajax({
+     				url:"manage_consumeTimeConnChart.action",
+   					type:"GET",
+     				data:'interday='+interday+'&t='+(new Date()).getTime(),
+     				dataType:'text',
+     				cache : true,
+     				success : function(data1) {
+         				var jsonArray = eval("(" + data1 + ")");
+         				for ( var i = 0; i < jsonArray.length; i++) {
+							x_data.push(jsonArray[i].dairyStr);
+							if(conn_flag==1){
+	       					   data.push([jsonArray[i].dairyStr,jsonArray[i].connsuc]);
+	       					   	if((parseInt(jsonArray[i].connsuc)/10)>(y_interval)){
+	       							y_interval=Math.round(jsonArray[i].connsuc/10);
+	       						}
+	       					}else{
+						       data.push([jsonArray[i].dairyStr,jsonArray[i].persuc]);
+					         	if((parseInt(jsonArray[i].persuc)/10)>(y_interval)){
+	       							y_interval=Math.round(jsonArray[i].persuc/10);
+	       						}
+						       name="连接人数";
+	       					}
+       					}
+       					$('#account_connection').highcharts({
+				             title: {
+				               enabled:false
+				             },
+				             chart: {
+							 type:'spline',
+							 borderWidth: 0,
+							 borderRadius: 0,
+							 plotBackgroundColor: null,
+							 plotShadow: false,
+							 plotBorderWidth: 0
+							 },
+				             xAxis: {
+								categories:x_data,
+								tickInterval:x_interval
+				             },
+				             yAxis: {
+				                title: {
+				                    text: ''
+				                }
+				            },
+				            legend:{
+				            	enabled:false
+				            },
+				            credits:{
+				           		 enabled:false
+				            },
+				            series: [{
+				                name: name,
+				                data: data
+				            	}]
+        				});
+        		 }
+     });   
+    }
+    
+	function showConfirmForm(id){
+		document.getElementById(id).style.display='block';
+	}
+</script>
+</head>
+<body onload="manageleftNav('accountinfo');viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+	#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+			#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="account ">
+					<span class="theme">我的时长</span>
+					<div class="my_time">
+						<div class="f">
+							<span class="title">剩余时长</span>
+							<span class="usetime">$!{balace}&nbsp;<span>小时</span></span>
+						</div>
+						<div class="f">
+							<span class="title">当月已用时长</span>
+							<span class="usetime">$!{usedTime}&nbsp;<span>小时</span></span>
+						</div>
+						<div id="link" class="f">
+							<span class="view">查看<a href="manage_stat.action">连接统计报表</a></span>
+							<span class="purchase">购买时长请<a href="html_static_contact.action">联系我们</a></span>
+						</div>
+					</div>
+				</div>
+				<div class="account ">
+					<span class="theme">昨日连接成功率</span>
+						<div class="account_app f left_1 border_right" style="width: 153px;">
+							<span class="success_conn_times">次数</span>
+							<img class="r" src="${images_url}/manage/account_3.png" alt="" />
+						</div>
+						<div class="account_app f left_2 border_right">
+							 	 <span class="number f">#if($!{wftTotalStat.connlv})  $!{wftTotalStat.connlv}% #else 0% #end</span>
+							 	 <span class="r" style="height: 90px;">
+							 	 		<span>人数</span>
+	 	 							 	<img class="r" src="${images_url}/manage/account_4.png" alt="" />
+							 	 </span>
+						</div>
+						<div class="account_app f right_1 " style="width: 153px;">
+							 <span class="number f">#if($!{wftTotalStat.perlv}) $!{wftTotalStat.perlv}% #else 0% #end</span>
+						</div>
+					<div class="clear"></div>
+				</div>
+				<div class="account relative">
+					<span class="theme">消耗时长
+					</span>
+					<span class="date_banner">
+						<span class="recent">最近</span>
+						<span class="date_item">
+							<span id="30day" class="date_right_border">30天</span>
+							<span id="7day" class="">7天</span>
+						</span>
+					</span>
+					<div class="account_appuse" id="account_appuse">
+					</div>
+					<div class="remove_chart_title" ></div>
+					<span  class="unit">单位: 小时</span>
+					<div class="clear"></div>
+				</div>
+				<div class="account relative">
+					<span class="theme">成功连接数
+						<select id="connnection" onchange="selectChange()">
+							<option value="1" selected="selected">次数</option>
+							<option value="2">人数</option>
+						</select>
+					</span>
+					<span class="date_banner">
+						<span class="recent">最近</span>
+						<span class="date_item">
+								<span id="conn_30day" class="date_right_border">30天</span>
+								<span id="conn_7day" class="">7天</span>
+						</span>
+					</span>
+					<div class="account_appuse" id="account_connection">
+					</div>
+					<span class="unit">单位: 次 (人)</span>
+					<div class="remove_chart_title"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

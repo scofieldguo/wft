@@ -1,0 +1,108 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#TITLE()</title>
+<Link href="style/Vivian.css" rel="stylesheet" />
+<Link href="style/style.css" rel="stylesheet" />
+<style type="text/css">
+	.navPoint {COLOR: #000000; CURSOR: hand; FONT-FAMILY: Webdings; FONT-SIZE: 12pt}
+</style>
+<body style="MARGIN: 0px" scroll=no>
+<script>
+	if(self!=top){
+		top.location=self.location;
+	}
+	
+	function switchSysBar(){
+		if (switchPoint.innerText==3){
+			switchPoint.innerText=4;
+			document.all("frmTitle").style.display="none";
+			document.all("frmTitle").width="0";
+		}else{
+			switchPoint.innerText=3;
+			document.all("frmTitle").style.display="";
+			document.all("frmTitle").width="160";
+		}
+	}
+</script>
+
+<table border="0" cellPadding="0" cellSpacing="0" height="100%" width="100%">
+  <tr>
+    <td height="42" colspan="3" background="images/top_bg.jpg">
+		<div style="width:100%; height:42px; position:relative;">
+		
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p style=" line-height:50px; font-size:13px;font-weight:bold;overflow:hidden; position:absolute;  top:0; color:#FFF">wifi通运营平台</p>
+			<p style="width:600px; height:42px; line-height:52px; overflow:hidden; position:absolute; right:0; top:0; color:#FFF">当前用户：<a href="#" style="color:#FF0;">admin&nbsp;[管理员]</a>　当前时间：
+				<script language="JavaScript">
+        		<!--
+        			var enabled = 0; 
+					var today = new Date();
+        			var day; 
+					var date;
+        			if(today.getDay()==0) day = "星期日";
+      	  			if(today.getDay()==1) day = "星期一";
+        			if(today.getDay()==2) day = "星期二";
+        			if(today.getDay()==3) day = "星期三";
+        			if(today.getDay()==4) day = "星期四";
+        			if(today.getDay()==5) day = "星期五";
+        			if(today.getDay()==6) day = "星期六";
+       	 			document.fgColor = "000000";
+        			date = "" +today.getYear() + "年" + (today.getMonth() + 1 ) + "月" + today.getDate() + "日" + day +"";
+        			document.write(date);
+        		// -->
+        		</script>　
+			</p>
+		</div>
+    </td>
+  </tr>
+  <tr>
+	<td>
+  <table width="100%" height="100%" border="0" cellPadding="0" cellSpacing="0">
+  <tr>
+    <td align="middle" noWrap vAlign="center" id="frmTitle" width="190">
+	<input type="hidden" id="sid" value="0" />
+    <iframe frameBorder="0" id="carnoc" name="carnoc" scrolling="auto" src="superleft.do" style="HEIGHT: 100%; width:100%; VISIBILITY: inherit; WIDTH: 190px; Z-INDEX: 2">
+    </iframe>
+    </td>
+    <td style="WIDTH: 9pt" class=division width="9">
+    <table border="0" cellPadding="0" cellSpacing="0" height="100%">
+      <tr>
+        <td style="HEIGHT: 100%" onClick="switchSysBar()">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <span class="navPoint" id="switchPoint" title="关闭/打开左栏"></span><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        </td>
+      </tr>
+    </table>
+    </td>
+    <td id="rightTD">
+
+    <iframe frameBorder="0" id="main" name="main" scrolling="yes" src="cardList.do" style="HEIGHT: 100%; width:100%; VISIBILITY: inherit; Z-INDEX: 1">
+    </iframe>
+
+</td>
+	</tr>
+	</table>
+    </td>
+  </tr>
+</table>
+</html>
+<script>
+if(window.screen.width<'1024'){switchSysBar()}
+</script>

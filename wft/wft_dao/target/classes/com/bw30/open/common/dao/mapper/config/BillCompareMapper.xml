@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.BillCompareMapper">
+	<sql id="table">
+		tb_bill_compare
+	</sql>
+	<sql id="billSelect">
+		id,mobile_num,record_date,online_time,offline_time,from_id,compare_id,merge_flag
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="whereByParam">
+		<if test="paramMap != null">
+		<where>
+			<if test="paramMap.mobileNum !=null">
+				and mobile_num = #{paramMap.mobileNum}
+			</if>
+			<if test="paramMap.onlineTimeStart != null">
+				and <![CDATA[ online_time >= #{paramMap.onlineTimeStart} ]]>
+			</if>
+			<if test="paramMap.onlineTimeEnd != null">
+				and <![CDATA[ online_time <= #{paramMap.onlineTimeEnd} ]]>
+			</if>
+			<if test="paramMap.fromId !=null">
+				and from_id = #{paramMap.fromId}
+			</if>
+			<if test="paramMap.compareFlag != null">
+				and <![CDATA[ compare_id > 0 ]]>
+			</if>
+		</where>
+		</if>
+	</sql>
+	
+	<update id="update" >
+		update <include refid="table"/>
+		<set>
+			<if test="mobile_num != null">
+				mobile_num = #{mobile_num},
+			</if>
+			<if test="record_date !=null">
+				record_date = #{record_date},
+			</if>
+			<if test="online_time !=null">
+				online_time = #{online_time},
+			</if>
+			<if test="offline_time !=null">
+				offline_time = #{offline_time},
+			</if>
+			<if test="from_id !=null">
+				from_id = #{from_id},
+			</if>
+			<if test="compare_id !=null">
+				compare_id = #{compare_id},
+			</if>
+			<if test="merge_flag !=null">
+				merge_flag = #{merge_flag},
+			</if>
+		</set>
+		<where>
+		 id = #{id}
+		 </where>
+	</update>
+	
+	<select id="count" resultType="Integer">
+		select count(*) 
+		from
+		<include refid="table"/>
+	</select>	
+	
+	<insert id="insert" parameterType="billCompare" useGeneratedKeys="true" keyProperty="id">
+		insert into
+		<include refid="table"/>
+		(mobile_num,record_date,online_time,offline_time,from_id,compare_id,merge_flag)
+		<![CDATA[
+		values(
+			#{mobile_num},#{record_date},#{online_time},#{offline_time},#{from_id},#{compare_id},#{merge_flag}
+		)
+		]]>
+		<selectKey resultType="int" keyProperty="id">  
+  				SELECT LAST_INSERT_ID()  as id
+  		</selectKey>  
+	</insert>
+	
+	<select id="findAll" resultType="billCompare">
+		select * from 
+		<include refid="table"/>
+	</select>
+	
+	<select id="findByPage" resultType="billCompare">
+		select * from 
+		<include refid="table"/>
+		<include refid="pager"/>
+	</select>
+	
+	<select id="findById" resultType="billCompare">
+		select * from <include refid="table"/>
+		where id=#{id}
+	</select>
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="whereByParam"/>
+	</select>
+	<select id="pageFindByParam" resultType="billCompare">
+		select * from <include refid="table"/>
+		<include refid="whereByParam"/>
+		order by online_time 
+		<if test="pager != null">
+			limit #{pager.skipNo},#{pager.pageSize}
+		</if>
+	</select>
+	<delete id="deleteAll">
+		delete from <include refid="table"/>
+	</delete>
+	
+	<insert id="batchInsert">
+		insert into 
+		<include refid="table"/>
+		(mobile_num,record_date,online_time,offline_time,from_id,compare_id,merge_flag)
+		values
+		<foreach collection="list" item="item" separator="," index="i">
+			(#{item.mobile_num}, #{item.record_date}, #{item.online_time}, #{item.offline_time}, #{item.from_id}, #{item.compare_id}, #{item.merge_flag})
+		</foreach>
+	</insert>
+</mapper>

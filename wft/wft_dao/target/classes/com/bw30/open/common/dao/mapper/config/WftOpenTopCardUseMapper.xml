@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOpenTopCardUseMapper">
+	<sql id="table">
+		wft_open_stat_carduse
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="insertColumn">
+		channel,dairy,hour,minute,cm_chargeusingcard,cm_nochargeusingcard,cn_chargeusingcard,cn_nochargeusingcard,cm_noacesscard,cn_noacesscard
+	</sql>
+	<sql id="insertValues">
+		#{channel},#{dairy},#{hour},#{minute},#{cm_chargeusingcard},#{cm_nochargeusingcard},#{cn_chargeusingcard},#{cn_nochargeusingcard},#{cm_noacesscard},#{cn_noacesscard}
+	
+	</sql>
+	<insert id="insert" >
+		insert into <include refid="table"/>
+		(<include refid="insertColumn"/>) 
+		values(<include refid="insertValues"/>)
+		on duplicate key update cm_chargeusingcard=cm_chargeusingcard+#{cm_chargeusingcard},cm_nochargeusingcard=cm_nochargeusingcard+#{cm_nochargeusingcard},
+		cn_chargeusingcard=cn_chargeusingcard+#{cn_chargeusingcard},cn_nochargeusingcard=cn_nochargeusingcard+#{cn_nochargeusingcard},
+		cm_noacesscard=cm_noacesscard+#{cm_noacesscard},cn_noacesscard=cn_noacesscard+#{cn_noacesscard}
+	</insert>
+	<select id="find" resultType="wftOpenTopCardUse">
+		select * from <include refid="table"/>
+		<where>
+			<if test="channel !=null">
+			 channel =#{channel} and
+			</if>
+			<if test="start!=null">
+		    dairy=#{start} and	
+			</if>
+			<if test="hour!=null">
+	     		hour=#{hour}
+			</if>
+		</where>
+		<include refid="pager"/>	
+	</select>
+	<select id="countByCondition" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<where>
+			<if test="channel !=null">
+		    channel=#{channel} 	and
+			</if>
+			<if test="start!=null">
+			dairy=#{start} and	
+			</if>
+			<if test="hour!=null">
+		    hour=#{hour}
+			</if>
+		</where>
+	</select>
+	<select id="getChargeTopValue" resultType="Integer">
+		select 
+		<if test="paramMap.ssid=='CMCC'">
+			max(cm_chargeusingcard)
+		</if>
+		<if test="paramMap.ssid=='ChinaNet'">
+			max(cn_chargeusingcard)
+		</if>
+		 from <include refid="table"/>
+		<where>
+			<if test="paramMap.dairy!=null">
+				dairy=#{paramMap.dairy}
+			</if>
+			<if test="paramMap.hour!=null">
+				and hour=#{paramMap.hour}
+			</if>
+			<if test="paramMap.flag==1">
+				and <![CDATA[ 0<= minute <30 ]]>
+			</if>
+			<if test="paramMap.flag==2">
+				and <![CDATA[ 30<= minute ]]>
+			</if>
+			<if test="paramMap.channel!=null">
+				and channel=#{paramMap.channel}
+			</if>
+		</where>
+	</select>
+		<select id="getTopValue" resultType="Integer">
+		select 
+		<if test="paramMap.ssid=='CMCC' and paramMap.data==1">
+			max(cm_chargeusingcard+cm_nochargeusingcard)
+		</if>
+		<if test="paramMap.ssid=='ChinaNet' and paramMap.data==1">
+			max(cn_chargeusingcard+cn_nochargeusingcard)
+		</if>
+		<if test="paramMap.ssid=='CMCC' and paramMap.data==2">
+			max(cm_chargeusingcard+cm_nochargeusingcard+cm_noacesscard)
+		</if>
+		<if test="paramMap.ssid=='ChinaNet' and paramMap.data==2">
+			max(cn_chargeusingcard+cn_nochargeusingcard+cn_noacesscard)
+		</if>
+		 from <include refid="table"/>
+		<where>
+			<if test="paramMap.dairy!=null">
+				dairy=#{paramMap.dairy}
+			</if>
+			<if test="paramMap.hour!=null">
+				and hour=#{paramMap.hour}
+			</if>
+			<if test="paramMap.flag==1">
+				and <![CDATA[ 0<= minute <30 ]]>
+			</if>
+			<if test="paramMap.flag==2">
+				and <![CDATA[ 30<= minute ]]>
+			</if>
+			<if test="paramMap.channel!=null">
+				and channel=#{paramMap.channel}
+			</if>
+		</where>
+	</select>
+	<select id="getlast20" resultType="wftOpenTopCardUse">
+	select * from <include refid="table"/> 
+	<where>
+			<if test="paramMap.channel!=null">
+				  channel=#{paramMap.channel}
+			</if>
+			<if test="paramMap.dairy!=null">
+				and dairy=#{paramMap.dairy}
+			</if>
+	</where>
+     order by hour desc,minute desc limit #{paramMap.limit}
+	</select>
+</mapper>

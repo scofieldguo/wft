@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#HEARD()
+<script type="text/javascript">
+jQuery.validator.addMethod("isTxt", function(value, element) {       
+    return this.optional(element) || /^.*\.txt$/.test(value);       
+ }, "请上传TXT文本文件");
+	
+$(function(){
+	$("#fileForm").validate({
+		event: "blur",
+		rules: {
+			"cardFile":{
+				required:true, 
+				isTxt:true
+			}
+		},
+		messages:{
+			"cardFile":{
+				required:"请选择TXT文本文件",
+				isTxt:"请选择TXT文本文件"
+			}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+	
+	$("#fileBtn").click(function(){
+		if(confirm("确定要停用文件中的所有卡？")){
+			$("#fileForm").submit();
+		}
+	});
+	
+});
+
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    	
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="5" background="images/table_top_bg.jpg">        	
+								#TABLETILE("停用卡")	        		       
+							</td>
+						</tr>
+	  
+						<tr>
+							<td colspan="5" height="40" align="center" class="tdw1">
+								<form id="fileForm" action="stop.do" method="post" enctype="multipart/form-data">
+									TXT文件：<input type="file" name="cardFile" size="60"/>&nbsp;&nbsp;
+									<input type="button" id="fileBtn" value="停卡" />
+								</form>
+							</td>
+	  					</tr>
+						
+						#if($!{pass})
+							<tr>
+								<td colspan="5" height="40" align="center">
+									<font color="red">总共上传了${modelList.size()}张卡。#if($!{pass}=="ok") 卡已成功停用 #else 卡信息有误，请修改后重新上传。#end</font>
+								</td>
+	  						</tr>
+						#end
+						
+						<tr>
+							<td height="30" align="center" class="tdy1">序号</td>
+							<td align="center" class="tdy2">渠道</td>
+							<td align="center" class="tdy2">卡id</td>
+							<td align="center" class="tdy2">卡号</td>	
+							<td align="center" class="tdy2">操作结果</td>
+                        </tr>
+						
+						#foreach($model in $!{modelList})
+						<tr>
+                            <td height="20" align="center" class="tdw1">$velocityCount</td>
+                            <td align="center" class="tdw2">$!{model.channel}</td>
+                            <td align="center" class="tdw2">$!{model.id}</td>
+							<td align="center" class="tdw2">$!{model.no}</td>
+							<td align="center" class="tdw2">#if($!{model.msg}) <font color="red">$!{model.msg}</font> #else 成功 #end</td>
+                        </tr>
+						#end
+                    </table>
+					
+				</td>
+			</tr>
+		</table>
+
+		#FOOT()
+	</body>
+</html>

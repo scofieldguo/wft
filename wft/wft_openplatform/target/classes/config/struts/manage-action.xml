@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="manage" extends="base">
+		<action name="manage_*" class="com.bw30.openplatform.action.ManageAction"
+			method="{1}">
+			<result name="accountUrl">/WEB-INF/velocity/htmls/manage/account.html</result>
+			<result name="appUrl">/WEB-INF/velocity/htmls/manage/app.html</result>
+			<result name="appcreatUrl">/WEB-INF/velocity/htmls/manage/appcreate.html</result>
+			<result name="creatappSuccess">/WEB-INF/velocity/htmls/manage/appcreatesuccess.html</result>
+			<result name="updateSuccess" type="redirect">manage_app</result>
+			<result name="passwordUrl">/WEB-INF/velocity/htmls/manage/password.html</result>
+			<result name="statUrl">/WEB-INF/velocity/htmls/manage/connstat.html</result>
+			<result name="user" type="redirect">manage_user.action</result>
+			<result name="userinfo">/WEB-INF/velocity/htmls/manage/person.html</result>
+			<result name="useredit">/WEB-INF/velocity/htmls/manage/personedit.html</result>
+			<result name="macUrl">/WEB-INF/velocity/htmls/manage/macstat.html</result>
+			<result name="notice">/WEB-INF/velocity/htmls/manage/notice.html</result>
+		</action>
+	</package>
+</struts>

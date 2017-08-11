@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOpenMacStatMapper">
+	<sql id="table">
+		wft_stat_open_mac_${code}
+	</sql>
+
+	<update id="creatTable" parameterType="String">
+	CREATE TABLE if not exists `wft_stat_open_mac_${code}` (
+  		`mac` varchar(25) NOT NULL,
+  		`dairy` varchar(11) NOT NULL,
+  		`channel` varchar(11) DEFAULT NULL,
+  		`succcnt` int(11) DEFAULT NULL,
+  		`failcnt` int(11) DEFAULT NULL,
+  		PRIMARY KEY (`mac`,`dairy`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		 
+	</update>
+	<insert id="insertMac" parameterType="wftOpenMacStat">
+		insert into <include refid="table"/>(dairy,mac,channel,succcnt,failcnt)
+		values(#{wftOpenMacStat.dairy},#{wftOpenMacStat.mac},#{wftOpenMacStat.channel},#{wftOpenMacStat.succcnt},#{wftOpenMacStat.failcnt}) on duplicate key update
+		succcnt=succcnt+#{wftOpenMacStat.succcnt},failcnt=failcnt+#{wftOpenMacStat.failcnt}
+	</insert>
+	<select id="findSuccByParam" parameterType="HashMap" resultType="Integer">
+		select count(*) from <include refid="table"/> A join wft_hotspot B ON A.mac=B.mac where B.ssid=#{paramMap.ssid}
+		and A.succcnt>0 and A.dairy=#{paramMap.dayYMD}
+	</select>
+	<select id="findFailByParam" parameterType="HashMap"  resultType="Integer">
+		select count(*) from <include refid="table"/> A join wft_hotspot B ON A.mac=B.mac where B.ssid=#{paramMap.ssid}
+		and A.dairy=#{paramMap.dayYMD} and A.succcnt=0
+	</select>
+	<select id="findFailOTByParam" parameterType="HashMap"  resultType="Integer">
+		select count(*) from <include refid="table"/> A join wft_hotspot B ON A.mac=B.mac where B.ssid=#{paramMap.ssid}
+		and A.dairy=#{paramMap.dayYMD} and A.failcnt> #{paramMap.failcnt}
+	</select>
+</mapper>

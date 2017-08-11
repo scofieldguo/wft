@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftAcessCardMapper">
+	<sql id="table">
+		wft_stat_acesscard
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="insertColumn">
+		dairy,hour,cmcccnt,chcnt,channel
+	</sql>
+	<sql id="insertValues">
+		#{dairy},#{hour},#{cmcccnt},#{chcnt},#{channel}
+	</sql>
+	<sql id="whereParam">
+		<where>
+			<if test="paramMap.channel!=null">
+				channel=#{paramMap.channel}
+			</if>
+			<if test="paramMap.start!=null">
+				and DATE_FORMAT(dairy,"%Y-%m-%d")=#{paramMap.start}
+			</if>
+		</where>
+	</sql>
+	<insert id="insert">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="insertColumn" />
+		)
+		values(
+		<include refid="insertValues" />
+		) on duplicate key update
+		cmcccnt=cmcccnt+#{cmcccnt},chcnt=chcnt+#{chcnt}
+	</insert>
+	<select id="countByParam" resultType="Integer">
+		select count(*) from
+		<include refid="table" />
+		<include refid="whereParam"/>
+	</select>
+	<select id="pageFindByParam" resultType="wftOpenAcessCardStat">
+		select * from
+		<include refid="table" />
+		<include refid="whereParam"/>
+		<include refid="pager"/>
+	</select>
+</mapper>

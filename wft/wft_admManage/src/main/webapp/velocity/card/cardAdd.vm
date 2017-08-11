@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+#HEARD()
+
+<script type="text/javascript">
+jQuery.validator.addMethod("isExcel", function(value, element) {       
+    return this.optional(element) || /^.*\.xls$/.test(value);       
+ }, "只能上传Excel 97-2003文件");
+ 
+$(function(){
+	$("input[name='opt']").click(function(){
+		if(1 == $("input[name='opt']:checked").val()){
+			$("#prtime").show();
+		}else{
+			$("#prtime").hide();
+		}
+	});
+	
+	
+	$("#fileForm").validate({
+		event: "blur",
+		rules: {
+			"cardFile":{
+				required:true,
+				isExcel:true
+			}
+		},
+		messages:{
+			"cardFile":{
+				required:"请选择excel 97-2003文件",
+				isExcel:"请选择excel 97-2003文件"
+			}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+	
+	$("#cardForm").validate({
+		ignore: ":hidden",
+		event: "blur",
+		rules: {
+			"channel":{required:true},
+			"prtime":{required:true}
+		},
+		messages:{
+			"channel":{required:"合作方不能为空"},
+			"prtime":{required:"预启用时间不能为空"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+	
+	$("#fileBtn").click(function(){
+		$("#fileForm").submit();
+	});
+	
+	$("#cardBtn").click(function(){
+		if(confirm("确定要添加列表中的所有卡？")){
+			$("#cardForm").submit();
+		}
+	});
+	
+});
+
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    	
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="12" background="images/table_top_bg.jpg">        	
+								#TABLETILE("添加新卡")	        		       
+							</td>
+						</tr>
+	  
+						<tr>
+							<td colspan="12" height="30" align="center" class="tdw1">
+								<form id="fileForm" action="cardCheckForAdd.do" method="post" enctype="multipart/form-data">
+									Excel文件：<input type="file" name="cardFile" size="60"/>&nbsp;&nbsp;
+									<input type="button" id="fileBtn" value="上传并验证" />
+								</form>
+							</td>
+	  					</tr>
+						
+						#if($!{camList})
+						<tr>
+							<td colspan="12" align="center">
+								<form id="cardForm" action="cardAdd.do" method="post" enctype="multipart/form-data">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+                                            <td height="30" align="center" class="tdw1">
+												<font color="red">总共上传了${camList.size()}张卡。#if($!{pass}) 卡信息有误，请修改后重新上传。#end</font>
+											</td>
+										</tr>
+										
+										#if(!$!{pass})
+										<tr>
+											<td height="30" align="center" class="tdw1">
+												合作方：<select name="channel">
+														 <option value="">请选择</option>
+														#foreach($ch in $!{channelList})
+															<option value="$!{ch.code}">$!{ch.name}</option>
+														#end
+													</select>&nbsp;&nbsp;&nbsp;&nbsp;
+												<input type="radio" name="opt" value="2" checked="checked" />调入卡池&nbsp;&nbsp;&nbsp;&nbsp;
+												<input type="radio" name="opt" value="1" />设置预启用时间
+												<span id="prtime" style="display:none">
+													<input name="prtime" type="text" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd HH:mm'})" />
+												</span>&nbsp;&nbsp;
+												<input type="button" id="cardBtn" value="提 交" />
+											</td>
+										</tr>
+										#end
+                                    </table>
+								</form>
+							</td>
+	  					</tr>
+						#end
+						
+						<tr>
+							<td height="30" align="center" class="tdy1">序号</td>
+							<td align="center" class="tdy2">运营商</td>
+							<td align="center" class="tdy2">省份</td>	  
+							<td align="center" class="tdy2">漫游</td>
+							<td align="center" class="tdy2">类型</td>
+							<td align="center" class="tdy2">分配次数</td>
+							<td align="center" class="tdy2">起始日期</td>
+							<td align="center" class="tdy2">截止日期</td>
+							<td align="center" class="tdy2">金额(分)</td>
+							<td align="center" class="tdy2">时长(小时)</td>
+							<td align="center" class="tdy2">密码</td>
+							<td align="center" class="tdy2">验证信息</td>
+                        </tr>
+						
+						#foreach($cam in $!{camList})
+						<tr>
+                            <td height="20" align="center" class="tdw1">$velocityCount</td>
+							<td align="center" class="tdw2">$!{cam.op}</td>
+							<td align="center" class="tdw2">$!{cam.prv}</td>	  
+							<td align="center" class="tdw2">$!{cam.flag}</td>
+							<td align="center" class="tdw2">$!{cam.type}</td>
+							<td align="center" class="tdw2">$!{cam.unum}</td>
+							<td align="center" class="tdw2">$!{cam.vbtime}</td>
+							<td align="center" class="tdw2">$!{cam.vetime}</td>
+							<td align="center" class="tdw2">$!{cam.mvalue}</td>
+							<td align="center" class="tdw2">$!{cam.bvalue}</td>
+							<td align="center" class="tdw2">$!{cam.pwd}</td>
+                            <td align="center" class="tdw2">#if($!{cam.msg}) <font color="red">$!{cam.msg}</font> #else 验证通过 #end</td>
+                        </tr>
+						#end
+						
+                    </table>
+					
+				</td>
+			</tr>
+		</table>
+
+		#FOOT()
+	</body>
+</html>

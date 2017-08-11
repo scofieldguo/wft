@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftConnSessionMapper">
+	<sql id="table">
+		wft_conn_session_${channel}
+	</sql>
+	
+	<sql id="insertCloumn">
+		csid, uid, stime, etime, status, ustatus, bstime, betime, cid, cno, hsid, ssid, mac, uflag, note, ip, prvid, channel, version, lstatus, logouturl, wifiip, conntime, utvalue, bstimeop, betimeop, utvalueop, uhourop, mflag, bstimeqq, betimeqq, csidqq, flagqq, opid, ostype, osversion, imei
+	</sql>
+	
+	<sql id="insertValues">
+		#{csid}, #{uid}, #{stime}, #{etime}, #{status}, #{ustatus}, #{bstime}, #{betime}, #{cid}, #{cno}, #{hsid}, #{ssid}, #{mac}, #{uflag}, #{note}, #{ip}, #{prvid}, #{channel}, #{version}, #{lstatus}, #{logouturl}, #{wifiip}, #{conntime}, #{utvalue}, #{bstimeop}, #{betimeop}, #{utvalueop}, #{uhourop}, #{mflag}, #{bstimeqq}, #{betimeqq}, #{csidqq}, #{flagqq}, #{opid}, #{ostype}, #{osversion}, #{imei}
+	</sql>
+	
+	<insert id="insert" parameterType="wftConnSession" >
+		insert into <include refid="table"/> (<include refid="insertCloumn"/>)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftConnSession">
+		select * from <include refid="table"/>
+		<where>
+			csid=#{id}
+		</where>
+	</select>
+	
+	<select id="findUncloseSession" resultType="wftConnSession" >
+		select * from <include refid="table"/>
+		<where>
+			uid = #{uid} and status != 3
+		</where>
+	</select>
+	
+	<update id="update" parameterType="wftConnSession" >
+		update <include refid="table"/>
+		<set>
+			<if test="uid!=null">
+				uid = #{uid},
+			</if>
+			<if test="stime!=null">
+				stime = #{stime},
+			</if>
+			<if test="etime!=null">
+				etime = #{etime},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="ustatus!=null">
+				ustatus = #{ustatus},
+			</if>
+			<if test="bstime!=null">
+				bstime = #{bstime},
+			</if>
+			<if test="betime!=null">
+				betime = #{betime},
+			</if>
+			<if test="cid!=null">
+				cid = #{cid},
+			</if>
+			<if test="cno!=null">
+				cno = #{cno},
+			</if>
+			<if test="hsid!=null">
+				hsid = #{hsid},
+			</if>
+			<if test="ssid!=null">
+				ssid = #{ssid},
+			</if>
+			<if test="mac!=null">
+				mac = #{mac},
+			</if>
+			<if test="uflag!=null">
+				uflag = #{uflag},
+			</if>
+			<if test="note!=null">
+				note = #{note},
+			</if>
+			<if test="ip!=null">
+				ip = #{ip},
+			</if>
+			<if test="prvid!=null">
+				prvid = #{prvid},
+			</if>
+			<if test="channel!=null">
+				channel = #{channel},
+			</if>
+			<if test="version!=null">
+				version = #{version},
+			</if>
+			<if test="lstatus!=null">
+				lstatus = #{lstatus},
+			</if>
+			<if test="logouturl!=null">
+				logouturl = #{logouturl},
+			</if>
+			<if test="wifiip!=null">
+				wifiip = #{wifiip}, 
+			</if>
+			<if test="conntime!=null">
+				conntime = #{conntime},
+			</if>
+			<if test="utvalue!=null">
+				utvalue=#{utvalue},
+			</if>
+			<if test="bstimeop!=null">
+				bstimeop=#{bstimeop},
+			</if>
+			<if test="betimeop!=null">
+				betimeop=#{betimeop},
+			</if>
+			<if test="utvalueop!=null">
+				utvalueop=#{utvalueop},
+			</if>
+			<if test="uhourop!=null">
+				uhourop=#{uhourop}, 
+			</if>
+			<if test="mflag!=null">
+				mflag=#{mflag},
+			</if>
+			<if test="bstimeqq!=null">
+				bstimeqq=#{bstimeqq},
+			</if>
+			<if test="betimeqq!=null">
+				betimeqq=#{betimeqq},
+			</if>
+			<if test="csidqq!=null">
+				csidqq=#{csidqq},
+			</if>
+			<if test="flagqq!=null">
+				flagqq=#{flagqq},
+			</if>
+			<if test="opid!=null">
+				opid=#{opid},
+			</if>
+			<if test="ostype!=null">
+				ostype=#{ostype},
+			</if>
+			<if test="osversion!=null">
+				osversion=#{osversion}
+			</if>
+		</set>
+		where csid = #{csid}
+	</update>
+	
+	<update id="updateByParam">
+		update <include refid="table"/>
+		<set>
+			<if test="paramMap.bstime !=null">
+				bstime=#{paramMap.bstime},
+			</if>
+			<if test="paramMap.uflag !=null">
+				uflag=#{paramMap.uflag},
+			</if>
+			<if test="paramMap.bstimeqq !=null">
+				bstimeqq=#{paramMap.bstimeqq},
+			</if>
+			<if test="paramMap.betimeqq !=null">
+				betimeqq=#{paramMap.betimeqq},
+			</if>
+			<if test="paramMap.csidqq !=null">
+				csidqq=#{paramMap.csidqq},
+			</if>
+			<if test="paramMap.flagqq !=null">
+				flagqq=#{paramMap.flagqq},
+			</if>
+			<if test="paramMap.status !=null">
+				status=#{paramMap.status},
+			</if>
+			<if test="paramMap.ustatus !=null">
+				ustatus=#{paramMap.ustatus}
+			</if>
+		</set>
+		<where>
+			csid=#{paramMap.csid}
+		</where>
+	</update>
+	
+	<select id="findTimeoutConnSession" resultType="wftConnSession">
+		select * from wft_conn_session_${channel}
+		<where>
+			status = 1  and 
+			<![CDATA[ DATE_ADD(stime, INTERVAL #{minute} MINUTE) < #{nowTime} ]]>
+			and ssid like CONCAT('%',#{ssid},'%')
+		</where>
+		 limit 5000;
+	</select>
+	
+	<select id="findInvalidConnSession" resultType="wftConnSession">
+		select * from wft_conn_session_${channel}
+		<where>
+			status = 2 and 
+			<![CDATA[ DATE_ADD(bstime, INTERVAL #{minute} MINUTE) < #{nowTime} ]]>
+			and ssid like CONCAT('%',#{ssid},'%')
+		</where>
+		order by stime asc
+	</select>
+	
+	<select id="findActiveSession" resultType="wftConnSession" >
+		select * from wft_conn_session_${channel}
+		<where>
+			status = 2 and ssid like CONCAT('%',#{ssid},'%') 
+			<if test="minute!=null">
+				and <![CDATA[ DATE_ADD(bstime,INTERVAL #{minute} MINUTE) > #{nowDate} ]]>
+			</if> 
+		</where>
+		limit 5000
+	</select>
+	
+	<select id="findCloseConnSession" resultType="wftConnSession" >
+		select * from wft_conn_session_${channel}
+		<where>
+			status = 3 and ssid like CONCAT('%',#{ssid},'%') 
+			<if test="minute!=null">
+				and <![CDATA[ DATE_ADD(bstime,INTERVAL #{minute} MINUTE) < #{nowDate} ]]>
+			</if> 
+		</where>
+	</select>
+	
+	<select id="findByParam" resultType="wftConnSession" >
+		select * from wft_conn_session_${paramMap.channel}
+		<where>
+			<if test="paramMap.status !=null">
+				and status=#{paramMap.status}
+			</if>
+			<if test="paramMap.lstatus !=null">
+				and lstatus=#{paramMap.lstatus}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByUid" resultType="wftConnSession">
+		select * from <include refid="table"/>
+		<where>
+			uid = #{uid}
+		</where>
+		order by stime desc;
+	</select>
+	
+	<select id="findByCsidqq" resultType="wftConnSession">
+		select * from <include refid="table"/>
+		<where>
+			csidqq = #{csidqq}
+		</where>
+		order by stime desc;
+	</select>
+	
+	<select id="findByCsidqqAndUid" resultType="wftConnSession">
+		select * from <include refid="table"/>
+		<where>
+			csidqq = #{csidqq} and uid = #{uid} 
+		</where>
+		order by stime desc;
+	</select>
+	
+	<select id="findByCid" resultType="wftConnSession">
+		select * from <include refid="table"/>
+		<where>
+			cid=#{cid} 
+			<if test="status!=null">
+				and status=#{status}
+			</if>
+		</where>
+		order by stime desc;
+	</select>
+	
+	<delete id="delete" >
+		delete from <include refid="table"/>
+		<where>
+			csid=#{id}
+		</where>
+	</delete>
+	<select id="countCardUseSituation" resultType="Integer">
+		select count(*) from <include refid="table"/> 
+		<where>
+			<if test="status!=null">
+				and status=#{status}
+			</if>
+			<if test="opid!=null">
+				and opid=#{opid}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

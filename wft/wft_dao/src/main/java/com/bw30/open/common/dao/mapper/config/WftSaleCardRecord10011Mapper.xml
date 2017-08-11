@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftSaleCardRecord10011Mapper">
+	<sql id="table">
+		wft_sale_card_record_${channel_id}
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="insertColumn" >
+		cno, pwd, open_time, card_type, duration, order_id, start_time, end_time
+	</sql>
+	
+	<sql id="insertValues">
+		#{cno}, #{pwd}, #{open_time}, #{card_type}, #{duration}, #{order_id}, #{start_time}, #{end_time}
+	</sql>
+	
+	<sql id="where">
+		<where>
+			<if test="paramMap.startDate!=null and paramMap.startDate!=''">
+				and date_format(open_time,'%Y-%m-%d') > #{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate!=null and paramMap.endDate!=''">
+				and #{paramMap.endDate} >= date_format(open_time,'%Y-%m-%d')
+			</if>
+			<if test="paramMap.cno!=null and paramMap.cno!=''">
+				and cno like CONCAT('%',#{paramMap.cno},'%')  
+			</if>
+			<if test="paramMap.time!=null and paramMap.time!=''">
+				and duration=#{paramMap.time}
+			</if>
+		</where>
+	</sql>
+	<select id="findByCno" resultType="wftSaleCardRecord10011">
+		select * from <include refid="table"/> where cno=#{cno}
+	</select>
+	
+	<select id="findRecordByOrderId" resultType="wftSaleCardRecord10011">
+		select * from <include refid="table"/> where order_id=#{order}
+	</select>
+	<insert id="insert" parameterType="wftSaleCardRecord">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<update id="update" parameterType="wftSaleCardRecord10011">
+		update <include refid="table" />
+		<set>
+			<if test="duration!=null">
+				duration =#{duration},
+			</if>
+			<if test="end_time !=null">
+				end_time =#{end_time},
+			</if>
+			<if test="pwd!=null">
+				pwd =#{pwd},
+			</if>
+			<if test="start_time!=null">
+				start_time =#{start_time},
+			</if>
+			<if test="total_value!=null">
+				total_value = total_value + #{total_value},
+			</if>
+		</set>
+		<where>
+			cno =#{cno}
+		</where>
+	</update>
+	<select id="pageFindByParam" resultType="wftSaleCardRecord10011">
+		select * from <include refid="table"/>
+		<include refid="where" />
+		<if test="paramMap.orderFlag==0">
+			order by open_time
+		</if>
+		<if test="paramMap.orderFlag==1">
+			 ORDER BY DATEDIFF(end_time,open_time)
+		</if>
+		<include refid="pager" />
+	</select>
+	<select id="findByParam" resultType="wftSaleCardRecord10011">
+		select * from <include refid="table"/>
+		<include refid="where"/>
+	</select>
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="where" />
+	</select>
+</mapper>

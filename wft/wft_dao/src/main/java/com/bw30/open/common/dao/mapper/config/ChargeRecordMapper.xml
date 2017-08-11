@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.ChargeRecordMapper">
+	<sql id="table">
+		open_platform_charge_record
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="insertColumn">
+		userid,dairy,chargehours,chargecost
+	</sql>
+	<sql id="insertValues">
+		#{userid},#{dairy},#{chargehours},#{chargecost}
+	</sql>
+	<insert id="insert" parameterType="chargeRecord">
+		insert into 
+		<include refid="table"/>
+		(<include refid="insertColumn"/>)
+		values
+		(<include refid="insertValues"/>)
+	</insert>
+	<select id="countByParam" resultType="Integer">
+		select count(*)
+		from
+		<include refid="table"/>
+		where 
+		userid = #{paramMap.userid}
+	</select>
+	
+	<select id ="pageFindByParam" resultType="chargeRecord">
+		select *
+		from
+		<include refid="table" />
+		where
+		userid = #{paramMap.userid}
+		<include refid="pager"/>
+	</select>
+</mapper>

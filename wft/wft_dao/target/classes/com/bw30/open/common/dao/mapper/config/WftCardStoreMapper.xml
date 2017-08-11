@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftCardStoreMapper">
+	<sql id="table">
+		wft_card_store
+	</sql>
+	
+	<sql id="insertColumn" >
+		id, opid, ssid, prvid, ctype, no, pwd, bvalue, vbtime, vetime, ustatus, cstatus, tvalue, prtime, inplace, atime, intime,  utvalue, ucount, uscount, orderid, pctime, utime, uid, channel, stoptime, stopcode
+  	</sql>
+	
+	<sql id="insertValues">
+		#{id}, #{opid}, #{ssid}, #{prvid}, #{ctype}, #{no}, #{pwd}, #{bvalue}, #{vbtime}, #{vetime}, #{ustatus}, #{cstatus}, #{tvalue}, #{prtime}, #{inplace}, #{atime}, #{intime}, #{utvalue}, #{ucount}, #{uscount}, #{orderid}, #{pctime}, #{utime}, #{uid}, #{channel}, #{stoptime}, #{stopcode}
+	</sql>
+	
+	<sql id="whereByParam">
+		<if test="paramMap != null">
+		<where>
+			<if test="paramMap.opid !=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.prvid != null">
+				and prvid = #{paramMap.prvid}
+			</if>
+			<if test="paramMap.ctype !=null">
+				and ctype = #{paramMap.ctype}
+			</if>
+			<if test="paramMap.inplace != null">
+				and inplace = #{paramMap.inplace}
+			</if>
+			<if test="paramMap.begVetime != null">
+				and <![CDATA[ vetime >= #{paramMap.begVetime} ]]>
+			</if>
+			<if test="paramMap.endVetime != null">
+				and <![CDATA[ vetime <= #{paramMap.endVetime} ]]>
+			</if>
+			<if test="paramMap.begIntime != null">
+				and <![CDATA[ intime >= #{paramMap.begIntime} ]]>
+			</if>
+			<if test="paramMap.endIntime != null">
+				and <![CDATA[ intime <= #{paramMap.endIntime} ]]>
+			</if>
+			<if test="paramMap.channel !=null">
+				and channel = #{paramMap.channel}
+			</if>
+		</where>
+		</if>
+	</sql>
+	
+	<insert id="insert" parameterType="wftCardStore" useGeneratedKeys="true" keyProperty="id">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftCardStore">
+		select * from <include refid="table"/>
+		<where>
+			id = #{id}
+		</where>
+	</select>
+	
+	<update id="update" >
+		update <include refid="table"/>
+		<set>
+			<if test="opid != null">
+				opid = #{opid},
+			</if>
+			<if test="ssid!=null">
+				ssid = #{ssid},
+			</if>
+			<if test="prvid!=null">
+				prvid = #{prvid},
+			</if>
+			<if test="ctype!=null">
+				ctype = #{ctype},
+			</if>
+			<if test="no!=null">
+				no = #{no},
+			</if>
+			<if test="pwd!=null">
+				pwd = #{pwd},
+			</if>
+			<if test="bvalue!=null">
+				bvalue = bvalue + #{bvalue},
+			</if>
+			<if test="vbtime!=null">
+				vbtime = #{vbtime},
+			</if>
+			<if test="vetime!=null">
+				vetime = #{vetime},
+			</if>
+			<if test="ustatus!=null">
+				ustatus = #{ustatus},
+			</if>
+			<if test="cstatus!=null">
+				cstatus = #{cstatus},
+			</if>
+			<if test="tvalue!=null">
+				tvalue = #{tvalue},
+			</if>
+			<if test="inplace!=null">
+				inplace = #{inplace},
+			</if>
+			<if test="intime!=null">
+				intime = #{intime},
+			</if>
+			<if test="utvalue!=null">
+				utvalue = #{utvalue},
+			</if>
+			<if test="ucount!=null">
+				ucount = #{ucount},
+			</if>
+			<if test="uscount!=null">
+				uscount = #{uscount},
+			</if>
+			<if test="orderid!=null">
+				orderid = #{orderid},
+			</if>
+			<if test="pctime!=null">
+				pctime = #{pctime},
+			</if>
+			<if test="utime!=null">
+				utime = #{utime},
+			</if>
+			<if test="uid!=null">
+				uid = #{uid},
+			</if>
+			<if test="channel!=null">
+				channel = #{channel},
+			</if>
+			<if test="stoptime!=null">
+				stoptime = #{stoptime},
+			</if>
+			<if test="stopcode!=null">
+				stopcode = #{stopcode}
+			</if>
+		</set>
+		<where>
+		 	id = #{id}
+		 </where>
+	</update>
+	
+	<select id="findAllNo" resultType="String">
+		select no from <include refid="table" />
+		<where>
+			<if test="null!=opid">
+				opid=#{opid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByNo" resultType="wftCardStore">
+		select * from 
+		<include refid="table"/>
+		<where>
+			no = #{no}
+		</where>
+	</select>
+	
+	<insert id="batchInsert">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values
+		<foreach collection="list" item="item" separator="," index="i">
+			(#{item.id}, #{item.opid}, #{item.ssid}, #{item.prvid}, #{item.ctype}, #{item.no}, #{item.pwd}, #{item.bvalue}, #{item.vbtime}, #{item.vetime}, #{item.ustatus}, #{item.cstatus}, #{item.tvalue}, #{item.prtime}, #{item.inplace}, #{item.atime}, #{item.intime}, #{item.utvalue}, #{item.ucount}, #{item.uscount}, #{item.orderid}, #{item.pctime}, #{item.utime}, #{item.uid}, #{item.channel}, #{item.stoptime}, #{item.stopcode})
+		</foreach>
+	</insert>
+	
+	<update id="batchUpdateStatus">
+		update <include refid="table"/>
+		<set>
+			<if test="params.cstatus != null">
+				cstatus = #{params.cstatus},
+			</if>
+			<if test="params.inplace != null">
+				inplace = #{params.inplace},
+			</if>
+			<if test="params.intime != null">
+				intime = #{params.intime},
+			</if>
+			<if test="params.prtime != null">
+				prtime = #{params.prtime},
+			</if>
+			<if test="params.channel != null">
+				channel = #{params.channel},
+			</if>
+		</set>
+		<where>
+			<if test="params.ids != null">
+				and id in 
+				<foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">  
+					#{item}   
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	<select id="getCardForEnable" resultType="wftCardStore">
+		select * from <include refid="table"/>
+		<where>
+			<if test="cstatus != null">
+				cstatus = #{cstatus}
+			</if>
+			<if test="prtime != null">
+				<![CDATA[ and prtime <= #{prtime} ]]>
+			</if>
+		</where>
+		order by prtime asc
+	</select>
+	
+	
+	<select id="getCardForActive" resultType="wftCardStore">
+		select * from <include refid="table"/>
+		<where>
+			inplace = #{inplace} and opid = #{opid} and cstatus != 4
+		</where>
+	</select>
+	
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="whereByParam"/>
+	</select>
+	
+	<select id="pageFindByParam" resultType="wftCardStore">
+		select * from <include refid="table"/>
+		<include refid="whereByParam"/>
+		order by id desc 
+		<if test="pager != null">
+			limit #{pager.skipNo},#{pager.pageSize}
+		</if>
+	</select>
+	<delete id="delete">
+		delete from <include refid="table" />
+		where id = #{id}
+	</delete>
+</mapper>

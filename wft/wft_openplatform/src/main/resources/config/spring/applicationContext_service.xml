@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean name="userService" class="com.bw30.openplatform.service.impl.UserServiceImpl"/>
+	<bean name="openPlayFormAccountService" class="com.bw30.openplatform.service.impl.OpenPlayFormAccountServiceImpl"/>
+	<bean name="openPlayFormAppService" class="com.bw30.openplatform.service.impl.OpenPlayFormAppServiceImpl"/>
+	<bean name="wftOperatorService" class="com.bw30.openplatform.service.impl.WftOperatorServiceImpl"></bean>
+	<bean name="openPlayFormAppTypeService" class="com.bw30.openplatform.service.impl.OpenPlayFormAppTypeServiceImpl"></bean>
+	<bean name="openPlayFormNoticeService" class="com.bw30.openplatform.service.impl.OpenPlayFormNoticeServiceImpl"></bean>
+	<bean id="smsService" class="com.bw30.openplatform.service.impl.SmsService">
+		<property name="smsUrl" value="${openPlatform.sms.url}"></property>
+		<property name="username" value="${openPlatform.sms.username}"></property>
+		<property name="password" value="${openPlatform.sms.password}"></property>
+	</bean>
+	<bean name="statService" class="com.bw30.openplatform.service.impl.StatServiceImpl"></bean>
+	<bean name="wifiCardService" class="com.bw30.openplatform.service.WiFiCardService">
+		<property name="serverURL" value="${wifiServer}"></property>
+	</bean>
+</beans>

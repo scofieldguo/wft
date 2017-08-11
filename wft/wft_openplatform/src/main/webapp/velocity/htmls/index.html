@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/home_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+</head>
+<body onload="viewNavTab('home')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<!-- 幻灯片 -->
+	<div id="slides">
+		<div class="slide_content" id="banner">
+			<a href="#" class="d1" style="background:url(${images_url}/slides/001.jpg) center no-repeat;"></a>
+			<a href="#" class="d1" style="background:url(${images_url}/slides/002.jpg) center no-repeat;"></a>
+			<a href="#" class="d1" style="background:url(${images_url}/slides/003.jpg) center no-repeat;"></a>
+			<a href="#" class="d1" style="background:url(${images_url}/slides/004.jpg) center no-repeat;"></a>
+			<div class="d2" id="banner_id"><ul><li></li><li></li><li></li><li></li></ul></div>
+		</div>
+	</div>
+	
+	<!-- 主题内容 -->
+	<div id="topic">
+		<div class="topic_content">
+			<div class="topic_title font30 weight_bold">核心优势</div>
+			<div class="topic_content_item1">
+				<img src="${images_url}/ap.png"/>
+				<p class="item_title font24 weight_bold">海量热点</p>
+				<p class="item_desc font18">三大运营商600万热点</p>
+			</div>
+			<div class="topic_content_item1">
+				<img src="${images_url}/data.png"/>
+				<p class="item_title font24 weight_bold">数据支持</p>
+				<p class="item_desc font18">WiFi时长数据智能分析</p>
+			</div>
+			<div class="topic_content_item1">
+				<img src="${images_url}/ap.png"/>
+				<p class="item_title font24 weight_bold">底层平台</p>
+				<p class="item_desc font18">对接运营商底层平台</p>
+			</div>
+			<div class="clear"></div>
+			<a href="user_registUI.action" class="join_us font24 weight_bold">马上加入</a>
+			<div class="topic_title font30 weight_bold">接入流程</div>
+			<div  style="margin: 0 auto;width: 776px;">
+			<div class="topic_content_item2">
+				<img src="${images_url}/step_1.png"/>
+				<p class="item_title font18 weight_bold">注册开发者</p>
+			</div>
+			<!-- <div class="step_arrow"></div>
+			<div class="topic_content_item2">
+				<img src="${images_url}/step_2.png"/>
+				<p class="item_title font18 weight_bold">创建应用</p>
+			</div> -->
+			<div class="step_arrow"></div>
+			<div class="topic_content_item2">
+				<img src="${images_url}/step_3.png"/>
+				<p class="item_title font18 weight_bold">获取SDK</p>
+			</div>
+			<div class="step_arrow"></div>
+			<div class="topic_content_item2">
+				<img src="${images_url}/step_4.png"/>
+				<p class="item_title font18 weight_bold">开发调试</p>
+			</div>
+			<div class="step_arrow"></div>
+			<div class="topic_content_item2">
+				<img src="${images_url}/step_5.png"/>
+				<p class="item_title font18 weight_bold">商用发布</p>
+			</div>
+			</div>
+			<div class="clear"></div>
+			<a href="html_doc_sdkdoc.action" class="join_us font24 weight_bold">查看开发文档</a>
+		</div>
+	</div>
+	
+	<!-- 合作伙伴 -->
+	<div id="partners">
+		<div class="partners_title font30 weight_bold">
+			合作伙伴
+			<div class="partners_more font18"><a href="$!{server_url}/html_static_case.action">了解更多</a>&nbsp;<img src="${images_url}/topic_title_ico.png" alt="" /></div>
+		</div>
+		<ul class="partners_ico">
+			<li><img src="${images_url}/partner_0.png"/></li>
+			<li class="auto"><img src="${images_url}/partner_1.png"/></li>
+			<li><img src="${images_url}/partner_2.png"/></li>
+		</ul>
+		
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">banner()</script>
+</body>
+</html>

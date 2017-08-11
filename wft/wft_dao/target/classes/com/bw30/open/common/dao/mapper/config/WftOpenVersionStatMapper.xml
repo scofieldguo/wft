@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOpenVersionStatMapper">
+	<sql id="table">
+		wft_stat_version_open
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}
+	</sql>
+	<sql id="column">
+		dairy,channel,version,cm_succcnt,cn_succcnt,cm_failcnt,cn_failcnt,cm_succper,cn_succper,cm_failper,cn_failper,cm_succmac,cm_failmac,cn_succmac,cn_failmac
+
+	</sql>
+	<sql id="insertValues">
+		#{dairy},#{channel},#{version},#{cm_succcnt},#{cn_succcnt},#{cm_failcnt},#{cn_failcnt},#{cm_succper},#{cn_succper},#{cm_failper},#{cn_failper},
+		#{cm_succmac},#{cm_failmac},#{cn_succmac},#{cn_failmac}
+	</sql>
+	<insert id="insert">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="column" />
+		)
+		values(
+		<include refid="insertValues" />
+		) on duplicate key update
+		cm_succcnt=cm_succcnt+#{cm_succcnt},cn_succcnt=cn_succcnt+#{cn_succcnt},cm_failcnt=cm_failcnt+#{cm_failcnt},cn_failcnt=cn_failcnt+#{cn_failcnt},cm_succper=cm_succper+#{cm_succper},
+		cn_succper=cn_succper+#{cn_succper},cm_failper=cm_failper+#{cm_failper},cn_failper=cn_failper+#{cn_failper},
+		cm_succmac=cm_succmac+#{cm_succmac},cm_failmac=cm_failmac+#{cm_failmac},cn_succmac=cn_succmac+#{cn_succmac},cn_failmac=cn_failmac+#{cn_failmac}
+	</insert>
+	<select id="findVersionStat" resultType="wftOpenVersionStat">
+	select * from <include refid="table"/>
+	 <where>
+	 	<if test="dairy!=null">
+	 	 dairy=#{dairy}
+	 	</if>
+	 	<if test="version!=null">
+	 	 and version=#{version}
+	 	</if>
+	 	<if test="channel!=null">
+	 	 and channel=#{channel}
+	 	</if>
+	 </where>
+	</select>
+</mapper>

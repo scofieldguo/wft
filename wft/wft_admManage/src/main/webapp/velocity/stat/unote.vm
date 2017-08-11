@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+<script type="text/javascript">
+	$(function(){
+	$("#pageform").validate({
+		event: "blur",
+		rules: {
+			"dairy":{required:true, rangelength:[1,32]},
+			"channel":{required:true,	rangelength:[0,32]}
+		},
+		messages:{
+			"dairy":{required:"日期不能为空 ", rangelength:"长度不能大于32"},
+			"channel":{required:"请选择渠道",rangelength:"长度不能大于32"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+});
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("错误码数据统计")	
+			
+				<form id="pageform" action="exportUnote.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="31" background="images/table_top_bg.jpg">        	
+								#TABLETILE("错误码导出")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="31" align="center" class="tdw1">
+								日期：<input id="start" name="dairy" type="text" value="$!{dairy}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd '})" />&nbsp;&nbsp;
+								小时：<select id="hour" name="hour">
+										<option value="" selected ="selected">当天全部</option>
+									#if($!hourList && $!{hourList.size()}>0)
+										#foreach($hour in $!{hourList})
+											<option >$!{hour}</option>
+										#end
+									#end
+                                </select>
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="30" align="center" class="tdw1">
+								渠道：
+								<select id="channel" name="channel">
+									<option value="">全部</option>
+								#if($!channelList && $!{channelList.size()}>0)
+									#foreach($ch in ${channelList})
+									<option #if($!{channel}==$!{ch.code}) selected="selected" #end value="${ch.code}">$!{ch.name}</option>
+								    #end
+								#end	
+								</select>&nbsp;&nbsp;
+								运营商:
+								<select name="opid">
+									<option value="0">全部</option>
+									<option value="1">中国移动</option>
+									<option value="2">中国电信</option>
+									<option value="3">中国联通</option>
+								</select>
+							</td>
+                        </tr>
+                        <tr >
+							<td height="30" colspan="31" align="center" class="tdw1">
+								错误码：<input type="text" name="note" value="" id="note">
+							</td>
+                        </tr>
+						<tr >
+							<td height="30" colspan="31" align="center" class="tdw1">
+								<input type="submit" value="导出">
+							</td>
+                        </tr>
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

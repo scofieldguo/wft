@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+		function editApp(appid,appname,appctime,appkey,status,opids,type,packages,website,intro){
+			$("#appid").html(appid);
+			$("#appname").html(appname);
+			$("#appkey").html(appkey);
+			$("#appctime").html(appctime);
+			$("#apppackages").html(packages);
+			$("#appwebsite").html(website);
+			$("#appintro").html(intro);
+			$("#userappid").val(appid);
+			if(status==0){
+				$("#appstatus").html("测试");
+			}else if(status==1){
+				$("#appstatus").html("正式");
+			}else if(status==2){
+				$("#appstatus").html("已停止");
+			}else if(status==3){
+				$("#appstatus").html("审核");
+			}else{
+				$("#appstatus").html("未通过");
+			}
+			var strs=new Array();
+			strs=opids.split(",");
+			var opids=$("input[name=userapp.opids]");
+			for(var i=0;i<strs.length;i++){
+				for(var j=0;j<opids.length;j++){
+					if(strs[i]==opids[j].value){
+					var op="check_"+strs[i];
+					 $("#"+op).attr("checked",true);
+					}
+				}
+			}
+			
+			$("#apptype option[value="+type+"]").attr("selected",true);
+		}
+		
+		function showDiv(id1,id2){
+			if(id1!=""){
+				document.getElementById(id1).style.display='none';
+			}
+			document.getElementById(id2).style.display='block';
+			$("#popup").addClass("popup");
+		}
+	
+		function editConfirm(id){
+			if($("input[name=userapp.opids][checked]").size()<1){
+    			$("#opid_desc").html("至少选择一个运营商");
+    			return false;
+    		}
+    		alert($("#apptype").val());
+    		if($("#apptype").val()=="" || $("#apptype").val()==null){
+    			$("#type_desc").html("请选择应用类型");
+    			return false;
+    		}
+			if(confirm("您确定提交么？")==true){
+				$("#updateapp").submit();
+				document.getElementById(id).style.display='none';
+				$("#popup").removeClass("popup");
+			}
+		}
+		
+		function appkey(divid,appid){
+			$("#appid_status").val(appid);
+			document.getElementById(divid).style.display='block';
+			$("#popup").addClass("popup");
+		}
+		
+		function closeDiv(id){
+			document.getElementById(id).style.display='none';
+			$("#popup").removeClass("popup");
+		}
+		function applyKey(id1,id2){
+			if($("#agree")[0].checked || $("#reagree")[0].checked ){
+				var id=	$("#appid_status").val();
+				jQuery.ajax({
+					type:"POST",
+					url:"manage_applyKey.action",
+					data:{appid:id},
+					success:function(){
+						showDiv(id1,id2);	
+					}
+				});
+			}else{
+				alert("请勾选\"已经阅读并同意开发者协议\"");
+			}
+		}
+		function redirecapp(){
+		location.href="manage_app.action";
+		}
+</script>
+</head>
+<body onload="leftNav();">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+		#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+			<div class="content r">
+				<div class="app_title">
+					<a  class="button_creat" href="manage_appcreat.action">创建应用</a>
+					<span>还可以创建3个应用</span>
+				</div>
+				<div class="app_text">
+					<table >
+						<tr >
+							<td class="td1 bold">应用名称</td>
+							<td class="bold">创建时间</td>
+							<td class="td3 bold" >剩余测试时长</td>
+							<td class="bold">已用时长</td>
+							<td class="td5 bold">Key</td>
+							<td class="td6 bold">Key状态</td>
+							<td class="td7 bold" >应用操作</td>
+						</tr>
+						#set ($line=0)
+						#if($!userappList && $!{userappList.size()}>0)
+							#foreach($app in $!{userappList})
+						<tr #if($line%2==0) class="back" #else class="noback" #end>
+							<td class="td1">$!{app.name}</td>
+							<td>$!{app.ctimestr}</td>
+							<td class="td3"></td>
+							<td>200</td>
+							<td class="td5">$!{app.openkey}</td>
+							#if(${app.status}==0)
+							<td class="td6">测试</td>
+							#elseif(${app.status}==1)
+							<td class="td6">正式</td>
+							#elseif(${app.status}==2)
+							<td class="td6">已停止</td>
+							#elseif(${app.status}==3)
+							<td class="td6">审核</td>
+							#elseif(${app.status}==4)
+							<td class="td6">未通过</td>
+							#end
+							<td class="td7">
+								<a href="#"  onclick="editApp('$!{app.id}','$!{app.name}','$!{app.ctimestr}','$!{app.openkey}','$!{app.status}','$!{app.opids}','$!{app.type}','$!{app.packages}','$!{app.website}','$!{app.introduction}'),showDiv('','appedit2')">编辑应用信息</a>
+								#if(${app.status}==3)
+								审核中
+								#elseif(${app.status}==4)
+								<a href="#" onclick="appkey('retry_apply','$!{app.id}')">未通过重新提交</a>
+								#elseif(${app.status}==0)
+								<a href="#" onclick="appkey('apply_key','$!{app.id}')">申请正式key</a>
+								#end
+							</td>
+						</tr>
+							#set ($line=$line+1)
+							#end
+							#else
+							<tr>
+								<td colspan="7">无</td>
+							</tr>
+						#end
+					</table>
+					<span class="line1">*如果您需要增加额外的测试时长，请<a>联系我们</a>.</span>
+					<span class="line2">*请<a>联系我们</a>进行Key启用.</span>
+				</div>
+			</div>
+			<div id="popup">
+				<div id="appedit2" class="app_edit">
+					<img id="closeimg" onclick="closeDiv('appedit2')" src="${images_url}/manage/02_09.png" alt="" />
+					<form action="manage_updateapp.action" method="post" id="updateapp">
+					<input type="hidden" name="userapp.id" id="userappid"/>
+					<div class="head">
+						<span class="name" id="appname">应用名称</span>
+						<span class="appinfo">
+							<span class="column">App ID:<span id="appid"></span></span>
+							<span class="column">创建时间:<span id="appctime"></span></span>
+						</span>
+						<span class="appinfo">
+							<span class="column">App Key:<span id="appkey"></span></span>
+							<span class="column">Key 状态:<span id="appstatus"></span></span>
+						</span>
+					</div>
+					<div class="body">
+						<span class="line">
+							<span class="body_name">WIFI运营商：<span>*</span></span>
+							<span class="body_content">
+								#if($!opList && $!{opList.size()}>0)
+									#foreach($op in $!{opList})
+									<input id="check_$!{op.id}" type="checkbox" value="$!{op.id}" name="userapp.opids" /><span class="op">$!{op.name}</span>
+									#end
+								#end
+							</span>
+							<span id="opid_desc"  class="item_desc"></span>
+						</span>
+						<span class="line">
+							<span class="body_name">应用分类：<span>*</span></span>
+							<span class="body_content">
+								<select id="apptype" name="userapp.type"></select>
+									#if($!apptypeList && $!{apptypeList.size()}>0)
+										#foreach($apptype in $!{apptypeList})
+											<option value="$!{apptype.id}">$!{apptype.name}</option>
+										#end
+									#end
+							</span>
+							<span id="type_desc" class="item_desc"></span>
+						</span>
+						<span class="line"><span class="body_name">应用包名：<span>&nbsp;</span></span><span class="body_content" ><input type="text" id="apppackages" name="userapp.packages"/></span></span>
+						<span class="line"><span class="body_name">应用官网：<span>&nbsp;</span></span><span class="body_content"><input type="text" id="appwebsite" name="userapp.website"/></span></span>
+						<span class="line"><span class="body_name">应用简介：<span>&nbsp;</span></span><span class="body_content"><textarea id="appintroduce" class="introduction" name="userapp.introduction" cols="39" rows="3" style="resize: none"></textarea></span></span>
+						<span class="line last">
+							<span class="body_name"></span>
+							<span class="body_content">
+								<input class="ok" type="button" value="确定" onclick="editConfirm('appedit2')"/>
+								<input class="cancel" type="button" value="取消"  onclick="closeDiv('appedit2')"/>	
+							</span>
+						</span>
+					</div>
+					</form>
+				</div>
+				<div id="apply_key">
+						<input type="hidden" name="userapp.id" id="appid_status"/>
+						<span class="headline">申请正式KEY</span>
+						<span>为了您的正式key申请尽快通过</span>
+						<span>请在您与我们联系联系后再提出正式KEY申请</span>
+						<span class="agree">
+							<input class="remember_account" type="checkbox" name="remember_account" value="" id="agree"/>
+							我已阅读并同意 
+							<a>应用接入规范</a>
+						</span>
+						<span class="bt">
+								<input class="confirm_blue" type="button" value="确定" onclick="applyKey('apply_key','apply_confirm')"/>
+								<input class="cancel_blue" type="button" value="取消" onclick="closeDiv('apply_key')"/>
+						</span>
+				</div>
+				<div id="apply_confirm">
+					<span class="headline">
+						<img src="${images_url}/manage/01_07.png" alt="" />完成申请 &nbsp!
+					</span>
+					<span>
+						审核需要N个工作日，完成审核后，您会收到通知邮件，请耐心等待。
+					</span>
+					<span>
+						<input class="confirm_blue" type="button" value="确定" onclick="closeDiv('apply_confirm'),redirecapp()"/>
+					</span>
+				</div>
+				<div id="retry_apply">
+					<span class="headline">您需要重新提交审核吗&nbsp?</span>
+					<span class="agree">
+					<input class="remember_account" type="checkbox" name="remember_account" value="" id="reagree"/>
+							我已阅读并同意 
+							<a>应用接入规范</a>
+					</span>
+					<span >
+							<input class="confirm_blue_94" type="button" value="确定" onclick="applyKey('retry_apply','apply_confirm')"/>
+							<input class="cancel_white_94" type="button" value="取消"  onclick="closeDiv('retry_apply')"/>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

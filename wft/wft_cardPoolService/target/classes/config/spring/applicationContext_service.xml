@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<!-- 电信时长卡接口请求加密 -->
+	<bean id="rsaEncrypterForCTCC" class="com.bw30.open.wft.common.cardpool.RsaEncrypter" init-method="initPublicKey">
+		<property name="publicKeyPath" value="${ctcc.keyPath}"></property>
+	</bean>
+	
+	<!-- 电信时长卡接口响应解密 -->
+	<bean id="desDecrypterForCTCC" class="com.bw30.open.wft.common.cardpool.DesDecrypter" init-method="init">
+		<property name="key" value="${ctcc.des3Key}"></property>
+	</bean>
+	
+	<!-- 电信时长卡接口 -->
+	<bean id="cardCtccService" class="com.bw30.open.cardpool.service.ctcc.CardCtccService">
+		<property name="partner" value="${ctcc.partner}"></property>
+		<property name="url" value="${ctcc.url}"></property>
+	</bean>
+	
+	<bean id="cardCmccService" class="com.bw30.open.cardpool.service.cmcc.CardCmccService">
+		<property name="url" value="${cmcc.url}"></property>
+	</bean>
+	
+	<bean id="cardPoolService" class="com.bw30.open.cardpool.service.CardPoolServiceImpl" />
+	
+</beans>

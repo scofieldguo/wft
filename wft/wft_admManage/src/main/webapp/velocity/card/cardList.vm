@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<script type="text/javascript">
+$(function(){
+	$("#searchBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "cardList.do");
+		form.submit();
+	});
+	
+	$("#addCardBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "cardToAdd.do");
+		form.submit();
+	});
+	
+	$("#updateCardBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "cardToUpdate.do");
+		form.submit();
+	});
+	
+	$("#addToActiveBtn").click(function(){
+		if(0==$("[name='cid']:checked").length){
+			alert("请勾选需要出库的卡");
+		}else{
+			$("#channelDiv").dialog("open");
+		}
+	});
+	
+	$("#stopCardBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "toStop.do");
+		form.submit();
+	});
+	
+	$("#deleteCardBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "toDeleteCard.do");
+		form.submit();
+	});
+	
+	
+	$("#updatePwdBtn").click(function(){
+		var form = $("#pageform");
+		form.attr("action", "toUpdatePwd.do");
+		form.submit();
+	});
+	
+	
+	$("#channelDiv").dialog({      
+    	autoOpen: false,      
+    	height: 130,      
+    	width: 400,      
+    	modal: true,      
+    	buttons: {        
+    		"确定": function() {
+    			var outchannel=$('input:radio[name="radio"]:checked').val();
+            	if(outchannel==null){
+                	alert("请选择出库渠道！");
+            	}else{
+            		$("#outchannel").val(outchannel);
+					var form = $("#pageform");
+					form.attr("action", "cardToActive.do");
+					form.submit();
+	            }
+			},        
+    		"取消": function() {
+				$(this).dialog("close");
+			}      
+    	},
+		open: function(){
+			$(".ui-dialog-titlebar-close").hide();
+		}
+    });
+    
+});
+
+//复选框
+function doCheck(allCheckId, childCheckName){
+	$("input[name='"+childCheckName+"']").each(function(){
+		this.checked=$("#"+allCheckId)[0].checked;
+	});
+	
+	$("input[name='"+childCheckName+"']").click(function(){
+		var flag=true;
+		if(this.checked){
+			$("input[name='"+childCheckName+"']").each(function(){
+				if(!this.checked){
+					flag=false;
+					return false;
+				}
+			});
+			$("#"+allCheckId)[0].checked=flag;
+		}else{
+			$("#"+allCheckId)[0].checked=false;
+		}
+	});
+}
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<div id="channelDiv" title="出库渠道">
+		选择出库渠道：
+        #foreach($ch in ${channelList})
+        	<input type="radio" name="radio" value="$!{ch.code}">$!{ch.name}</input>
+        #end
+	</div>
+
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡库存管理")	
+    	
+				<form id="pageform" method="post" enctype="multipart/form-data">
+					<input type="hidden" id="outchannel" name="outchannel" />
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td background="images/table_top_bg.jpg">        	
+								#TABLETILE("卡库存管理")	        		       
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="tdw1">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+                                        <td height="30">运营商
+											<select name="opid">
+												<option value="" selected>全部</option>
+												#foreach($operator in ${operatorList})
+													<option value="$!{operator.id}" #if($!{opid}==$!{operator.id}) selected #end>$!{operator.name}</option>
+												#end
+                                            </select>
+										</td>
+										
+										<td>省份
+											<select name="prvid">
+												<option value="">全部</option>
+												#foreach($province in ${provinceList})
+													<option value="$!{province.id}" #if($!{prvid}==$!{province.id}) selected="selected" #end>$!{province.name}</option>
+												#end
+                                            </select>
+										</td>
+										
+										<td height="30">类型
+											<select name="ctype">
+												<option value="" selected >全部</option>
+												<option value="2" #if($!{ctype} == 2) selected #end>不可跨月时长卡</option>
+												<option value="1" #if($!{ctype} == 1) selected #end>包月卡</option>
+												<option value="3" #if($!{ctype} == 3) selected #end>可跨月时长卡</option>
+												<option value="4" #if($!{ctype} == 4) selected #end>电子卡</option>
+												<option value="5" #if($!{ctype} == 5) selected #end>账期卡</option>
+                                            </select>
+                                        </td>
+                                        
+                                        <td>是否自动充值
+											<select name="autorecharge">
+												<option value="" #if(!$!{autorecharge}) selected #end>全部</option>
+                                        		<option value="0" #if($!{autorecharge}==0) selected #end>否</option>
+                                        		<option value="1" #if($!{autorecharge}==1) selected #end>是</option>
+											</select>
+										</td>
+										
+										 <td>渠道
+                                        	<select name="channel">
+                                        		<option value="" #if(!$!{channel}) selected #end>全部</option>
+                                        		<option value="0" #if($!{channel}=="0") selected #end >未出库</option>
+                                        	#foreach($ch in ${channelList})
+                                        		<option value="$!{ch.code}" #if($!{channel}==$!{ch.code}) selected #end>$!{ch.name}</option>
+                                        	#end
+                                        	</select>
+                                        </td>
+                                    </tr>
+									
+									<tr>
+                                        <td colspan="5">截止日期
+											<input type="text" id="begVetime" name="begVetime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!begVetime"/>
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input type="text" id="endVetime" name="endVetime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!endVetime"/>
+										&nbsp;&nbsp;出库时间
+											<input type="text" id="begIntime" name="begIntime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!begIntime"/>
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input type="text" id="endIntime" name="endIntime" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!endIntime"/>
+										</td>
+                                        <td>
+                                        </td>
+                                       
+                                    </tr>
+									
+									<tr>
+                                        <td height="30" colspan="5" align="center">
+											<input type="button" id="searchBtn" value="查 询" />&nbsp;&nbsp;
+											<input type="button" id="addCardBtn" value="添加新卡" />&nbsp;&nbsp;
+											<input type="button" id="updateCardBtn" value="修改卡信息" />&nbsp;&nbsp;
+											<input type="button" id="addToActiveBtn" value="批量出库" />&nbsp;&nbsp;
+
+											<input type="button" id="stopCardBtn" value="停用卡" />&nbsp;&nbsp;
+											<input type="button" id="deleteCardBtn" value="删除卡" />&nbsp;&nbsp;
+											<input type="button" id="updatePwdBtn" value="修改密码" />&nbsp;&nbsp;
+										</td>
+                                    </tr>
+                                </table>
+                            </td>
+						</tr>
+						
+						<tr>
+							<td>
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td height="30" align="center" class="tdy1">
+											<input type="checkbox" id="checkAll" name="checkAll" onclick="doCheck('checkAll', 'cid');"/>卡ID
+										</td>		
+										<td align="center" class="tdy2">卡号</td>	
+										<td align="center" class="tdy2">运营商</td>
+										<td align="center" class="tdy2">省份</td>
+										<td align="center" class="tdy2">漫游</td>
+										<td align="center" class="tdy2">类型</td>
+										<td align="center" class="tdy2">入库时间</td>
+										<td align="center" class="tdy2">截止日期</td>
+										<td align="center" class="tdy2">金额(元)</td>
+										<td align="center" class="tdy2">时长</td>
+										<td align="center" class="tdy2">描述</td>
+										<td align="center" class="tdy2">出库时间</td>
+										<td align="center" class="tdy2">出库渠道</td>
+									</tr>
+									
+									#foreach($card in ${cardList})
+									<tr>
+										<td height="30" align="center" class="tdw1">
+											#if($!{card.inplace}!=1)
+												<input type="checkbox" name="cid" value="$!{card.id}" />
+											#end
+											$!{card.id}
+										</td>
+										<td align="center" class="tdw2">$!{card.no}</td>
+										<td align="center" class="tdw2">$!{operatorMap.get($!{card.opid})}</td>
+										<td align="center" class="tdw2">$!{provinceMap.get($!{card.prvid})}</td>
+										<td align="center" class="tdw2">
+											#if($!{card.rflag}==1)
+												可以漫游
+											#else
+												不可以漫游
+											#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.ctype}==1)
+												包月卡
+											#elseif($!{card.ctype}==2)
+												不可跨月时长卡
+											#elseif($!{card.ctype}==3)
+												可跨月时长卡
+											#elseif($!{card.ctype}==4)
+												电子卡
+											#elseif($!{card.ctype}==5)
+												账期卡
+											#else
+												$!{card.ctype}
+											#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.atime})$date.format('yyyy-MM-dd HH:mm:ss', $!{card.atime})#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.vetime})$date.format('yyyy-MM-dd HH:mm:ss', $!{card.vetime})#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.mvalue})
+												#set($mvalue=$!{card.mvalue}/100)
+												$mvalue 
+											#else 
+												0
+											#end
+										</td>
+										<td align="center" class="tdw2">
+											#if($!{card.bvalue})
+												#set($aa=$!{card.bvalue}) 
+												#set($bb=$aa / 3600) 
+												#set($cc=$aa % 3600)
+												#set($cc=$cc/60)
+												$bb小时#if($cc!=0 )$cc分#end
+											#else
+												0									
+											#end 
+										</td>
+										<td align="center" class="tdw2">描述</td>
+										<td align="center" class="tdw2">
+											#if($!{card.intime})
+												$date.format('yyyy-MM-dd HH:mm:ss', $!{card.intime})
+											#elseif($!{card.prtime})
+												$date.format('yyyy-MM-dd HH:mm:ss', $!{card.prtime})
+											#end
+										</td>
+										<td align="center" class="tdw2">$!{channelMap.get($!{card.channel})}</td>
+									</tr>
+									#end
+								</table>
+							</td>
+						</tr>
+						
+						#if($!{cardList})
+						<tr>
+							<td height="30" class="tdw1">
+								<p style=" width:100%; height:30px; line-height:30px; text-align:center;">
+									#PageInfo($!{pager})
+								</p>
+							</td>
+						</tr>
+						#end
+    				</table>
+    			</form> 
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>

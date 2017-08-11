@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('doc');leftNav('api','result')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div class="doc_nav">资料中心&gt;API接入-API接口说明</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+			<div class="apply_key">申请KEY</div>
+		</div>
+		
+		<div class="doc_right">
+			<div class="doc_right_nav_title">返回码说明</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>状态码</th>
+						<th>说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">9000</td>
+						<td>成功</td>
+					</tr>
+					<tr>
+						<td class="tdname">9001</td>
+						<td>参数错误，请参考接口文档</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">9002</td>
+						<td>卡种类错误</td>
+					</tr>
+					<tr>
+						<td class="tdname">9003</td>
+						<td>卡品错误</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">9004</td>
+						<td>卡号错误</td>
+					</tr>
+					<tr>
+						<td class="tdname">9005</td>
+						<td>卡密码错误</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">9006</td>
+						<td>IP非法</td>
+					</tr>
+					<tr>
+						<td class="tdname">9007</td>
+						<td>卡已下线,仅用于在线查询接口</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">9008</td>
+						<td>服务器异常</td>
+					</tr>
+					<tr>
+						<td class="tdname">9009</td>
+						<td>已超过开卡数目限制</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

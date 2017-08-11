@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.NoticeMapper">
+	<sql id="table">
+		open_platform_notice
+	</sql>
+	<sql id="pager">
+		limit #{pager.skipNo},#{pager.pageSize}	
+	</sql>
+	<insert id="insert">
+	insert into <include refid="table"/>(userid,message,status,intime) values(#{userid},#{message},#{status},#{intime})
+	</insert>
+	<select id="findNotice" resultType="notice">
+	select * from <include refid="table"/>
+	<where>
+		<if test="userid!=null">
+			userid=#{userid}
+		</if>
+		<if test="status!=null">
+		and	status=#{status}
+		</if>
+	</where>
+	order by intime desc
+		<if test="pager!=null">
+			<include refid="pager"/>
+		</if>
+	</select>
+	<update id="updateByUserId">
+		update <include refid="table"/> set status=1 where userid=#{userid}
+	</update>
+	<delete id="delete">
+	 delete from <include refid="table"/>
+	 where id=#{id}
+	</delete>
+	<select id="countByParam" resultType="Integer">
+	select count(*) from <include refid="table"/>
+	<where>
+		<if test="paramMap.id!=null">
+			userid=#{paramMap.id}
+		</if>
+		<if test="paramMap.status!=null">
+		and status=#{paramMap.status}
+		</if>
+	</where>
+	</select>
+</mapper>

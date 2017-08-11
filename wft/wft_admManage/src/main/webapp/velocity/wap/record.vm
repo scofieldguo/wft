@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!{head_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style/jquery.mobile-1.4.5.min.css"/>
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+		<style>
+			tr{color:#666;border-bottom:1px #E0E0E0 solid;}
+			tr:nth-child(even){background:#e9e9e9;}
+			.pager{height:40px;line-height:40px; text-align:center;}
+		</style>
+	</head>
+<body>
+	<div data-role="page">
+		<div data-role="panel" id="overlayPanel" data-display="overlay"> 
+				<form method="get" data-ajax="false" action="records.do">
+				 	<label for="tmall_order">卡号:</label>
+					<input type="text" name="card_no" id="card_no" value=$!{cardNo}>
+			 		<input type="submit" value="确定" data-theme="b"> 
+			    </form>
+			</div> 
+		<div data-role="header" data-theme="b">
+			<h1>销售记录</h1>
+	    	<a href="wapIndex.do" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left" target="_self">Home</a>
+	    	<a href="#overlayPanel" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left" target="_self">Search</a>
+		</div>
+		<div role="main" class="ui-content">
+			<table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow" id="myTable" data-column-btn-text="显示或隐藏列">
+				<thead>
+					<tr>
+						<th class="firstStyle" width="100" data-priority="1">卡号</th>
+						<th data-priority="1">密码</th>
+						<th data-priority="1">时长</th>
+						<th data-priority="2">有效期</th>
+						<th data-priority="2">淘宝</th>
+						<th data-priority="2">淘宝订单</th>
+						<th data-priority="2">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				#if($!{records}&&$!{records.size()}>0)
+					#foreach($record in $!{records})
+						<tr>
+							<td>$!{record.cno}</td>
+							<td>$!{record.pwd}</td>
+							<td>
+								#set($time = $!{record.duration}/3600)
+								$!{time}
+							</td>
+							<td>$!{date.format('yyyy-MM-dd HH:mm:ss',$!{record.end_time})}</td>
+							<td>$!{record.shop_name}</td>
+							<td>$!{record.order_id}</td>
+							<td><a href="to_recharge.do?card_no=$!{record.cno}&pageId=${pager.pageIndex}" class="ui-btn ui-corner-all ui-shadow" target="_self">去充值</a></td>
+			 			</tr>
+		 			#end
+		 		#else
+		 			<tr>
+						<td colspan="5">无数据</td>
+		 			</tr>
+				#end
+				</tbody>
+	 		</table>
+	 	</div>
+	 	<div data-role="footer" style="text-align:center;">
+	   		#if($!{records} && $!{records.size()}>0)
+				#PAGEWAP("records.do?q=1")
+			#end
+		 </div>
+	</div>
+</body>
+</html>

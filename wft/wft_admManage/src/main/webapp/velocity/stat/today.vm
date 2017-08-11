@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+	<script type="text/javascript">
+
+	function exportExcel(){
+      var start=$("#start").val();
+      var end=$("#endTime").val();
+	  location.href="statExport.do?start="+start+"&end="+end;
+	}
+	function statchannel(channel){
+	  var start=$("#start").val();
+      var end=$("#endTime").val();
+	  location.href="statChannel.do?start="+start+"&end="+end+"&channel="+channel;
+
+	}
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("运营数据统计")	
+			
+				<form id="pageform" action="stat.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="31" background="images/table_top_bg.jpg">        	
+								#TABLETILE("当日数据")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td height="30" colspan="31" align="center" class="tdw1">
+								日期：<input id="start" name="start" type="text" value="$!{start}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd '})" />&nbsp;&nbsp
+								至&nbsp;&nbsp <input id="endTime" name="end" type="text" value="$!{end}" class="Wdate" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd '})"/>
+							</td>
+						</tr>
+						<tr >
+							<td height="30" colspan="31" align="center" class="tdw1">
+								<input type="submit" value="查询">
+								<input type="button" value="导出" onclick="exportExcel()"/>
+							</td>
+                        </tr>
+						<tr>
+							<td height="30" align="center" class="tdy1">日期</td>	
+							<td align="center" class="tdy2">渠道</td>
+							<td align="center" class="tdy2">电信消耗时长-平台</td>
+							<td align="center" class="tdy2">电信消耗时长-运营商</td>
+							<td align="center" class="tdy2">电信运营商平台统计消耗时长</td>
+							<td align="center" class="tdy2">移动消耗时长-平台</td>	
+							<td align="center" class="tdy2">移动消耗时长-运营商</td>
+							<td align="center" class="tdy2">打开jar包次数</td>
+							<td align="center" class="tdy2">打开jar包人数</td>
+							<td align="center" class="tdy2">电信连接成功次数</td>
+							<td align="center" class="tdy2">电信连接失败次数</td>
+							<td align="center" class="tdy2">电信次数连接成功率</td>
+							<td align="center" class="tdy2">电信连接成功人数</td>
+							<td align="center" class="tdy2">电信连接失败人数</td>
+							<td align="center" class="tdy2">电信人数连接成功率</td>
+							<td align="center" class="tdy2">移动连接成功次数</td>
+							<td align="center" class="tdy2">移动连接失败次数</td>
+							<td align="center" class="tdy2">移动连接次数成功率</td>
+							<td align="center" class="tdy2">移动连接成功人数</td>
+							<td align="center" class="tdy2">移动连接失败人数</td>
+							<td align="center" class="tdy2">移动连接人数成功率</td>
+							<td align="center" class="tdy2">移动连接成功热点数</td>
+							<td align="center" class="tdy2">移动连接失败热点数</td>
+							<td align="center" class="tdy2">移动连接热点成功率</td>
+							<td align="center" class="tdy2">移动连接3次以上不成功热点数</td>
+							<td align="center" class="tdy2">电信连接成功热点数</td>
+							<td align="center" class="tdy2">电信连接失败热点数</td>
+							<td align="center" class="tdy2">电信热点连接成功率</td>
+							<td align="center" class="tdy2">电信连接3次以上不成功热点数</td>
+							<td align="center" class="tdy2">移动取卡失败次数</td>
+							<td align="center" class="tdy2">电信取卡失败次数</td>
+						</tr>
+						#if($!list && $!{list.size()}>0)
+						#foreach($stat in ${list})
+						<tr>
+							<td height="40"  align="center" class="tdw1">$!{stat.dairy}</td>
+							<td align="center"   class="tdw2"><a href="#" onclick="statchannel('$!{stat.channel}')">$!{stat.channelName}</a></td>
+							<td align="center"   class="tdw2">$!{stat.cnutvaluestr}</td>
+							<td align="center"   class="tdw2">$!{stat.cnutvalueopstr}</td>
+							<td align="center"   class="tdw2">$!{stat.wftConsumeStat.ctccvalue}</td>
+							<td align="center"   class="tdw2">$!{stat.cmutvalue}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmutvalueop}</td>
+							<td align="center"   class="tdw2">$!{stat.sdkcnt}</td>
+							<td align="center"   class="tdw2">$!{stat.sdkper}</td>
+							<td align="center"   class="tdw2">$!{stat.cncnsucccnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cncnfailcnt}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cncnrate}%</td>
+							<td align="center" 	 class="tdw2">$!{stat.cncnsuccper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cncnfailper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cncnperrate}%</td>
+							<td align="center"   class="tdw2">$!{stat.cmcnsucccnt}</td>
+							<td align="center"   class="tdw2">$!{stat.cmcnfailcnt}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmcnrate}%</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmcnsuccper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmcnfailper}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmcnperrate}%</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmsuccmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmfailmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmmacrate}%</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmfaovthree}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cnsuccmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cnfailmac}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cnmacrate}%</td>
+							<td align="center" 	 class="tdw2">$!{stat.cnfaovthree}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cmaccesscardfail}</td>
+							<td align="center" 	 class="tdw2">$!{stat.cnaccesscardsucc}</td>
+						</tr>
+						#end
+						
+						<tr>
+							<td height="30" colspan="31" class="tdw1"><p style=" width:100%; height:30px; line-height:30px; text-align:center;">#PageInfo($!{pager})</p></td>
+						</tr>
+						#else
+                            <tr>
+								<td colspan="31" align="center" class="tdw1" >无数据
+                                </td>
+							</tr>
+							#end
+	  
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

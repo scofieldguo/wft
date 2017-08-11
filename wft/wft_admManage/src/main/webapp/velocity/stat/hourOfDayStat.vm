@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+	<script type="text/javascript">
+
+	function findDayData(startDate, endDate,channel,opid,hour){
+     alert(startDate);
+     alert(endDate);
+     alert(channel);
+     alert(opid);
+     alert(hour);
+     location.href="findHourStatByDay.do?startDate="+startDate+"&endDate="+endDate+"&channel="+channel+"&opid="+opid+"&hour="+hour;
+	}
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("运营数据统计")	
+			
+				<form id="pageform" action="findHourStat.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="7" background="images/table_top_bg.jpg">        	
+								#TABLETILE("日使用时间分布")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td colspan="7">        	
+								<a href="javascript:history.go(-1)">返回</a>	       
+							</td>
+						</tr>
+						<tr>
+							<td height="30" align="center" class="tdy1">时间</td>
+							<td align="center" class="tdy2">小时</td>
+							<td align="center" class="tdy2">渠道</td>
+							<td align="center" class="tdy2">运营商</td>
+							<td align="center" class="tdy2">连接次数</td>
+							<td align="center" class="tdy2">连接成功次数</td>
+							<td align="center" class="tdy2">连接成功率</td>
+						</tr>
+						#if($!hourList && $!{hourList.size()}>0)
+						#foreach($stat in ${hourList})
+						<tr>
+							<td height="40"  align="center" class="tdw1">$!{stat.dairyStr}</td>
+							<td align="center"   class="tdw2">${stat.hour}</td>
+							<td align="center"   class="tdw2">$!{channelUser.name}</td>
+							<td align="center"   class="tdw2">
+								#if($!opList && $!{opList.size()}>0)
+								#foreach($op in $!{opList})
+								#if(${op.id} == ${stat.opid})
+								$!{op.name}
+								#end
+								#end
+								#end
+							</td>
+							<td align="center"   class="tdw2">${stat.conncnt}</td>
+							<td align="center"   class="tdw2">$!{stat.connsuc}</td>
+							<td align="center" 	 class="tdw2">$!{stat.connlv}%</td>
+						</tr>
+						#end
+						#else
+                            <tr>
+								<td colspan="7" align="center" class="tdw1" >无数据
+                                </td>
+							</tr>
+							#end
+	  
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

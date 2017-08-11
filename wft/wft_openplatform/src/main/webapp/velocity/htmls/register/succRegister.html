@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript">
+	function sendMail(mail){
+	 jQuery.ajax({
+	 	url:'user_sendMailAgain.action',
+	 	type:'GET',
+	 	data:{email:mail},
+	 	dataType:"text",
+	 	success:function(data){
+	 		if(data=='1'){
+	 			alert("邮件发送成功！！！");
+	 		}else{
+	 			alert("邮件发送失败！！！");
+	 		}
+	 	
+	 	}
+	 });
+	}
+</script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;注册</div>
+	<div id="register">
+		<div class="register_title">
+			<img src="${images_url}/register_secc_ico.png" alt="" />
+			<h3>$!{activeResult}</h3>
+		</div>
+		
+		<div class="no_email">
+			#if($!{activeFlag}==1)
+			<p>您现在可以：</p>
+			<p><a href="$!{server_url}/manage_account.action">进入管理中心</a></p>
+			#else
+			<p>1、请您重新尝试发送&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="sendMail('$!{email}')">重新发送</a></p>
+			<p>2、<a href="$!{server_url}/user_registUI.action">更换邮箱</a></p>
+			#end
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

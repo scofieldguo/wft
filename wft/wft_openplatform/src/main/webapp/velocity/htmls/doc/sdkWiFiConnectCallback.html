@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#doc_right_nav_other ul li a").click(function(){
+		$(this).parent().addClass("current").siblings().removeClass("current");
+	});
+	
+	$("a").each(function (){
+   		 var link = $(this);
+   		 var href = link.attr("href");
+   		 if(href && href[0] == "#")
+	    {
+     	 var name = href.substring(1);
+        $(this).click(function() {
+     		var nameElement = $("[name='"+name+"']");
+        	var idElement = $("#"+name);
+       		var element = null;
+        if(nameElement.length > 0) {
+           element = nameElement;
+        } else if(idElement.length > 0) {
+           element = idElement;
+        }
+        if(element) {
+          var offset = element.offset();
+          window.parent.scrollTo(offset.left, offset.top);
+        }
+        return false;
+      });
+    }
+  });
+	
+});
+</script>
+</head>
+<body onload="viewNavTab('doc');leftNav('sdk','doc')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div id="top"></div>
+		<div class="doc_nav"><a href="$!{server_url}/html_doc_index.action">文档中心</a>&gt;<a href="$!{server_url}/html_doc_sdkdoc.action">SDK接入-SDK接口文档</a>&gt;WiFiConnectCallback</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+		</div>
+		
+		<div class="doc_right">
+			<div id="doc_right_nav_other" >
+				<ul>
+					<li class="current"><a href="#top1">接口说明</a></li>
+					<li><a href="#top2">方法目录</a></li>
+					<li><a href="#top3">方法详情</a></li>
+					<li><a href="#top4">示例代码</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div class="doc_right_nav_title" id="top1">1.接口说明</div>
+			<div class="doc_right_nav_content">
+				<p>该接口为抽象类接口，需要合作方APP根据自身需求和产品形态自行并有选择性的实现，该接口的所有方法都由SDK主动发起，APP被动接收。</p>
+			</div>
+			<div class="doc_right_nav_title" id="top2">2.方法目录</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>方法名称</th>
+						<th>方法说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >onScanResultsAvailable</td>
+						<td>用户扫描可用WiFi回调</td>
+					</tr>
+					<tr>
+						<td >onConnectStateChange</td>
+						<td>用于connect接口回调，显示连接中的状态变化。</td>
+					</tr>
+					<tr class="tr_line">
+						<td >onConnectSuccess</td>
+						<td>用于connect方法，成功连接上WiFi后回调。</td>
+					</tr>
+					<tr>
+						<td >onConnectFail</td>
+						<td>用于connect方法，连接WiFi失败回调。</td>
+					</tr>
+					<tr class="tr_line">
+						<td >onConnectActionChange</td>
+						<td>连接上WiFi后监听连接状态变化</td>
+					</tr>
+					<tr>
+						<td >onDisconnectResult</td>
+						<td>退出连接的回调</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top3">3.方法详情</div>
+			<div class="doc_right_nav_content">
+				<h3 id="skdTop1">.onScanResultsAvailable</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onScanResultsAvailable(int level){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>用户扫描可用WiFi回调</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>SDK注册监听了SCAN_RESULTS_AVAILABLE_ACTION广播，会自行扫描周围WiFi列表，然后根据SDK所支持的SSID进行过滤，把可用的SSID的信号级别回调给APP。通知APP是否有可用的运营商热点。（若因APP自身产品形式需要自身扫描WiFi热点，APP需要先获取SDK所支持的SSID列表【参：getSupportSsid()】，根据SSID列表进行过滤，可以忽略该回调函数。）</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >level</td>
+						<td>Int</td>
+						<td class="sdk_prarms_intro">WiFi信号强度级别<br/>【0】无可用热点<br/>【1-5】有可以热点，分由若到强1-5个级别</td>
+					</tr>
+				</table>
+				
+				<h3 id="skdTop2">.onConnectStateChange</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onConnectStateChange(int stateType){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>用于connect接口回调，显示连接中的状态变化。</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>该方法对应功能接口中的connect方法，用于显示连接WiFi过程中的状态，如“正在连接热点”、“正在获取网络IP”等。</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >stateType</td>
+						<td>Int</td>
+						<td class="sdk_prarms_intro">其值定义如下（括号内为对应常量名定义）：<br/>0：正在用户鉴权（USER_AUTHENTICATION）<br/>1：正在连接WiFi热点（CONNECTING_QQ_WIFI）<br/>2：正在获取网络IP地址（GET_INTERNET_ADDRESS）<br/>3：正在确认登录信息（CONFIRM_LOGIN_INFO）</td>
+					</tr>
+				</table>
+				<h3 id="skdTop3">.onConnectSuccess</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onConnectSuccess(String openid, String ssid){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>监测当前是否有可用WiFi</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>调该方法对应功能接口中的connect方法，用于连接WiFi成功后回调通知APP。</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >openid</td>
+						<td>String</td>
+						<td class="sdk_prarms_intro">APP传入的openid</td>
+					</tr>
+					<tr>
+						<td >ssid</td>
+						<td>String</td>
+						<td class="sdk_prarms_intro">成功连接的SSID</td>
+					</tr>
+				</table>
+				<h3 id="skdTop4">.onConnectFail</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onConnectFail(int resultCode, String openid, String bssid){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>用于connect方法，连接WiFi失败回调。</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>该方法对应功能接口中的connect方法，用于连接WiFi失败后回调通知APP。</td>
+					</tr>
+				</table>
+				
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >resultCode</td>
+						<td>Int</td>
+						<td class="sdk_prarms_intro">连接失败状态码，定义如下（常量名）：<br/>10001：openid不符合规则（FAIL_BAD_OPENID）<br/>
+						10002：登录WiFi鉴权失败（FAIL_LOGIN_PROTAL）<br/>10003：不支持该SSID（FAIL_NO_SUPPORT_SSID）<br/>
+						10004：取卡失败（FAIL_ACQUIRECARD）<br/>10005：无网络或网络太差（FAIL_NO_INTERNET）<br/>10099：SDK异常（FAIL_CODE_EXCEPTION）</td>
+					</tr>
+					<tr>
+						<td >openid</td>
+						<td>String</td>
+						<td class="sdk_prarms_intro">APP传入的openid</td>
+					</tr>
+					<tr class="tr_line">
+						<td >ssid</td>
+						<td>String</td>
+						<td class="sdk_prarms_intro">连接失败的SSID</td>
+					</tr>
+				</table>
+				
+				<h3 id="skdTop5">.onConnectActionChange</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onConnectActionChange(int resultCode){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>连接上WiFi后监听连接状态变化</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>在连接成功后，可能会存在用户不主动断开、走出热点范围等被动断开的情况。这时SDK会主动使用该方法回调告知APP正在连接的WiFi已经断开。</td>
+					</tr>
+				</table>
+				
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td >resultCode</td>
+						<td>Int</td>
+						<td class="sdk_prarms_intro">断开原因状态码：定义如下（常量名）<br/>1：断开（离开热点等各种原因）</td>
+					</tr>
+				</table>
+				<h3 id="skdTop6">.onDisconnectResult</h3>
+				<table class="doc_right_sdk_table">
+					<tr>
+						<th>定义</th>
+						<td>public void onDisconnectResult(boolean isSuccess){};</td>
+					</tr>
+					<tr class="tr_line">
+						<th>功能</th>
+						<td>退出连接的回调</td>
+					</tr>
+					<tr>
+						<th>说明</th>
+						<td>用户主动断开，告知APP是否断开成功</td>
+					</tr>
+				</table>
+				<h3>参数列表</h3>
+				<table>
+					<tr>
+						<th>参数名</th>
+						<th>类型</th>
+						<th>参数说明</th>
+					</tr>
+					<tr>
+						<td >isSuccess</td>
+						<td>Boolean</td>
+						<td class="sdk_prarms_intro">断开结果<br/>true：断开成功<br/>false：断开失败</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top4">4.示例代码</div>
+			<div class="doc_right_nav_content">
+				<div class="doc_dash_text">
+					<p>请求示例代码</p>
+				</div>
+			</div>
+		</div>
+		<a href="#top" target="_self"><img class="gotop" src="${images_url}/go_top.png" alt="" /></a>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		$("#doc_right_nav_other").smartFloat(); 
+	</script>
+</body>
+</html>

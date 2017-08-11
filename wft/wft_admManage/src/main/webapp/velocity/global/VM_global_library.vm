@@ -1,0 +1,88 @@
+##标题
+#macro(TITLE)
+wifi通运营平台
+#end
+###页面头
+#macro(HEARD)	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>#TITLE()</title>
+		<link href="style/jquery-ui.css" rel="stylesheet" type="text/css" />
+		<link href="style/style.css" rel="stylesheet" type="text/css" />
+	    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="js/calendar.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script language="javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/validate.js"></script>
+    </head>
+#end
+
+##----分页-----##
+#macro( PageInfo $pager )
+	共$!{pager.recCount}条记录&nbsp;
+	第$!{pager.pageIndex}/$!{pager.pageCount}页&nbsp;&nbsp;
+	<input type="hidden" id="pageNum" value="$!{pager.pageCount}" size="7"/>
+	<a href="javascript:_submitPaged(1)" class="redlink">【首页】</a>&nbsp;
+	<a href="javascript:prev()" class="redlink">【上一页】</a>&nbsp;
+	<a href="javascript:next()" class="redlink">【下一页】</a>
+	<a href="javascript:_submitPaged($!{pager.pageCount})" class="redlink">【尾页】</a>&nbsp;
+	<input onkeyup="value=value.replace(/[^\d]/g,'')" id="pageId" name="pageId"  value="$!{pager.pageIndex}" size="7"/>
+	<a href="javascript:jump()" class="redlink">【跳转】</a>&nbsp;
+#end
+
+###您现在的位置>>
+#macro(MENUADDRESS $menuname)
+	<p id="rightPath">您现在的位置：<a href="#">wifi通运营平台</a> >> <a href="#">$menuname</a></p>
+#end
+
+###展示内容标题
+#macro(TABLETILE $tabletile)
+	<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="170" background="images/table_top_left.jpg">　　<img src="images/helveticons1_024.png" width="16" height="16" align="absbottom"><span class="style2">$tabletile</span></td>
+			<td class="table_bitch">　</td>
+			<td width="10" align="right"><img src="images/table_top_right.jpg" width="10" height="35"></td>
+    	</tr>
+	</table>
+#end
+
+##提交按钮
+#macro(SUBBUTTON)
+	<input name="submit" type="submit" value="提 交">&nbsp;&nbsp;
+#end
+
+##重置按钮
+#macro(RESBUTTON)
+	<input name="reset" type="reset"  value="重 置">&nbsp;&nbsp;
+#end
+
+##返回按钮
+#macro(REBUTTON)
+	<input type="button" name="back" onclick="javascript:history.back(-1);" value="返 回"/>&nbsp;&nbsp;
+#end
+
+###页脚
+#macro(FOOT)
+	<table width="1124" border="0" align="center" cellpadding="0" cellspacing="0">
+		<tr>
+			<td height="40" align="center">2013 北京北纬通信科技股份有限公司</td>
+		</tr>
+	</table>
+#end
+
+
+#macro(PAGEWAP $value)
+	<a href="$!{value}&pageId=1" target="_self">First</a>
+	#if($!{pager.pageIndex}>1)
+		#set($x = $!{pager.pageIndex} - 1)
+		<a href="$!{value}&pageId=$!{x}" target="_self">Prev</a>
+	#end
+	【${pager.pageIndex}/${pager.pageCount}】
+	#if($!{pager.pageIndex}<$!{pager.pageCount})
+		#set($y = $!{pager.pageIndex} + 1)
+		<a href="$!{value}&pageId=$!{y}" target="_self">Next</a>
+	#end
+	<a href="$!{value}&pageId=$!{pager.pageCount}" target="_self">Last</a>
+#end

@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bw30.wft</groupId>
+  <artifactId>wft</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <modules>
+  	<module>wft_model</module>
+  	<module>wft_common</module>
+  	<module>wft_dao</module>
+  	<module>wft_dataService</module>
+  	<module>wft_mem</module>
+  	<module>wft_admManage</module>
+  	<module>wft_mongoDB</module>
+  	<module>cardCacheProto_common</module>
+  	<module>wft_admApi</module>
+  	<module>wft_openplatform</module>
+  	<module>wft_jobs</module>
+  	<module>wft_cardPoolApi</module>
+  	<module>wft_cardPoolService</module>
+  </modules>
+</project>

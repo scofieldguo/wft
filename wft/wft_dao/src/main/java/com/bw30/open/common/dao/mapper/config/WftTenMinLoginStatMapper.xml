@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftTenMinLoginStatMapper">
+	<sql id="table">
+		wft_tenMin_login_stat
+	</sql>
+	<select id="findEveryHourConnStat" resultType="wftTenMinLoginStat">
+		SELECT channel ,`hour` ,opid,sum(conncnt) as conncnt,sum(connsuc) as connsuc
+		from <include refid="table"/>
+		<where>
+			<if test="paramMap.channel !=null">
+				and channel =#{paramMap.channel}
+			</if>
+			<if test="paramMap.opid !=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.startDate!=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>= #{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[and DATE_FORMAT(dairy,'%Y-%m-%d')<= #{paramMap.endDate}]]>
+			</if>
+		</where>
+		group by channel,hour,opid;
+	</select>
+	<select id="findEveryHourConnStatByDay" resultType="wftTenMinLoginStat">
+		SELECT dairy ,channel ,`hour` ,opid,sum(conncnt) as conncnt,sum(connsuc) as connsuc
+		from <include refid="table"/>
+		<where>
+			<if test="paramMap.channel !=null">
+				and channel =#{paramMap.channel}
+			</if>
+			<if test="paramMap.opid !=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.hour !=null">
+				and hour = #{paramMap.hour}
+			</if>
+			<if test="paramMap.startDate!=null">
+				and DATE_FORMAT(dairy,'%Y-%m-%d')>= #{paramMap.startDate}
+			</if>
+			<if test="paramMap.endDate !=null">
+				<![CDATA[and DATE_FORMAT(dairy,'%Y-%m-%d')<= #{paramMap.endDate}]]>
+			</if>
+		</where>
+		group by dairy,channel,hour,opid;
+	</select>
+	
+	<select id="findByParam" resultType="wftTenMinLoginStat">
+		select opid,sum(conncnt) as conncnt ,sum(connsuc) as connsuc,sum(nocard) as nocard from <include refid="table"/>
+		<where>
+			<if test="paramMap.channel !=null">
+	 			and channel = #{paramMap.channel}
+	 		</if>
+	 		<if test="paramMap.dairy !=null">
+	 			and dairy = #{paramMap.dairy}
+	 		</if>
+	 		<if test="paramMap.hour !=null">
+	 			and hour = #{paramMap.hour}
+	 		</if>
+	 		<if test="paramMap.min !=null">
+	 			and min = #{paramMap.min}
+	 		</if>
+		</where>
+		group by opid;
+	</select>
+</mapper>

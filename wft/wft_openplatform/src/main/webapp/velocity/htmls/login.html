@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/validate.js"></script>
+<script type="text/javascript" src="${js_url}/common.js"></script>
+</head>
+<body onload="viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;登录</div>
+	<div id="login">
+		<!-- <div>
+			<img src="${images_url}/login_1.png" alt="" />
+			<img class="img2" src="${images_url}/login_2.png" alt="" />
+			<span>请重新登陆</span>
+		</div> -->
+		<form action="user_regist.action" method="post" id="registForm" onsubmit="return true;" autocomplete="off">
+			<span>
+				<span class="item_name" style="width: 650px;">
+					<input id="user_email_html" class="login_input account_input font16" type="text" onclick="if(this.value=='请填写登录邮箱')this.value=''" onblur="if(value ==''){value='请填写登录邮箱'}" value="请填写登录邮箱" name="email"/>
+				</span>
+				<span class="font16">
+					<a href="user_registUI.action">没有账户？立即注册</a>
+				</span>
+			</span>
+			<span>
+				<span class="item_name" style="width: 650px;">
+					<input id="user_pwd_html" class="login_input password_input font16" type="text" onclick="if(this.value=='请填写登录密码')this.value=''" onblur="if(value ==''){value='请填写登录密码'}" value="请填写登录密码" name="pwd"/>
+					<input id="user_pwd_html_true" class="login_input password_input font16" type="password" name="pwd"/>
+				</span>
+				<span class="font16">
+					<a href="user_findPWDStep1.action">忘记密码？</a>
+				</span>
+			</span>
+			<div id="error_desc_html"></div>
+			<span >
+				<span style="width: 288px;"></span>
+				<span class="remenber">
+					<input id="remenber_html" type="checkbox" value="Y" name="remember_account"  class="remember_account"/>
+					<span class="font16">记住账号</span>
+				</span>	
+			</span>
+			<input id="login_html" class="login_button font18 weight_bold" type="button" value="登录"/>
+		</form>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	<script type="text/javascript">
+   $(function(){
+  	 jQuery.ajax({
+			url:'user_getUserFromCookie.action',
+			type:'GET',
+			dataType:'text',
+			async: false,
+			cache : false,
+			success:function(data){
+			    var text=data.split(',');
+			    if(text[0]!='null'){
+					$("#user_email_html").val(text[0]);
+				}
+				if(text[1]==$("#remenber").val()){
+					$("#remenber_html").attr("checked",true);
+				}
+			}
+		});
+   
+ 	  $("#user_email_html").focus();
+ 	  
+  	  $(document).keydown(function(event){
+   	 	 if(event.keyCode==13){
+   	 	 loginht();
+   	 	 }
+  	 });
+  	 
+  	 $("#user_pwd_html").focus(function() {
+			$(this).hide();
+			$("#user_pwd_html_true").show();
+			$("#user_pwd_html_true").focus();
+	 });
+		
+	 $("#user_pwd_html_true").blur(function() {
+			if ($(this).val() == "") {
+				$(this).hide();
+				$("#user_pwd_html").show();
+			}
+	 });
+		$("#user_pwd_html_true").hide();
+   });
+	
+   $("#login_html").click(function(){
+    	loginht();
+    });
+     function loginht(){
+		if(!checkemailformat("user_email_html")){
+			$("#error_desc_html").html("请正确填写邮箱");
+			return false;
+		}else if(!checkString("user_pwd_html_true",6,14)){
+			$("#error_desc_html").html("请正确填写登录密码");
+			return false;
+		}else{
+			var result=false;
+			var rem="no";
+			if($("#remenber_html").attr("checked")==true){
+			rem=$("#remenber_html").val();
+			}
+			jQuery.ajax({
+				url: 'user_login.action',
+				data: 'email='+jQuery.trim($("#user_email_html").val())+'&pwd='+jQuery.trim($("#user_pwd_html_true").val())+'&auto='+rem,
+				type: 'POST',
+				dataType: "text",
+				async: false,
+				cache : false,
+				success: function(text){
+					if('0'==text){
+						$("#error_desc_html").html("账号还未激活");
+					}else if('1'==text){
+						location.href="$!{server_url}/manage_account.action";
+					}else{
+						$("#error_desc_html").html("账号或密码错误");
+					}
+				}
+			});
+			return result;
+		}
+	}
+	</script>
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

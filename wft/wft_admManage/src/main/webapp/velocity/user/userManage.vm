@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+<script type="text/javascript">
+	function chargeDialog(uid,channel,mails){
+		$("#uid").val(uid);
+		$("#channel").val(channel);
+		$('#dialogDiv').dialog('open');
+		$('#mail').html(mails);
+	
+	}
+	
+	function noticeDialog(uid,retime,channel,mails){
+		$("#uidWarn").val(uid);
+		$("#channelWarn").val(channel);
+		$("#retime").val(retime);
+		$('#dialogNoticeDiv').dialog('open');
+		$('#mailWarn').html(mails);
+	}
+	
+	function chargeRecord(uid){
+		location.href="chargeRecord.do?id="+uid;
+	}
+	
+	function addDefaultChannel(channel, name){
+		jQuery.ajax({
+				url: 'addDefaultChannel.do',
+				data: 'channel='+channel+'&name='+name,
+				type: 'POST',
+				dataType: "text",
+				async: false,
+				cache : false,
+				success: function(text){
+					if(text == 'ok'){
+						alert('添加成功！');
+					}
+					else{
+						alert('添加失败，渠道信息已存在！');
+					}
+				}
+			});
+	}
+
+	function goCharge(){
+		var uid = $("#uid").val();
+		var chargeHours= $("#dialogHours").val();
+		var chargeCost= $("#dialogCost").val();
+		var sendNotice=$("#sendNotice").val();
+		var sendMail=$("#sendMail").val();
+		var mails=$("#mail").val();
+		alert(mails);
+		location.href="charge.do?id="+uid+"&chargeHours="+chargeHours+"&chargeCost="+chargeCost+"&sendNotice="+sendNotice+"&sendMail="+sendMail+"&mail="+mails;
+	}
+	
+	function sendWarn(){
+		var uid=$("#uidWarn").val();
+		var mails=$("#mailWarn").val();
+		var sendMail=$("#sendWarnMail").val();
+		var  notice=$("#sendWarnNotice").val();
+		location.href="sendWarn.do?id="+uid+"&sendMail="+sendMail+"&mail="+mails+"&notice="+notice;
+	}
+	
+	function checkNum(){
+		var hourNum=checkNumber("dialogHours",0,99999999999);
+		var costNum=checkNumber("dialogCost",0,99999999999);
+		if(!hourNum){
+			$("#error").html("请正确输入");
+  			return false;
+  		}
+		else if(!costNum){
+			$("#error").html("请正确输入");
+  			return false;
+		}
+		else{
+  			$("#error").html("");	
+  			return true;
+  		}
+	}
+	
+	function checkMail(){
+		var flag=$("#sendMail").val();
+		var warnflag=$("#sendWarnMail").val();
+		var mails;
+		var mail;
+		var search_str = /^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/;
+		if(flag==1){
+		mails=$("#mail").val();
+		if(mails.trim().length==0){
+			$("#error").html("邮箱不能为空");
+			return false;
+		}
+		mail=mails.trim().split(";");
+    		for(var i=0;i<mail.length;i++){
+    			if(mail[i].trim.length!=0&&!search_str.test(mail[i])){
+    				$("#error").html("邮箱格式不正确");
+      				return false;
+    			}
+    		}
+		}
+		if(warnflag==1){
+		mails=$("#mailWarn").val();
+		if(mails.trim().length==0){
+			$("#errorWarn").html("邮箱不能为空");
+			return false;
+		}
+		mail=mails.trim().split(";");
+    		for(var i=0;i<mail.length;i++){
+    			if(mail[i].trim.length!=0&&!search_str.test(mail[i].trim())){
+    				$("#errorWarn").html("邮箱格式不正确");
+      				return false;
+    			}
+    		}
+		
+		}
+		return true;
+	}
+	
+	$(document).ready(function(){
+    	$('#dialogDiv').dialog({  
+            modal:true,  
+            autoOpen:false,  
+            width: 250,  
+            height:300,  
+           	resizable:false,  
+            position:"center",  
+            buttons: {  
+                '确定': function() {  
+                    $(this).dialog('close');
+					if(checkNum()&&checkMail()){
+						goCharge();
+						alert("充值成功！");
+						return true;
+					}
+					alert("充值失败！");
+					return false;
+                },  
+                '取消': function() {  
+                    $(this).dialog('close'); 
+                }
+            },  
+			open: function(){
+				$(".ui-dialog-titlebar-close").hide();
+			}
+        });  
+		
+		
+		$('#dialogNoticeDiv').dialog({  
+            modal:true,  
+            autoOpen:false,  
+            width: 250,  
+            height:300,  
+           	resizable:false,  
+            position:"center",  
+            buttons: {  
+                '确定': function() {  
+                    $(this).dialog('close');
+					if(checkMail()){
+						sendWarn();
+						alert("发送预警成功！");
+						return true;
+					}
+					alert("发送预警失败！");
+					return false;
+                },  
+                '取消': function() {  
+                    $(this).dialog('close'); 
+                }
+            },  
+			open: function(){
+				$(".ui-dialog-titlebar-close").hide();
+			}
+        });  
+		
+		
+		$("#dialogHours").blur(function(){
+			checkNum();
+		})
+		$("#dialogCost").blur(function(){
+			checkNum();
+		})
+		$("input[name='mail']").blur(function(){
+			checkMail();
+		})
+	});
+</script>
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("账号信息管理")	
+                <div id="dialogDiv" style="height:10px" title="充值">
+						<input type="hidden" id="uid" />
+						充值时长:<input type="text" id="dialogHours"/><br/> 
+						<div style="height:10px">
+                        </div>
+						充值金额:<input type="text" id="dialogCost"/> <br/>
+						<div style="height:10px">
+                        </div>
+						<input type="checkbox" value="0" id="sendNotice" onclick="this.value=(this.value==0)?1:0"/>&nbsp;
+						发送通知: <input type="text" id="channel" disabled ="disabled"/><br/>
+						<div style="height:10px">
+                        </div>
+						<input type="checkbox"  name="mail" value="0" id="sendMail" onclick="this.value=(this.value==0)?1:0"/>&nbsp;
+						发送邮件: <textarea id="mail" name="mail">
+                        </textarea> 
+						<div id="error" style="color:#a22;text-align:center;width:100%;"></div> 
+                </div>
+				<div id="dialogNoticeDiv" style="height:10px" title="发送预警">
+						<input type="hidden" id="uidWarn" />
+						剩余时长:<input type="text" id="retime"/><br/> 
+						<div style="height:10px">
+                        </div>
+						<input type="checkbox" value="0" id="sendWarnNotice" onclick="this.value=(this.value==0)?1:0"/>&nbsp;
+						发送通知: <input type="text" id="channelWarn" disabled ="disabled"/><br/>
+						<div style="height:10px">
+                        </div>
+						<input type="checkbox"  name="mail" value="0" id="sendWarnMail" onclick="this.value=(this.value==0)?1:0"/>&nbsp;
+						发送邮件: <textarea id="mailWarn" name="mail">
+                        </textarea> 
+						<div id="errorWarn" style="color:#a22;text-align:center;width:100%;"></div> 
+                </div> 
+				
+				<form id="pageform" action="userManage.do" method="post" enctype="multipart/form-data">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td colspan="31" background="images/table_top_bg.jpg">        	
+								#TABLETILE("账号信息管理")	        		       
+							</td>
+						</tr>
+                    </table>
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td height="30"  align="center" class="tdt1">渠道</td>	
+							<td align="center" class="tdt2">用户名</td>
+							<td align="center" class="tdt2">密码</td>
+							<td align="center" class="tdt2">年购买总时长</td>
+							<td align="center" class="tdt2">使用时长</td>
+							<td align="center" class="tdt2">剩余时长</td>
+							<td align="center" class="tdt2">操作</td>	
+						</tr>
+						
+						#if($!{userList} && $!{userList.size()}>0)
+						#foreach($user in ${userList})
+						<tr>
+							<td height="40"  align="center" class="tdw1">$!{user.wftchannel.name}</td>
+							<td align="center" 	 class="tdw2">$!{user.mail}</td>
+							<td align="center"   class="tdw2">$!{user.pwd}</td>
+							<td align="center"   class="tdw2">$!{user.openPlatformAccount.getBuyHours()}</td>
+							<td align="center" 	 class="tdw2">$!{user.openPlatformAccount.getUseHours()}</td>
+							<td align="center" 	 class="tdw2">$!{user.openPlatformAccount.retime}</td>
+							<td align="center" 	 class="tdw2">
+								<input type="button" value="充值" onclick="chargeDialog($!{user.id},'$!{user.wftchannel.name}','$!{user.send_mails}')"> 
+								<input type="button" value="充值记录" onclick="chargeRecord($!{user.id})">
+								<input type="button" value="增加默认渠道信息" onclick="addDefaultChannel('$!{user.channelcode}','$!{user.name}')">
+								<input type="button" value="发送预警" onclick="noticeDialog($!{user.id},$!{user.openPlatformAccount.retime},'$!{user.wftchannel.name}','$!{user.send_mails}')">
+							</td>
+						</tr>
+						#end
+						<tr>
+							<td height="30" colspan="31" class="tdw1"><p style=" width:100%; height:30px; line-height:30px; text-align:center;">#PageInfo($!{pager})</p></td>
+						</tr>
+						#else
+                            <tr>
+								<td colspan="31" align="center" class="tdw1" >无数据
+                                </td>
+							</tr>
+						#end
+	  
+    				</table>
+    			</form> 
+			</td>
+			<td width="5"></td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>    

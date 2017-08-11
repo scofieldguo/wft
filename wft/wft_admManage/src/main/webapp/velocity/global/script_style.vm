@@ -1,0 +1,18 @@
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/redmond/jquery-ui-1.8.2.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.jqgrid.css" />  
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.multiselect.css" />
+<style>  
+html, body {  
+   margin: 0;  
+    padding: 0;  
+    font-size: 100%;  
+}  
+</style>  
+<script src="js/jquery-1.10.2.js" type="text/javascript"></script>
+<script src="js/grid/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script> 
+<script src="js/grid/jquery.layout.js" type="text/javascript"></script>
+<script src="js/grid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script src="js/grid/ui.multiselect.js" type="text/javascript"></script>
+<script src="js/grid/jquery.jqGrid.js" type="text/javascript"></script>
+<script src="js/grid/jquery.tablednd.js" type="text/javascript"></script>
+<script src="js/grid/jquery.contextmenu.js" type="text/javascript"></script>

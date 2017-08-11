@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+		function showWindow(id){
+		document.getElementById(id).style.display='block';
+				$("#popup").addClass("popup");
+		}
+</script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+		#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+			<div class="item f">
+				<ul>
+					<li class="bottom_line"><a href="manage_account.action" >我的账户</a></li>
+					<li class="bottom_line"><a href="manage_app.action" class="currentColor">我的应用</a></li>
+					<li class="bottom_line"><a href="manage_stat.action">连接统计报表</a></li>
+					<li class="bottom_line"><a href="manage_user.action">个人信息 </a></li>
+					<li><a href="manage_password.action">修改密码</a></li>
+				</ul>
+			</div>
+			<div class="content r">
+				<div class="person_title">
+					<a>我的应用</a>>创建应用
+				</div>
+				<div id="appsucc">
+					<span class="title"><img src="${images_url}/manage/01_04.png" alt="" /><span>您的应用已经创建完成</span></span>
+					<span class="content">APP ID:<span>$!{userapp.id}</span></span>
+					<span class="content">APP Key:<span>$!{userapp.openkey}</span></span>
+					<span class="content">您可以在"<a href="manage_app.action">我的应用</a>"中查看APP ID 和APP Key 进行您的应用开发调试</span>
+					<span><input class="ok_bt" type="button" value="完成"/></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

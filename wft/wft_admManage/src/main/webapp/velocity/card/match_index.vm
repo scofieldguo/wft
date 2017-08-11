@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>蜂巢互联对账管理</title>
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/redmond/jquery-ui-1.8.2.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.multiselect.css" />
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.9.1.js" type="text/javascript"></script>
+<script src="js/grid/jquery-ui-custom.min.js" type="text/javascript"></script>
+<script src="js/grid/jquery.layout.js" type="text/javascript"></script>
+<script src="js/grid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script src="js/grid/jquery.jqGrid.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/calendar.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/validate.js"></script>
+<script type="text/javascript" src="js/jqGridExportToExcel.js"></script>
+<style>
+  .ui-progressbar {
+    position: relative;
+  }
+  .progress-label {
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  </style>
+<script type="text/javascript">
+$("document").ready(function() {
+		var grid = $("#cardtabel").jqGrid({
+			url : 'card_match_list.do',
+			datatype : "json",
+			colNames : [ 'ID', '卡号', '登陆时间', '上线时间', '下线时间','来源'],
+			colModel : [ {
+				name : 'id',
+				index : 'id int',
+				sortable : false
+			}, {
+				name : 'mobile_num',
+				index : 'mobile_num',
+				sortable : false
+			}, {
+				name : 'record_date',
+				index : 'record_date',
+				sortable : false
+			}, {
+				name : 'online_time',
+				index : 'online_time',
+				sortable : false,
+			}, {
+				name : 'offline_time',
+				index : 'offline_time',
+				sortable : false,
+			}, {
+				name : 'from_id',
+				index : 'from_id',
+				sortable : false,
+			}],
+			rowNum : 20,
+			emptyrecords : "无记录",
+			gridview : true,
+			rowList : [ 10, 20, 30 ],
+			pager : '#pjmap1',
+			cellsubmit : 'clientArray',
+			sortname : 'id',
+			viewrecords : true,
+			sortorder : "asc",
+			caption : "卡池卡列表",
+			autowidth : true,
+			jsonReader : {
+				repeatitems : false,
+				id : 0
+			},
+			height : '100%',
+			gridComplete: function(){
+				var ids = grid.jqGrid('getDataIDs');
+				for(var i=0;i < ids.length;i++){
+					var rowId = ids[i];
+					var rowData = grid.jqGrid('getRowData',rowId);
+					var from = rowData.from_id;
+					if(from == 1){
+						status = "运营商";
+					}else{
+						status = "北纬";
+					}
+					grid.jqGrid('setRowData',ids[i],{from_id:status});
+				}
+			},
+		});
+		grid.jqGrid('navGrid', '#pjmap1', {
+			add : false,
+			edit : false,
+			del : false,
+			search: false
+		}, {}, {}, {}, {});
+		grid.jqGrid('navButtonAdd', '#pjmap1', {
+			caption : "列选择",
+			onClickButton : function() {
+				grid.jqGrid('columnChooser');
+			}
+		});
+		$("#fileBtn").click(function(){
+			$("#fileForm").submit();
+		});
+		$("#deleteBtn").click(function(){
+			if (confirm("确定清空数据?")){
+    			jQuery.ajax({  
+                     type: 'get',  
+                     url:'card_match_delete.do',
+    				 cache:false,
+    				 async:false,
+                     success:function(data){
+    				 	alert("数据已经清空");
+						jQuery("#cardtabel").jqGrid().trigger("reloadGrid");
+                    }             
+            	});
+			}
+		});
+		$("#totalBtn").click(function(){
+			jQuery.ajax({  
+                 type: 'get',  
+                 url:'card_match_total.do',
+				 cache:false,
+                 success:function(data){
+				 	var result = jQuery.parseJSON(data);
+					$( "#total").html(result.total);
+					$( "#compared").html(result.compared);
+					$( "#comparedTime").html(timeFormatter(result.comparedTime));
+					$( "#totalTime").html(timeFormatter(result.totalTime));
+					$( "#dialog-confirm" ).dialog("open");
+                }             
+        	});
+		});
+		var maxCount;
+		var progressbar=$("#divProgressbar");
+		$("#compareBtn").click(function(){
+			jQuery.ajax({  
+                 type: 'get',  
+                 url:'card_match_compare.do',
+				 cache:false,
+					async:false,
+                 success:function(data){
+				 	maxCount = parseInt(data);
+					progressbar.progressbar({max: maxCount});
+				 	alert("开始比对数据，请勿关闭界面");
+					progress();
+                }             
+        	});
+		});
+		progressLabel = $( ".progress-label" );
+		progressbar.progressbar({
+      		value: false,
+      		change: function() {
+        		progressLabel.text( progressbar.progressbar( "value" ) + "条" );
+      		},
+      		complete: function() {
+        		progressLabel.text( "完成！" );
+      		}
+    	});
+ 
+    	function progress() {
+      		var val;
+			jQuery.ajax({  
+                 	type: 'get',  
+                 	url:'card_match_count.do',
+				 	cache:false,
+					async:false,
+                 	success:function(data){
+						val = parseInt(data);
+						progressbar.progressbar( "value", val);
+                	}             
+        	});
+			progressbar.progressbar( "value", val);
+			if ( val < maxCount ) {
+         		setTimeout( progress, 500 );
+       		}
+     	}
+		$( "#dialog-confirm" ).dialog({
+             resizable: false,
+             height:250,
+			 autoOpen: false,
+			 closeOnEscape:true,
+             modal: true,
+        	//按钮
+             buttons: {
+               "关闭": function() {
+                 $(this).dialog( "close" );
+               },
+             }
+   		});
+		function timeFormatter(cellvalue){
+			var hour = parseInt(cellvalue /1000/3600);
+			var min = parseInt(cellvalue/1000%3600/60);
+			return hour+"小时"+min+"分";
+		};
+	});
+</script>
+</head>
+<body>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>#MENUADDRESS("对账管理")
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+					<tr>
+						<td background="images/table_top_bg.jpg">#TABLETILE("对账卡列表")
+						</td>
+					</tr>
+					<tr>
+						<td class="tdw1">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr height="30">
+							<td colspan="12" height="30" align="left" class="tdw1">
+								<form id="fileForm" action="card_match_upload.do" method="post" enctype="multipart/form-data">
+									Excel文件：<input type="file" name="uploadFile" size="30"/>
+									<input type="radio" id="fromId_0" name="id" value="0"/>北纬账单
+									<input type="radio" id="fromId_1" name="id" value="1"/>移动账单
+									账单日期<input type="text" id="date" name="date"
+										class="Wdate" onclick="new Calendar().show(this);"
+										onfocus="this.select()" readonly="readonly"
+										value="$!date" />账单日期
+									<input type="button" id="fileBtn" value="上传" />
+									<input type="button" id="totalBtn" value="统计" />
+									<input type="button" id="compareBtn" value="比对" />
+									<input type="button" id="deleteBtn" value="清空" />
+									<div style="float:right;width:300px;">
+                                        <div style="float:left">进度$!{isRunning}</div>
+										<div id="divProgressbar" style="float:left;width:200px; height: 10px;padding: 2px; border: 1px solid black; margin: 2px;"><div class="progress-label">加载...</div></div>
+                                    </div>
+								</form>
+							</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table id="cardtabel"></table>
+	<div id="pjmap1"></div>
+	<div id="dialog-confirm" title="统计数据">
+		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>统计数据</p>
+		<table width="100%" border="1" cellspacing="0" cellpadding="1">
+			<tr class="tdw1">
+                <td>总记录条数</td><td id="total"></td>
+            </tr>
+			<tr class="tdw1">
+                <td>已比对记录</td><td id="compared"></td>
+            </tr>
+			<tr class="tdw1">
+                <td>总记录时间(M)</td><td id="totalTime"></td>
+            </tr>
+			<tr class="tdw1">
+                <td>已比对时间(M)</td><td id="comparedTime"></td>
+            </tr>
+        </table>
+	</div>
+</body>
+</html>

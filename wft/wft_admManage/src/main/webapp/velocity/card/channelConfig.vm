@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<script type="text/javascript">
+$(function(){
+	$("#channelform").validate({
+		event: "blur",
+		rules: {
+			"ctccnum":{required:true, digits:true},
+			"ctccbalance":{required:true, num:true}
+		},
+		messages:{
+			"ctccnum":{required:"请输入整数", digits:"请输入整数"},
+			"ctccbalance":{required:"请输入整数", num:"请输入整数"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+	
+});
+
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("卡池管理")	
+    			<form id="channelform" action="config.do" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="id" value="${channel.code}" />
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="2" background="images/table_top_bg.jpg">        	
+							#TABLETILE("电信卡池最低额度调整")	        		       
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td align="left" class="tdw1">渠道</td>	
+						<td align="left" class="tdw2">$!{channel.name}</td>	
+					</tr>
+					
+					<tr height="30">
+						<td align="left" class="tdw1">渠道代码</td>	
+						<td align="left" class="tdw2">$!{channel.code}</td>	
+					</tr>	
+					
+					<tr height="30">	
+						<td align="left" class="tdw1">最低卡片数量</td>
+						<td align="left" class="tdw2">
+							<input type="text" name="ctccnum" value="$!{channel.ctccnum}" />
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td align="left" class="tdw1">开卡卡品</td>
+						<td align="left" class="tdw2">
+							<select name="ctypeforopenctcc">
+								<option value="">请选择</option>
+							#foreach($ct in $!{ctList})
+								<option value="$!{ct.codeop}" #if($!{channel.ctypeforopenctcc} == $!{ct.codeop}) selected #end>$!{ct.standby}</option>
+							#end
+							</select>
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td align="left" class="tdw1">最低分卡时长</td>
+						<td align="left" class="tdw2">
+							<input type="text" name="ctccbalance" value="$!{channel.ctccbalance}" />秒
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td align="left" class="tdw1">充值卡品</td>
+						<td align="left" class="tdw2">
+							<select name="ctypeforrechargectcc">
+								<option value="">请选择</option>
+							#foreach($ct in $!{ctList})
+								<option value="$!{ct.codeop}" #if($!{channel.ctypeforrechargectcc} == $!{ct.codeop}) selected #end>$!{ct.standby}</option>
+							#end
+							</select>
+						</td>
+					</tr>
+					
+					<tr height="30">
+						<td colspan="2" align="center" class="tdw1">
+							<input type="submit" id="btn_submit" value="提&nbsp;交" size="10"/>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" id="btn_cancel" value="返&nbsp;回" size="10" onclick="javascript:history.go(-1);" />
+						</td>
+					</tr>
+    			</table>
+    			</form>
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>
+

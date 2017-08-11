@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+#HEARD()
+
+<script type="text/javascript">
+
+</script>
+
+<body leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>
+				#MENUADDRESS("淘宝出售卡记录")	
+    	
+				<form id="pageform" method="post" action="records.do">
+					<input type="hidden" id="outchannel" name="outchannel" />
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td background="images/table_top_bg.jpg">        	
+								#TABLETILE("淘宝出售卡记录")	        		       
+							</td>
+						</tr>
+						<tr>
+							<td class="tdw1">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr height="30">
+										<td colspan="7">开卡时间
+											<input type="text" id="begIntime" name="startDate" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!{startDate}"/>
+											&nbsp;&nbsp;至&nbsp;&nbsp;
+											<input type="text" id="endIntime" name="endDate" class="Wdate" onclick="new Calendar().show(this);" onfocus="this.select()" readonly="readonly" value="$!{endDate}"/>
+										</td>
+                                    </tr>
+									<tr>
+                                        <td height="30" colspan="5" align="center">
+											<input type="submit" id="searchBtn" value="查 询" />&nbsp;&nbsp;
+										</td>
+                                    </tr>
+                                </table>
+                            </td>
+						</tr>
+						<tr>
+							<td>
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td height="30" align="center" class="tdy1">卡号</td>	
+										<td align="center" class="tdy2">密码</td>
+										<td align="center" class="tdy2">时长</td>
+										<td align="center" class="tdy2">开卡日期</td>
+										<td align="center" class="tdy2">有效期</td>
+										<td align="center" class="tdy2">卖出淘宝账号</td>
+										<td align="center" class="tdy2">淘宝订单账号</td>
+									</tr>
+									
+									#foreach($record in ${records})
+									<tr>
+										<td height="30" align="center" class="tdw1">$!{record.cno}</td>
+										<td align="center" class="tdw2">$!{record.pwd}</td>
+										<td align="center" class="tdw2">
+											#set($time = $!{record.duration}/3600)
+											$!{time}
+										</td>
+										<td align="center" class="tdw2">
+											$!{date.format('yyyy-MM-dd HH:mm:ss',$!{record.open_time})}
+										</td>
+										<td align="center" class="tdw2">
+											$!{date.format('yyyy-MM-dd HH:mm:ss',$!{record.end_time})}
+										</td>
+										<td align="center" class="tdw2">
+											$!{record.shop_name}
+										</td>
+										<td align="center" class="tdw2">
+											$!{record.order_id}
+										</td>
+									</tr>
+									#end
+								</table>
+							</td>
+						</tr>
+						
+						#if($!{records})
+						<tr>
+							<td height="30" class="tdw1">
+								<p style=" width:100%; height:30px; line-height:30px; text-align:center;">
+									#PageInfo($!{pager})
+								</p>
+							</td>
+						</tr>
+						#end
+    				</table>
+    			</form> 
+			</td>
+		</tr>
+	</table>
+
+	#FOOT()
+	</body>
+</html>

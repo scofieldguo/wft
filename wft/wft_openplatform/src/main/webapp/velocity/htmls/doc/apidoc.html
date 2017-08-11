@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('doc');leftNav('api','doc')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div class="doc_nav">资料中心&gt;API接入-API接口文档</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+			<div class="apply_key">申请KEY</div>
+		</div>
+		
+		<div class="doc_right">
+			<div class="doc_right_nav_title">API接口文档</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>接口名称</th>
+						<th>方法定义</th>
+						<th>说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_apiOpenCard.action">开卡接口</a></td>
+						<td class="tdname">openCard.do</td>
+						<td>请求时长卡平台开卡，返回卡号、密码。</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_apiQueryValidity.action">有效期查询接口</a></td>
+						<td class="tdname">queryValidity.do</td>
+						<td>查询卡的有效起止日期</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_apiQueryBalance.action">卡剩余时长查询接口</a></td>
+						<td class="tdname">queryBalance.do</td>
+						<td>查询卡的剩余时长。</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_apiQueryOnline.action">在线查询接口</a></td>
+						<td class="tdname">queryRecord.do</td>
+						<td>查询卡是否在线，在线则返回接入信息。</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_apiQueryRecord.action">卡使用记录查询接口</a></td>
+						<td class="tdname">queryRecord.do</td>
+						<td>查询卡的使用记录。。</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

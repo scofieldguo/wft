@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftCardActiveMapper">
+	<sql id="table">
+		wft_card_active_${channel}
+	</sql>
+	
+	<sql id="insertColumn" >
+		id, opid, ssid, prvid, ctype, no, pwd, bvalue, vbtime, vetime, ustatus, cstatus, tvalue, intime,  utvalue, ucount, uscount, utime, uid, cache, stoptime, stopcode
+  	</sql>
+	
+	<sql id="insertValues">
+		#{id}, #{opid}, #{ssid}, #{prvid}, #{ctype}, #{no}, #{pwd}, #{bvalue}, #{vbtime}, #{vetime}, #{ustatus}, #{cstatus}, #{tvalue}, #{intime}, #{ utvalue}, #{ucount}, #{uscount}, #{utime}, #{uid},#{cache}, #{stoptime}, #{stopcode}
+	</sql>
+	
+	<sql id="whereByParam">
+		<if test="paramMap != null">
+		<where>
+			<if test="paramMap.no !=null">
+				and no = #{paramMap.no}
+			</if>
+			<if test="paramMap.begVetime != null">
+				and <![CDATA[ vetime >= #{paramMap.begVetime} ]]>
+			</if>
+			<if test="paramMap.endVetime != null">
+				and <![CDATA[ vetime <= #{paramMap.endVetime} ]]>
+			</if>
+			<if test="paramMap.begIntime != null">
+				and <![CDATA[ intime >= #{paramMap.begIntime} ]]>
+			</if>
+			<if test="paramMap.endIntime != null">
+				and <![CDATA[ intime <= #{paramMap.endIntime} ]]>
+			</if>
+			<if test="paramMap.intime != null">
+				and DATE_FORMAT(intime,'%Y-%m-%d')= #{paramMap.intime}
+			</if>
+			<if test="paramMap.prvid !=null">
+				and prvid = #{paramMap.prvid}
+			</if>
+			<if test="paramMap.opid !=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.ctype !=null">
+				and ctype = #{paramMap.ctype}
+			</if>
+			<if test="paramMap.begTvalue !=null">
+				and <![CDATA[ tvalue >= #{paramMap.begTvalue} ]]>
+			</if>
+			<if test="paramMap.endTvalue !=null">
+				and <![CDATA[ tvalue <= #{paramMap.endTvalue} ]]>
+			</if>
+			<if test="paramMap.cstatus != null">
+				and cstatus = #{paramMap.cstatus}
+			</if>
+			<if test="paramMap.begStoptime != null">
+				and <![CDATA[ stoptime >= #{paramMap.begStoptime} ]]>
+			</if>
+			<if test="paramMap.endStoptime != null">
+				and <![CDATA[ stoptime <= #{paramMap.endStoptime} ]]>
+			</if>
+		</where>
+		</if>
+	</sql>
+		
+	<insert id="insert" parameterType="wftCardActive">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<update id="updateByParam">
+		update wft_card_active_${channel}
+		<set>
+			<if test="paramMap.cstatus !=null">
+				cstatus = #{paramMap.cstatus},
+			</if>
+			<if test="paramMap.tvalue !=null">
+				tvalue = #{paramMap.tvalue},
+			</if>
+			<if test="paramMap.utvalue !=null">
+				utvalue = #{paramMap.utvalue},
+			</if>
+			<if test="paramMap.stoptime !=null">
+				stoptime = #{paramMap.stoptime},
+			</if>
+			<if test="paramMap.pwd !=null">
+				pwd = #{paramMap.pwd},
+			</if>
+		</set>
+		<where>
+			<if test="paramMap.id !=null">
+				id = #{paramMap.id}
+			</if>
+			<if test="paramMap.uid !=null">
+				and uid=#{paramMap.uid}
+			</if>
+		</where>
+	</update>
+	
+	
+	<update id="update" >
+		update <include refid="table"/>
+		<set>
+			<if test="opid != null">
+				opid = #{opid},
+			</if>
+			<if test="ssid!=null">
+				ssid = #{ssid},
+			</if>
+			<if test="prvid!=null">
+				prvid = #{prvid},
+			</if>
+			<if test="ctype!=null">
+				ctype = #{ctype},
+			</if>
+			<if test="no!=null">
+				no = #{no},
+			</if>
+			<if test="pwd!=null">
+				pwd = #{pwd},
+			</if>
+			<if test="bvalue!=null">
+				bvalue = bvalue + #{bvalue},
+			</if>
+			<if test="vbtime!=null">
+				vbtime = #{vbtime},
+			</if>
+			<if test="vetime!=null">
+				vetime = #{vetime},
+			</if>
+			<if test="ustatus!=null">
+				ustatus = #{ustatus},
+			</if>
+			<if test="cstatus!=null">
+				cstatus = #{cstatus},
+			</if>
+			<if test="tvalue!=null">
+				tvalue = #{tvalue},
+			</if>
+			<if test="intime!=null">
+				intime = #{intime},
+			</if>
+			<if test="utvalue!=null">
+				utvalue = #{utvalue},
+			</if>
+			<if test="ucount!=null">
+				ucount = ucount + 1,
+			</if>
+			<if test="uscount!=null">
+				uscount = #{uscount},
+			</if>
+			<if test="utime!=null">
+				utime = #{utime},
+			</if>
+			<if test="uid!=null">
+				uid = #{uid},
+			</if>
+			<if test="cache!=null">
+				cache = #{cache},
+			</if>
+			<if test="stoptime!=null">
+				stoptime = #{stoptime},
+			</if>
+			<if test="stopcode!=null">
+				stopcode = #{stopcode}
+			</if>
+		</set>
+		<where>
+		 id = #{id}
+		 </where>
+	</update>
+	
+	<update id="updateStop">
+		update <include refid="table"/>
+		SET vetime=date_sub(NOW(),interval 1 day), cstatus = 4,stoptime = NOW(),stopcode='stop小于0'
+		where vetime>NOW() AND cstatus=2 
+		<![CDATA[and tvalue <= 0]]>
+	</update>
+	
+	<select id="findById" resultType="wftCardActive" >
+		select * from <include refid="table"/>
+		<where>
+			id = #{id}
+		</where>
+	</select>
+	
+	<select id="findCardByNo" resultType="wftCardActive" >
+		select * from <include refid="table"/>
+		<where>
+			opid = #{opid} and no = #{no}
+		</where>
+	</select>
+	
+	<select id="findCardByUid" resultType="wftCardActive" >
+		select * from <include refid="table"/>
+		<where>
+			opid = #{opid} and uid = #{uid} and cstatus != 4 and tvalue > 0
+			<![CDATA[ and vetime > now()]]> 
+		</where>
+		order by utime desc
+	</select>
+	
+	<select id="findCardByUidAndDay" resultType="wftCardActive" >
+		select * from <include refid="table"/>
+		<where>
+		 	opid = #{opid} and uid = #{uid} and date_format(utime, '%y-%m-%d') = #{day}
+		</where>
+		order by utime desc
+	</select>
+	
+	<select id="findCardForCTCC" resultType="wftCardActive">
+		select * from <include refid="table"/>
+		<where>
+			opid = #{opid} and cstatus = 2 and tvalue > 0 and uid is null and 
+			<![CDATA[ (vbtime is null or vbtime < now()) and (vetime is null or vetime > now()) ]]>
+		</where>
+		order by vetime asc 
+		limit 0, #{count}
+	</select>
+	
+	<select id="getCardForOperator" resultType="wftCardActive">
+		select * from wft_card_active_${params.channel}
+		<where>
+			<![CDATA[opid = #{params.opid} and tvalue >= #{params.tvalue} and cstatus in ]]>
+			<foreach item="item" index="index" collection="params.cstatus" open="(" separator="," close=")">  
+				#{item}   
+			</foreach>
+			<![CDATA[and (vbtime is null or vbtime < now()) and (vetime is null or vetime > now()) ]]>
+		</where>
+		order by isnull(utime) desc, utime asc limit 0,${params.cardCount}
+	</select>
+	
+	<select id="findCtccCardForRecharge" resultType="wftCardActive">
+		select * from <include refid="table"/>
+		<where>
+			opid = 2 and ctype = 0 and cstatus = 2  and
+			<![CDATA[vetime > now()  and ( tvalue < #{tvalue} or DATE_SUB(vetime, INTERVAL 1 DAY) < now() )]]>
+			
+		</where>
+		order by isnull(utime) desc, utime asc 
+	</select>
+	
+	<select id="findCmccStopCardBeforeMinute" resultType="wftCardActive">
+		select * from <include refid="table"/>
+		<where>
+			<![CDATA[ opid=#{opid} and cstatus=#{cstatus} and DATE_ADD(stoptime,INTERVAL #{minute} MINUTE)< now() ]]>
+		</where>
+	</select>
+	
+	<select id="countByParam" resultType="Integer">
+		select count(*) from wft_card_active_${paramMap.channel}
+		<include refid="whereByParam"/>
+	</select>
+	<select id="findByParamForCardCache"  resultType="cardCacheBean">
+		select id,opid,prvid,no,pwd,tvalue from wft_card_active_${params.channel}
+		<where>
+			opid= #{params.opid} and cstatus=#{params.cstatus} and cache=#{params.cache}
+			<![CDATA[and tvalue >= #{params.tvalue} and (vbtime is null or vbtime < now()) and (vetime is null or vetime > now()) ]]>
+		</where>
+		order by isnull(utime) desc, utime asc limit 1000
+	</select>
+	
+	<select id="findByParamForInitCardCache"  resultType="cardCacheBean">
+		select id,opid,prvid,no,pwd,tvalue from wft_card_active_${params.channel}
+		<where>
+			opid= #{params.opid} and cstatus=#{params.cstatus} and cache=#{params.cache}
+			<![CDATA[and tvalue >= #{params.tvalue} and (vbtime is null or vbtime < now()) and (vetime is null or vetime > now()) ]]>
+		</where>
+		order by isnull(utime) desc, utime asc
+	</select>
+	
+	<insert id="batchInsert">
+		insert into wft_card_active_${params.channel}(<include refid="insertColumn" />)
+		values
+		<foreach collection="params.list" item="item" separator="," index="i">
+			(#{item.id}, #{item.opid}, #{item.ssid}, #{item.prvid}, #{item.ctype}, #{item.no}, #{item.pwd}, #{item.bvalue}, #{item.vbtime}, #{item.vetime}, #{item.ustatus}, #{item.cstatus}, #{item.tvalue}, #{item.intime}, #{item.utvalue}, #{item.ucount}, #{item.uscount}, #{item.utime}, #{item.uid}, #{item.cache}, #{item.stoptime}, #{item.stopcode})
+		</foreach>
+	</insert>
+	
+	<update id="freebackCard">
+		update <include refid="table"/>
+		<set>
+			cstatus=2, 
+			<if test="time!=null">
+				tvalue = tvalue - #{time},
+				utvalue = utvalue + #{time},
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	<select id="countCardUse" resultType="Integer">
+	select count(*) from <include refid="table"/> where cstatus=#{cstatus} and ssid=#{ssid} and vetime > now()
+	</select>
+	<select id="countCardOverTime" resultType="Integer">
+		select count(*) from <include refid="table"/> where ssid=#{ssid} and  now() > vetime and cstatus !=4
+	</select>
+	<select id="findByOpidAndCstatus" resultType="wftCardActive">
+		select * from <include refid="table"/>
+		<where>
+			<if test="opid!=null">
+				and opid=#{opid}
+			</if>
+			<if test="cstatus!=null">
+				and cstatus=#{cstatus}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="delete">
+		delete from <include refid="table"/>
+		<where>
+			id=#{id}
+		</where>
+	</delete>
+	
+	<select id="pageFindByParam" resultType="wftCardActive">
+		select * from wft_card_active_${paramMap.channel} 
+		<include refid="whereByParam"/>
+		order by id desc 
+		<if test="pager != null">
+			limit #{pager.skipNo},#{pager.pageSize}
+		</if>
+	</select>
+	
+	<select id="findByUtimeAndCstatus" resultType="wftCardActive">
+		select id, no,utime <include refid="table" />
+		<where>
+			opid = #{opid}
+			and <![CDATA[cstatus < 4]]>
+			and <![CDATA[(DATE_ADD(utime,INTERVAL #{hour} HOUR) < NOW() or utime is NULL)]]>
+			and <![CDATA[(vbtime is null or vbtime < now()) and (vetime is null or vetime > now()) ]]>
+		</where>
+	</select>
+	<select id="findByVetime" resultType="wftCardActive">
+		select id,no from <include refid="table" />
+		<where>
+			<![CDATA[
+			cache =1
+			and vetime < now()
+		 ]]>
+		</where>
+	</select>
+</mapper>

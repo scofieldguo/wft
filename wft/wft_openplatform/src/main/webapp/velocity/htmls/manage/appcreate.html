@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/slides.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+		$(document).ready(function(){
+		  	var name=$("#name");
+		  	var packages=$("#packages");
+		  	name.blur(function(){
+		  		checkAppName();
+		  	});
+		  	
+		  	packages.blur(function(){
+			  	checkAppPackages("packages");
+		  	});
+		  	
+			$("#app_form").submit(function(){
+		  		return checkForm();
+		    });
+		 }) ;
+	   
+	    function checkAppName(){
+	   		 if(!checkEmpty("name")){
+	   			$("#name_desc").html("应用名称不能为空");
+	   			return false;
+	   		 }else{
+	   			$("#name_desc").html("");
+	   			return true;
+	   		 }
+  		}  
+    
+	    function checkAppPackages(){
+	    	if(!checkEmpty("packages")){
+	    		$("#packages_desc").html("应用包名不能为空");
+	    		return false;
+	    	}else{
+				$("#packages_desc").html("");  
+				return true; 	
+	    	}
+	    }
+    
+    	function checkAppOpId(){
+    		if($("input[name=userapp.opids][checked]").size()<1){
+    			$("#opid_desc").html("至少选择一个运营商");
+    			return false;
+    		}else{
+    			$("#opid_desc").html("");
+    			return true;
+    		}
+    	}
+    	function checkAppType(){
+    		if($("#type").val()==""){
+    			$("#type_desc").html("请选择应用类型");
+    			return false;
+    		}else{
+    			$("#type_desc").html("");
+    			return true;
+    		}
+    	}
+  	    function checkForm(){
+			if($("#agree")[0].checked){
+				var a = checkAppName()?0:1;
+				var b = checkAppPackages()?0:1;
+				var c=checkAppOpId()?0:1;
+				var d=checkAppType()?0:1;
+				if(a==0&&b==0&&c==0&&d==0){
+					return true;
+				}
+				return false;
+			}else{
+				alert("请勾选\"已经阅读并同意开发者协议\"");
+			return false;
+			}
+		}
+			
+		function showWindow(id){
+				document.getElementById(id).style.display='block';
+				$("#popup").addClass("popup");
+		}
+		
+		function agreeRule(){
+		$("img.go").css("display","block");
+		}
+</script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+	#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+			<div class="item f">
+				<ul>
+					<li class="bottom_line"><a href="manage_account.action" >我的账户</a></li>
+					<li class="bottom_line"><a href="manage_app.action" class="currentColor">我的应用</a></li>
+					<li class="bottom_line"><a href="manage_stat.action">连接统计报表</a></li>
+					<li class="bottom_line"><a href="manage_user.action">个人信息 </a></li>
+					<li><a href="manage_password.action">修改密码</a></li>
+				</ul>
+			</div>
+			<div class="content r">
+				<div class="person_title">
+					<a href="manage_app.action">我的应用</a>>创建应用
+				</div>
+				<form id="app_form" action="manage_creatApp.action" method="post">
+				<div id="app">
+					<div class="app_item">
+						<span class="app_name">应用名称：<span>*</span></span>
+						<span class="app_input">
+							<input id="name" type="text" name="userapp.name" value=""/>
+						</span>
+						<span class="item_desc"  id="name_desc"></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name">WIFI运营商选择：<span>*</span></span>
+						<span class="app_input">
+								#if($!opList && $!{opList.size()}>0)
+									#foreach($op in $!{opList})
+										<input type="checkbox" name="userapp.opids" value="${op.id}"/><span  class="op">${op.name}</span>
+									#end
+								#end
+						</span>
+						<span  class="item_desc" id="opid_desc"></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name">应用分类：<span>*</span></span>
+						<span class="app_input">
+							<select id="type" name="userapp.type">
+								<option selected="selected" value="">请选择</option>
+									#if($!apptypeList && $!{apptypeList.size()}>0)
+										#foreach($apptype in $!{apptypeList})
+										<option value="id">${apptype.name}</option>
+										#end
+									#end
+							</select>
+						</span>
+						<span  class="item_desc" id="type_desc"></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name">应用包名：<span>*</span></span>
+						<span class="app_input">
+							<input id="packages" type="text" name="userapp.packages" value=""/>
+						</span>
+						<span  class="item_desc" id="packages_desc"></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name">应用官网：<span></span></span>
+						<span class="app_input"><input type="text" name="userapp.website" value=""/></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name" >应用简介：<span></span></span>
+						<span class="app_input "><textarea class="introduction" name="userapp.introduction" cols="39" rows="5" style="resize: none"></textarea></span>
+					</div>
+					<div class="app_item">
+						<span class="app_name"></span>
+						<span class="app_input">
+							<input class="remember_account" type="checkbox" name="remember_account" value="" id="agree"/>
+							<span class="agree">已经阅读并同意<a>应用接入规范</a></span>
+						</span>
+					</div>
+					<div class="app_item">
+						<span class="app_name"></span>
+						<span class="app_input">
+								<input class="creat" type="submit" value="创建应用"/>
+								<input class="cancel" type="button" value="取消创建"/>
+						</span>
+					</div>
+					<div class="app_item">
+						<span class="app_name"></span>
+						<span class="app_desc">审核通过前,以上信息都可在"<a href="manage_app.action">我的应用</a>"页修改,一个月应用未上线,Key将被平台回收.</span>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

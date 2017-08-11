@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftOpenVersionMacStatMapper">
+	<sql id="table">
+		wft_stat_open_version_mac_${code}
+	</sql>
+
+	<update id="creatTable" parameterType="String">
+	CREATE TABLE if not exists `wft_stat_open_version_mac_${code}` (
+  		`mac` varchar(25) NOT NULL,
+  		`dairy` varchar(11) NOT NULL,
+  		`channel` varchar(11) DEFAULT NULL,
+  		`version` varchar(11) DEFAULT NULL,
+  		`succcnt` int(11) DEFAULT NULL,
+  		`failcnt` int(11) DEFAULT NULL,
+  		PRIMARY KEY (`mac`,`dairy`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		 
+	</update>
+	<insert id="insertMac" parameterType="wftOpenVersionMacStat">
+		insert into <include refid="table"/>(dairy,mac,channel,version,succcnt,failcnt)
+		values(#{wftOpenVersionMacStat.dairy},#{wftOpenVersionMacStat.mac},#{wftOpenVersionMacStat.channel},#{wftOpenVersionMacStat.version},#{wftOpenVersionMacStat.succcnt},#{wftOpenVersionMacStat.failcnt}) on duplicate key update
+		succcnt=succcnt+#{wftOpenVersionMacStat.succcnt},failcnt=failcnt+#{wftOpenVersionMacStat.failcnt}
+	</insert>
+	<select id="statMac" resultType="Integer">
+		select count(*) from <include refid="table"/> A join wft_hotspot B on A.mac=B.mac
+		<where>
+			<if test="dairy!=null">
+			A.dairy=#{dairy}
+			</if>
+			<if test="version!=null">
+			and A.version=#{version}
+			</if>
+			<if test="flag==1">
+			and A.succcnt >0
+			</if>
+			<if test="flag==2">
+			and A.succcnt=0
+			</if>
+			<if test="op!=null">
+			and B.ssid=#{op}
+			</if>
+		</where>
+	</select>
+</mapper>

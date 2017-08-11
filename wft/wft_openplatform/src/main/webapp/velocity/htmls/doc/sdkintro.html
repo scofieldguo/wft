@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('doc');leftNav('sdk','intro')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div class="doc_nav"><a href="$!{server_url}/html_doc_index.action">文档中心</a>&gt;SDK接入-SDK接口说明</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+		</div>
+		
+		<div class="doc_right">
+			<div class="doc_right_nav_title">SDK接入说明</div>
+			<div class="doc_right_nav_content">
+				<p>WFT通过jar包的方式提供给合作方，jar包负责实现WiFi的连接功能。其会运行在合作方APP的后台进程中，不会自起服务。</p>
+				<p>SDK针对合作方APP开放两个接口，分别为：WiFiSupplier和WiFiConnectCallback。其中WiFiSupplier为功能接口，提供连接WiFi操作的功能实现。WiFiConnectCallback为回调接口，把功能接口中的实时状态回调给APP。</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

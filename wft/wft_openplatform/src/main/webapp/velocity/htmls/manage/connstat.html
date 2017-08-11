@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/wait_style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/manage_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	function showConfirmForm(id){
+		document.getElementById(id).style.display='block';
+	}
+	function findOp(){
+		var $options =$('#app_id option:selected');
+		var value =$options.val();
+		var colSel = $('#op_id');
+		jQuery.ajax({
+					url: 'manage_getAppOp.action',
+					data: 'appId='+value,
+					type: 'POST',
+					dataType: "json",
+					async: false,
+					cache : false,
+					success: function(text){
+						jQuery.each(text, function(i, op){
+						alert(op.name);
+						colSel.append("<option value='" + op.id + "'>" + op.name + "</option>");
+					});
+
+						}
+				});
+	}
+	function getDate(obj){
+		jQuery.ajax({
+					url: 'manage_getDate.action',
+					data: 'day='+obj.value,
+					type: 'POST',
+					dataType: "text",
+					async: false,
+					cache : false,
+					success: function(data){
+						var a = data.split(",");
+						$("#startDateId").val(a[0]);
+						$("#endDateId").val(a[1]);
+						}
+				});
+	}
+	function submitForm(){
+	 if(checkEmpty("startDateId")==false){
+	 	$("#message").html("开始时间不能为空");
+	 	return false;
+	 }
+	  if(checkEmpty("endDateId")==false){
+	  $("#message").html("结束时间不能为空");
+	 	return false;
+	 }
+	  $('#form1').attr("action", "manage_findData.action");
+	  $('#form1').submit();
+	}
+	
+	function exportExcel(){
+		if(checkEmpty("startDateId")==false){
+	 		$("#message").html("开始时间不能为空");
+	 		return false;
+		}
+	  	if(checkEmpty("endDateId")==false){
+			$("#message").html("结束时间不能为空");
+	 		return false;
+		}
+		$('#form1').attr("action", "manage_exportExcel.action");
+		$('#form1').submit();
+	}
+</script>
+</head>
+<body onload="manageleftNav('statinfo');viewNavTab('manager')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div class="main_body">
+	#parse("/WEB-INF/velocity/common/managehead.html")
+		<div class="producer_content">
+	#parse("/WEB-INF/velocity/common/manageleftnav.html")
+			<div class="content r">
+				<div class="options">
+				<form action="manage_findData.action" id="form1" name="form" method="post">
+					<input type="hidden" id= />
+				 	<span class="option_line">
+				 		<span class="bold">日期<input style="margin-left: 23px;" type="text" id="startDateId" name="startDate" value="$!{startDate}" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})"  readonly="readonly"/>至<input type="text" id="endDateId" name="endDate" value="$!{endDate}" onFocus="WdatePicker({skin:'whyGreen', dateFmt:'yyyy-MM-dd'})" readonly="readonly" /></span>
+				 		<input type="radio" name="day" value="6" onclick="getDate(this)"/>最近7天
+				 		<input style="margin-left: 20px;" type="radio" name="day" value="29" onclick="getDate(this)"/>最近30天
+				 	</span>
+				 	<span class="option_line bottom">
+				 		<span class="bold">	
+				 			运营商<select id="op_id" name="opid">
+				 			<option value="0">全部运营商</option>
+				 				#if($!opList && $!{opList.size()}>0)
+								#foreach($op in $!{opList})
+								#if(${opid}==$op.id)
+								<option value="${op.id}" selected="selected">${op.name}</option>
+								#else
+								<option value="${op.id}">${op.name}</option>
+								#end
+								#end
+								#end
+				 			</select>
+				 		</span>
+				 		<span id="message" class="item_desc"></span>
+				 		<span class="operate_but">
+					 		<input class="blue_74_29" type="button" value="Excel导出" onclick="exportExcel()"/>
+					 		<input class="blue_74_29" type="button" value="搜索" onclick="submitForm()"/>
+				 		</span>
+				 	</span>
+				 </form>
+				</div>
+				<div class="tablelist">
+					<table>
+						<tr>
+							<th class="bold" style="width:75px;">日期</th>
+							<th class="bold" style="width:70px;">运营商</th>	
+							<th class="bold" style="width:74px;">消耗时长</th>	
+							<th class="bold" style="width:74px;">日消耗增长率</th>	
+							<th class="bold" style="width:74px;">人均消耗时长</th>	
+							<th class="bold" style="width:75px;">连接次数</th>	
+							<th class="bold" style="width:75px;">成功连接次数</th>
+							<th class="bold" style="width:75px;">次数成功率</th>
+							<th class="bold" style="width:75px;">连接人数</th>
+							<th class="bold" style="width:75px;">成功连接人数</th>
+							<th class="bold" style="width:75px;;border-right: none">人数连接成功率</th>	
+						</tr>
+						#set($count=0)
+							#if($!wftTotalStatList && $!{wftTotalStatList.size()}>0)
+								#foreach($stat in $!{wftTotalStatList})
+									#if($count%2==0)
+						<tr class="back">
+									#else
+						<tr>
+									#end
+							<td>$!{stat.dairyStr}</td>
+							<td>#if($!opList && $!{opList.size()}>0)
+								#foreach($op in $!{opList})
+								#if(${op.id} == ${stat.opid})
+								$!{op.name}
+								#end
+								#end
+								#end</td>
+							#set($conntotal= $!{stat.connsuc}+$!{stat.connfail})
+							<td>${stat.hutvalue}</td>
+							<td>${stat.daylv}%</td>
+							<td>${stat.avghour}</td>
+							<td>${conntotal}</td>
+							<td>${stat.connsuc}</td>
+							<td>${stat.connlv}%</td>
+							#set($pertotal= $!{stat.persuc}+$!{stat.perfail})
+							<td>${pertotal}</td>
+							<td>${stat.persuc}</td>
+							<td class="border-right: none">${stat.perlv}%</td>
+						</tr>
+								#set($count=$count +1)
+							#end
+							#else
+						<tr>
+						 <td colspan="11" style="height: 300px;">
+							无数据
+							</td>
+						</tr>
+						#end
+					</table>
+				</div>
+				#if($!wftTotalStatList && $!{wftTotalStatList.size()}>0)
+				<div class="pager">
+					<span>#PAGE("manage_findData.action?q=1&startDate=$!{startDate}&endDate=$!{endDate}&opid=$!{opid}")</span>
+				</div>
+				#end
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

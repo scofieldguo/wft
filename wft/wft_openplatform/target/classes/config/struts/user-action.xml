@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="user" extends="base">
+		<action name="user_*" class="com.bw30.openplatform.action.UserAction"
+			method="{1}">
+			<result name="registUI">/WEB-INF/velocity/htmls/register/register.html</result>
+			<result name="registVer">/WEB-INF/velocity/htmls/register/endRegister.html</result>
+			<result name="findPWDStep1">/WEB-INF/velocity/htmls/register/passForgetStep1.html</result>
+			<result name="findPWDStep2">/WEB-INF/velocity/htmls/register/passForgetStep2.html</result>
+			<result name="findPWDStep3">/WEB-INF/velocity/htmls/register/passForgetStep3.html</result>
+			<result name="activeResult">/WEB-INF/velocity/htmls/register/succRegister.html</result>
+			<result name="succPassReset">/WEB-INF/velocity/htmls/register/succPassReset.html</result>			
+			<result name="top">/WEB-INF/velocity/htmls/index.html</result>
+			<result name="logout" type="redirect">top.action</result>
+		</action>
+	</package>
+</struts>

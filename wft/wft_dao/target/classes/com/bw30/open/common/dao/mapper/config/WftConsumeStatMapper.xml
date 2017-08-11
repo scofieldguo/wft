@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftConsumeStatMapper">
+	<sql id="table">
+		wft_stat_consume
+	</sql>
+	<sql id="column">
+		id, dairy, channel, channelname, opid, tvalue, intime
+	</sql>
+	<sql id="insertValues">
+		#{id}, #{dairy}, #{channel}, #{channelname}, #{opid}, #{tvalue}, #{intime}
+	</sql>
+	
+	<insert id="insert" parameterType="wftConsumeStat">
+		insert into
+		<include refid="table" />
+		(
+		<include refid="column" />
+		)
+		values(
+		<include refid="insertValues" />
+		)
+	</insert>
+	
+	<select id="findById" resultType="wftConsumeStat">
+		select * from
+		<include refid="table" />
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	<select id="findByCondition" resultType="wftConsumeStat">
+		select * from <include refid="table"/>
+		<where>
+			<if test="null!=dairy">
+				dairy=#{dairy}
+			</if>
+			<if test="null!=channel">
+				and channel=#{channel}
+			</if>
+			<if test="null!=opid">
+				and opid=#{opid}
+			</if>
+		</where>
+	</select>
+	<select id="findUtvalueByParam" resultType="Long">
+		select tvalue from <include refid="table"/>
+		<where>
+			<if test="opid!=null">
+				and opid = #{opid}
+			</if>
+			<if test="channel !=null">
+				and channel = #{channel}
+			</if>
+			<if test="dairy !=null">
+				and dairy=#{dairy}
+			</if>
+		</where>	
+	</select>
+		<select id="findOUtvalueByParam" resultType="Long">
+		select tvalue from <include refid="table"/>
+		<where>
+			<if test="opid!=null">
+				and opid = #{opid}
+			</if>
+			<if test="channel !=null">
+				and channel = #{channel}
+			</if>
+			<if test="dairy !=null">
+				and dairy=DATE_ADD(#{dairy},INTERVAL -1 DAY)
+			</if>
+		</where>	
+	</select>
+	<select id="getUsedTime" resultType="Integer">
+		select tvalue from <include refid="table"/>
+		<where>
+			<if test="opid!=null">
+				and opid = #{opid}
+			</if>
+			<if test="channel !=null">
+				and channel = #{channel}
+			</if>
+			<if test="firstDayOfMonth !=null and today!=null">
+				and 
+				<![CDATA[
+				 dairy>=#{firstDayOfMonth} and dairy<=#{today}
+				 ]]>
+			</if>
+		
+		</where>
+	
+	</select>
+	
+	<delete id="deleteByDairy">
+		delete from <include refid="table"/>
+		<where>
+			dairy = #{dairy}
+		</where>
+	</delete>
+	<select id="getIntervalStat"  resultType="wftConsumeStat">
+	select * from <include refid="table"/>
+	<where>
+		<if test="startday!=null">
+			and DATE_FORMAT(dairy,'%Y-%m-%d')>=#{startday}
+		</if>
+		<if test="endday!=null">
+			<![CDATA[ and DATE_FORMAT(dairy,'%Y-%m-%d')<=#{endday}]]>
+		</if>
+		<if test="channelcode!=null">
+			and channel=#{channelcode}
+		</if>
+		<if test="opIdCtcc!=null">
+			and opid=#{opIdCtcc}
+		</if>
+	</where>
+	order by dairy
+	</select>
+</mapper>

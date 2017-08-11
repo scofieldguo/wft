@@ -1,0 +1,58 @@
+#HEARD()
+<script type="text/javascript" >	
+	function exportChina(){
+		var daytime=$("input[name='daytime']").val();
+		var channel=$("#channel").val();
+		location.href="exportChinaNet.do?daytime="+daytime+"&channel="+channel+"&flag=1";
+	}
+	function exportCmcc(){
+		var daytime=$("input[name='daytime']").val();
+		var channel=$("#channel").val();
+		location.href="exportChinaNet.do?daytime="+daytime+"&channel="+channel+"&flag=2";
+	}
+</script>
+
+<body leftMargin=0 topMargin=0 MARGINWIDTH="0" MARGINHEIGHT="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="5"></td>
+		<td>
+				#MENUADDRESS("日使用峰值折线图")
+			<form  action="usepeakUI.do" id="pForm"  name="form1" method="post" enctype="multipart/form-data">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">	
+						<input name="type"  value="$!{random}" type="hidden">
+					<tr>
+						<td colspan="3" background="images/table_top_bg.jpg">
+								#TABLETILE("日使用峰值折线图")	
+						</td>
+					</tr>
+					<tr>
+						<td width="20%" colspan="8" height="30" align="left" class="tdw1">日期：
+						<input name="daytime"  onclick="new Calendar().show(this);"class="Wdate" onfocus="this.select()" readonly="readonly" value="$!{daytime}" type="text"/>
+					&nbsp;&nbsp;
+						   <select id="channel" name="channel">
+								#if($!channelList && $!{channelList.size()}>0)
+									#foreach($cha in $!{channelList})
+									<option #if($channel==$!{cha.code}) selected="selected" #end value="$!{cha.code}">$!{cha.name}
+                                    </option>	
+									#end
+								#end
+                            </select>
+							<input name="Submit" type="submit" value="搜索" >
+							<input type="button" value="chinaNet导出" onclick="exportChina()"/>
+							<input type="button" value="cmcc导出" onclick="exportCmcc()"/></td>
+	  				</tr>
+	  				<tr>
+	  					<td  height="25" colspan="22" class="table_g1">
+							<embed wmode="transparent" src="open-flash-chart.swf?data=usepeak.do?random=$!{random}%26daytime=$!{daytime}%26channel=$!{channel}" quality="high" bgcolor="#FFFFFF" width="1200" height="400" name="chart" id="chart" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+						</td>
+					</tr>
+	  			</table>
+			</form> 
+		</td>
+		<td width="5"></td>
+	</tr>
+	</table>
+	#FOOT()
+	</body>
+ </html>

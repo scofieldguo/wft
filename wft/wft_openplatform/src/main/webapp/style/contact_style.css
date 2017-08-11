@@ -1,0 +1,12 @@
+@charset "utf-8";
+#contact{width:1002px;height:auto !important;height:200px;min-height:200px;margin:0 auto;border:1px #999 solid;padding-top:30px;}
+.contact_online{margin:0 0 40px 30px;}
+.contact_ico{float:left;}
+.contact_title{margin-left:15px;float:left;}
+.contact_title h3{font-size:18px;color:#575757;margin-bottom:20px;}
+.contact_title p{font-size:14px;color:#6a6a6a;}
+.contact_title p img{display: inline-block;margin-left: 5px;vertical-align: middle;}
+.pro_logo{float:left;}
+.adress_text{float: left;font-size:14px;margin-left:25px;}
+.adress_text h5{font-weight:bold;color:#575757;}
+.adress_text p{padding:2px 0;}

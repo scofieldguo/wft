@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">       
+    <dubbo:application name="cardServer" />       
+    <dubbo:registry  protocol="zookeeper" address="119.254.108.64:2181" />  
+    <dubbo:protocol name="dubbo" port="20880" />        
+    <dubbo:service interface="com.bw30.open.wft.common.cardpool.rmi.service.ICardPoolService"  
+        ref="cardPoolService" >
+        <dubbo:method name="openCard" timeout="10000" retries="0"></dubbo:method>
+		<dubbo:method name="getBalance" timeout="10000" retries="2"></dubbo:method>
+		<dubbo:method name="updatePwd" timeout="10000" retries="0"></dubbo:method>
+		<dubbo:method name="queryOnline" timeout="10000" retries="2"></dubbo:method>
+		<dubbo:method name="queryRecord" timeout="20000" retries="2"></dubbo:method>
+		<dubbo:method name="recharge" timeout="10000" retries="0"></dubbo:method>
+		<dubbo:method name="queryCmccRecord" timeout="40000" retries="0"></dubbo:method>
+		<dubbo:method name="queryPoolInfo" timeout="10000" retries="3"></dubbo:method>
+    </dubbo:service>
+</beans>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wifi通运营平台</title>
+<link href="style/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body leftMargin=0 topMargin=0 MARGINWIDTH="0" MARGINHEIGHT="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="5"></td>
+    <td>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+        <td height="5"></td>
+	  </tr>
+      <tr>
+        <td height="25" class="t1"><img src="images/small0.gif" width="16" height="16" align="absmiddle"> 您现在的位置&gt;&gt;<a style="color:blue;">欢迎页</a></td>
+      </tr>
+    </table>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+        <td background="images/table_top_bg.jpg">
+		<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="170" background="images/table_top_left.jpg">　　<img src="images/helveticons1_024.png" width="16" height="16" align="absbottom"><span class="style2">欢迎登录</span></td>
+			<td class="table_bitch">　</td>
+            <td width="10" align="right"><img src="images/table_top_right.jpg" width="10" height="35"></td>
+          </tr>
+        </table>
+		</td>
+	  </tr>
+      <tr>
+        <td width="100%" height="500" class="table_w1">
+        	<div style="width:100%; height:498px; border:1px #fff solid; background:url(images/wel.jpg) no-repeat; position:relative;">
+                <h5 style="width:270px; height:30px; line-height:30px; position:absolute; top:210px; left:310px; font-size:16px; font-weight:bold; color:#069;">欢迎登录北纬通信wifi通运营平台</h5>
+                <p style=" width:270px; height:220px; line-height:30px; position:absolute; top:240px; left:310px;">欢迎登录本管理系统，您可以立即进行数据管理。<br />注意保护数据安全，加强精神文明建设。<br />请点选左侧列表开始。</p>
+            </div>
+        </td>
+	  </tr>
+	  
+    </table>
+	</td>
+	<td width="5"></td>
+  </tr>
+</table>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td height="40" align="center">2012 北京北纬通信科技股份有限公司</td>
+    </tr>
+</table>
+</body>
+</html>

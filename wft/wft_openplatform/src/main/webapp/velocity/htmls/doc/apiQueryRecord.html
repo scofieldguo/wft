@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${js_url}/layer_fixed.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#doc_right_nav_other ul li").click(function(){
+		$(this).addClass("current").siblings().removeClass("current");
+	});
+	
+});
+</script>
+</head>
+<body onload="viewNavTab('doc');leftNav('api','doc')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div class="doc_nav">资料中心&gt;API接入-API接口文档&gt;卡使用记录查询接口</div>
+		<div class="doc_left">
+			
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+			<div class="apply_key">申请KEY</div>
+		</div>
+		
+		<div class="doc_right">
+			<div id="doc_right_nav_other" >
+				<ul>
+					<li class="current"><a href="#top1">接口说明</a></li>
+					<li><a href="#top2">请求参数</a></li>
+					<li><a href="#top3">响应参数</a></li>
+					<li><a href="#top4">示例代码</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div class="doc_right_nav_title" id="top1">1.接口说明</div>
+			<div class="doc_right_nav_content">
+				<p>查询卡的使用记录。</p>
+				<p>方法定义：queryRecord.do</p>
+			</div>
+			<div class="doc_right_nav_title" id="top2">2.请求参数</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>属性</th>
+						<th>类型</th>
+						<th>最大长度</th>
+						<th>是否必填</th>
+						<th>说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">partner</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>合作方标识，由平台分配</td>
+					</tr>
+					<tr>
+						<td class="tdname">op</td>
+						<td>int</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>卡类型：2电信 </td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">cno</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>卡号</td>
+					</tr>
+					<tr>
+						<td class="tdname">pwd</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>卡密</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">startdate</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>开始日期，yyyy-MM-dd</td>
+					</tr>
+					<tr>
+						<td class="tdname">enddate</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>结束日期，yyyy-MM-dd</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">timestamp</td>
+						<td>String</td>
+						<td>-</td>
+						<td>Y</td>
+						<td>时间戳，yyyy-MM-dd HH:mm:ss</td>
+					</tr>
+					<tr>
+						<td class="tdname">standby</td>
+						<td>String</td>
+						<td>100</td>
+						<td>N</td>
+						<td>备用字段，请求响应中原样返回</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top3">3.响应参数</div>
+			<div class="doc_right_nav_content">
+				<table>
+					<tr>
+						<th>属性</th>
+						<th>类型</th>
+						<th>说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">result</td>
+						<td>int</td>
+						<td>响应码，见附件</td>
+					</tr>
+					<tr>
+						<td class="tdname">timestamp</td>
+						<td>String</td>
+						<td>时间戳，yyyy-MM-dd HH:mm:ss</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">cno</td>
+						<td>String</td>
+						<td>卡号</td>
+					</tr>
+					<tr>
+						<td class="tdname">standby</td>
+						<td>String</td>
+						<td>备用字段，请求响应中原样返回</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">recordlist</td>
+						<td>JSONArray</td>
+						<td>卡使用记录列表，json串</td>
+					</tr>
+				</table>
+				
+				<h3>recordlist数据结构如下：</h3>
+				<table>
+					<tr>
+						<th>属性</th>
+						<th>类型</th>
+						<th>说明</th>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">starttime</td>
+						<td>String</td>
+						<td>开始时间，yyyy-MM-dd HH:mm:ss</td>
+					</tr>
+					<tr>
+						<td class="tdname">endtime</td>
+						<td>String</td>
+						<td>结束时间，yyyy-MM-dd HH:mm:ss</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname">timelen</td>
+						<td>int</td>
+						<td>使用时长，秒</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="doc_right_nav_title" id="top3">4.示例代码</div>
+			<div class="doc_right_nav_content">
+				<div class="doc_dash_text">
+					<p>请求示例代码</p>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	<script type="text/javascript">
+		$("#doc_right_nav_other").smartFloat(); 
+	</script>
+</body>
+</html>

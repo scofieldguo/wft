@@ -1,0 +1,12 @@
+label.error 
+{ 
+background:url("../images/unchecked.gif") no-repeat 0px 0px;
+margin-left:5px; 
+padding-left:16px; 
+font-weight: bold;
+color: #EA5200;
+} 
+label.right {
+		background: url(../images/checked.gif) no-repeat 0px 0px;
+		font-family: Verdana,Geneva,sans-serif;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/doc_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body onload="viewNavTab('doc');leftNav('sdk','doc')">
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="doc">
+		<div id="top"></div>
+		<div class="doc_nav"><a href="$!{server_url}/html_doc_index.action">文档中心</a>&gt;SDK接入-SDK接口文档</div>
+		<div class="doc_left">
+			#parse("/WEB-INF/velocity/common/leftnav.html")
+		</div>
+		
+		<div class="doc_right">
+			<div class="doc_right_nav_title">SDK接口文档</div>
+			<div class="doc_right_nav_content">
+				<table cellpadding="0" cellspacing="0" width="100%">
+					<tr>
+						<th class="th1">接口类</th>
+						<th class="th2">接口说明</th>
+						<th class="th3">包含方法</th>
+						<th class="th4">方法说明</th>
+					</tr>
+					<tr>
+						<td class="tdname" rowspan="8"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action">WiFiSupplier</a></td>
+						<td rowspan="8">该接口为WiFi连接操作的功能接口，具体由SDK实现。该接口的所有方法都是由合作方APP主动调起。</td>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop1">init</a></td>
+						<td>SDK初始化</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop2">getSupportSsid</a></td>
+						<td>获取SDK支持的SSID列表</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop3">checkWiFiAvailable</a></td>
+						<td>监测当前是否有可用WiFi</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop4">setDebug</a></td>
+						<td>设置debug状态</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop5">checkWiFiState</a></td>
+						<td>当前WiFi连接状态</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop6">connect</a></td>
+						<td>连接WiFi功能接口</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop7">disconnect</a></td>
+						<td>断开连接</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiSupplier.action#skdTop8">release</a></td>
+						<td>释放内存</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname" rowspan="8"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action">WiFiConnectCallback</a></td>
+						<td rowspan="8">该接口为抽象类接口，需要合作方APP根据自身需求和产品形态自行并有选择性的实现，该接口的所有方法都由SDK主动发起，APP被动接收。</td>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop1">onScanResultsAvailable</a></td>
+						<td>用户扫描可用WiFi回调</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop2">onConnectStateChange</a></td>
+						<td>用于connect接口回调，显示连接中的状态变化</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop3">onConnectSuccess</a></td>
+						<td>用于connect方法，成功连接上WiFi后回调</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop4">onConnectFail</a></td>
+						<td>用于connect方法，连接WiFi失败回调</td>
+					</tr>
+					<tr class="tr_line">
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop5">onConnectActionChange</a></td>
+						<td>连接上WiFi后监听连接状态变化</td>
+					</tr>
+					<tr>
+						<td class="tdname"><a href="$!{server_url}/html_doc_sdkWiFiConnectCallback.action#skdTop6">onDisconnectResult</a></td>
+						<td>退出连接的回调</td>
+					</tr>
+				</table>
+				
+			</div>
+		</div>
+		<a href="#top" target="_self"><img class="gotop" src="${images_url}/go_top.png" alt="" /></a>
+	</div>
+	
+	<div class="clear"></div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+</body>
+</html>

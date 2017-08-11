@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <title>开卡</title>
+        <link rel="stylesheet" type="text/css" href="style/jquery.mobile-1.4.5.min.css"/>
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+		<script type="text/javascript" src="js/validate.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<script type="text/javascript" src="js/clipboard.min.js"></script>
+    </head>
+    <body>
+    	<div data-role="page">
+		<div data-role="header" data-theme="b">
+			<h1>用户开卡</h1>
+			<a href="records.do" class="ui-btn ui-corner-all ui-shadow ui-icon-arrow-r ui-btn-icon-left" target="_self">记录</a>
+		</div>
+		<div role="main" class="ui-content">
+			<label for="tmall_name">淘宝账号:</label>
+			<select name="tmall_name" id="tmall_name">
+				<option value="温瑾">温瑾</option>
+				<option value="上海迪旺">上海迪旺</option>
+			</select>
+			<label for="tmall_order">淘宝订单:</label>
+			<input type="text" name="tmall_order" id="tmall_order">
+			<label for="card_time">时长卡时:</label>
+			<select name="codeop" id="codeop">
+				<option value="18">15分钟</option>
+				<option value="20">1小时</option>
+				<option value="21">2小时</option>
+				<option value="22">5小时</option>
+				<option value="23">10小时</option>
+				<option value="24">20小时</option>
+				<option value="25">50小时</option>
+			</select>
+			<button class="ui-shadow ui-btn ui-corner-all ui-btn-b" id="submitBtn">领卡</button>
+			<p id="error_msg" style="color:red;"></p>
+			<button class="ui-shadow ui-btn ui-corner-all ui-btn-a" id="copy" data-clipboard-action="copy" data-clipboard-target="#card_info">复制到剪贴板</button>
+			<textarea id="card_info"></textarea>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$("#submitBtn").click(function(){
+			if(!checkString("tmall_order")){
+				$("#error_msg").html("请正确填写淘宝订单");
+				return false;
+			}else{
+				jQuery.ajax({
+					url: 'openCard.do',
+					data: 'tmall_name='+jQuery.trim($("#tmall_name").val())+'&tmall_order='+jQuery.trim($("#tmall_order").val())+'&codeop='+$("#codeop").val(),
+					type: 'POST',
+					dataType: "json",
+					async: false,
+					cache : false,
+					success: function(text){
+						$("#card_info").html("账号："+text.cno+"\n密码："+text.pwd+"\n有效期："+text.validity);
+						$("#card_info").css({"height":"80px","color":"red"});
+					}
+				});
+			}
+		})
+		var clipboard = new Clipboard('#copy');
+		clipboard.on('success', function(e) {
+			alert('复制成功');
+	        console.log(e);
+	    });
+	
+	    clipboard.on('error', function(e) {
+	        console.log(e);
+	        alert("不支持次操作，请手动选择复制！");
+	    });
+   	    </script>
+    </body>
+</html>

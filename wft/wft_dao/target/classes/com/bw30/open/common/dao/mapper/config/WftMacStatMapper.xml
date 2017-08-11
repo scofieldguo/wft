@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftMacStatMapper">
+	<sql id="table">
+		wft_mac_stat_${channel}
+	</sql>
+
+	<update id="creatTable" parameterType="String">
+	CREATE TABLE if not exists `wft_mac_stat_${channel}` (
+		`mac` varchar(25) NOT NULL,
+		`dairy` date NOT NULL,
+		`prvid` int(10) NOT NULL COMMENT '省份Id',
+		`ssid` varchar(16) NOT NULL,
+		`opid` int(3) DEFAULT NULL,
+  		`channel` varchar(11) DEFAULT NULL,
+		`succcnt` int(11) DEFAULT NULL,
+		`failcnt` int(11) DEFAULT NULL,
+		PRIMARY KEY (`mac`,`dairy`,`ssid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+		 
+	</update>
+	<insert id="insertMac" parameterType="wftMacStat">
+		insert into <include refid="table"/>(dairy,mac,prvid,ssid,opid,channel,succcnt,failcnt)
+		values(#{wftMacStat.dairy},#{wftMacStat.mac},#{wftMacStat.prvid},#{wftMacStat.ssid},#{wftMacStat.opid},#{wftMacStat.channel},#{wftMacStat.succcnt},#{wftMacStat.failcnt}) on duplicate key update
+		succcnt=succcnt+#{wftMacStat.succcnt},failcnt=failcnt+#{wftMacStat.failcnt}
+	</insert>
+	<select id="findSuccByParam" parameterType="HashMap" resultType="Integer">
+		select count(*) from <include refid="table"/> 
+		<where> succcnt>0
+			<if test="paramMap.channel !=null">
+				and channel=#{paramMap.channel}
+			</if>
+			<if test="paramMap.prvid !=null">
+				and prvid =#{paramMap.prvid}
+			</if>
+			<if test="paramMap.ssid !=null">
+				and ssid =#{paramMap.ssid}
+			</if>
+			<if test="paramMap.dairy!=null">
+				and dairy=#{paramMap.dairy}
+			</if>
+		</where>
+	</select>
+	<select id="findFailByParam" resultType="Integer">
+		select count(*) from <include refid="table"/> 
+		<where>
+			succcnt=0
+			<if test="paramMap.channel !=null">
+				and channel=#{paramMap.channel}
+			</if>
+			<if test="paramMap.prvid !=null">
+				and prvid =#{paramMap.prvid}
+			</if>
+			<if test="paramMap.ssid !=null">
+				and ssid =#{paramMap.ssid}
+			</if>
+			<if test="paramMap.dairy!=null">
+				and dairy=#{paramMap.dairy}
+			</if>
+		</where>
+	</select>
+	<select id="findFailOTByParam"  resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<where>
+			succcnt=0
+			<if test="paramMap.channel !=null">
+				and channel=#{paramMap.channel}
+			</if>
+			<if test="paramMap.prvid !=null">
+				and prvid =#{paramMap.prvid}
+			</if>
+			<if test="paramMap.ssid !=null">
+				and ssid =#{paramMap.ssid}
+			</if>
+			<if test="paramMap.dairy!=null">
+				and dairy=#{paramMap.dairy}
+			</if>
+			<if test="paramMap.failcnt!=null">
+				and failcnt > #{paramMap.failcnt}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{head_title}</title>
+<link rel="stylesheet" type="text/css" href="${style_url}/style.css"/>
+<link rel="stylesheet" type="text/css" href="${style_url}/register_style.css"/>
+<script type="text/javascript" src="${js_url}/jquery-1.4.2.js"></script>
+</head>
+<body>
+	<!-- 头部内容 -->
+	#parse("/WEB-INF/velocity/common/header.html")
+	<div id="navigation"><a href="$!{server_url}/top.action">首页</a>&gt;忘记密码</div>
+	<div id="register">
+		<div class="verification_step"><img src="${images_url}/verification_step3.png"/></div>
+		<div class="register_title">
+			<img src="${images_url}/verification_secc.png" alt="" />
+			<h3>验证成功！请重新设置密码</h3>
+		</div>
+		<form action="user_passReset" method="post" id="changePass">
+			<input type="hidden" name="email" value="$!{email}"></input>
+			<input type="hidden" name="sessionCode" value="$!{sessionCode}"></input>
+			<div class="regist_item">
+				<span class="item_name">新密码：<span>*</span></span>
+				<span class="item_input"><input type="text" name="pwd" value="" id="pwd" /></span>
+			</div>
+			<div class="regist_item">
+				<span class="item_name">确认密码：<span>*</span></span>
+				<span class="item_input"><input type="text" name="pwdRepeat" value="" id="pwdRepeat"/></span>
+			</div>
+			<div id="find_error_desc"></div>
+			<div class="regist_opr">
+				<input type="button" value="确定" onclick="validate()"/>
+			</div>
+		</form>
+	</div>
+	<!-- footer -->
+	#parse("/WEB-INF/velocity/common/footer.html")
+	
+	<script type="text/javascript">
+		function validate(){
+			if(!checkPwd()){
+				return false;
+			}
+			if(!checkPwdRepeat()){
+				return false;
+			}
+			$("#changePass").submit();
+		}
+		
+		function checkPwd(){
+			if(!checkPassword("pwd")){
+		  		$("#find_error_desc").html("密码长度应该为6~14位");
+		  		return false;
+		  	}else{
+		  		$("#find_error_desc").html("");
+		  		return true;
+		  	}
+		}
+		
+		function checkPwdRepeat(){
+			if(!checkRepassword("pwd","pwdRepeat")){
+	  			$("#find_error_desc").html("两次密码不一致");
+	  			return false;
+	  		}else{
+	  			$("#find_error_desc").html("");	
+	  			return true;
+	  		}
+		}
+		
+		$(document).ready(function(){
+			var pwd = $("#pwd");
+			var pwdRepeat = $("#pwdRepeat");
+			
+			pwd.blur(function(){
+				checkPwd();
+			});
+			
+			pwdRepeat.blur(function(){
+				checkPwdRepeat();
+			});
+		});
+	</script>
+</body>
+</html>

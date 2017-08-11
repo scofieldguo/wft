@@ -1,0 +1,12 @@
+#macro(PAGE $value)
+	当前第${pager.pageIndex}页，共${pager.pageCount}页
+	<a href="$!{value}&pager.pageIndex=1">第一页</a>
+	#foreach($i in [${pager.pageStart}..${pager.pageEnd}])
+		#if($i==${pager.pageIndex})
+		$i
+		#else
+		<a href="$!{value}&pager.pageIndex=$i">$i</a>
+		#end
+	#end
+	<a href="$!{value}&pager.pageIndex=${pager.pageCount}">最后一页</a>
+#end

@@ -1,0 +1,48 @@
+<script type="text/javascript">
+$(document).ready(function () {
+     $('li.doc_left_first_nav').click(function (e) {
+     	$(this).addClass("doc_left_first_nav current");
+     	$(this).siblings(".doc_left_first_nav").removeClass("current");
+		var dropDown = $(this).next();
+        $('.dropdown').not(dropDown).slideUp('slow');
+        dropDown.slideToggle('slow');
+        e.preventDefault();
+     });
+});
+
+function leftNav(firID,secID){
+	var firLi = $("#"+firID);
+	firLi.addClass("doc_left_first_nav current");
+	$("#"+firID+"_"+secID).addClass("current");
+	firLi.siblings('li.dropdown').not(firLi.next()).hide();
+}
+</script>
+<div class="doc_left_nav">
+	<ul>
+		<li class="doc_left_first_nav" id="platForm">平台介绍</li>
+		<li class="dropdown">
+			<ul class="doc_left_second_nav">
+				<li id="platForm_intro"><a href="$!{server_url}/html_doc_index.action">简介</a></li>
+<!-- 				<li id="platForm_guide"><a href="$!{server_url}/html_static_wait.action">新手指南</a></li>
+ -->				<li style="border-bottom:1px solid #b3b3b3" id="platForm_agree"><a href="$!{server_url}/html_doc_agreement.action">开发者协议</a></li>
+<!-- 				<li id="platForm_speci"><a href="$!{server_url}/html_static_wait.action">平台接入规范</a></li>
+ -->			</ul>
+		</li>
+		<!-- <li class="doc_left_first_nav" id="api">API接入</li>
+		<li class="dropdown">
+			<ul class="doc_left_second_nav">
+				<li id="api_intro"><a href="$!{server_url}/html_doc_apiintro.action">接入说明</a></li>
+				<li id="api_doc"><a href="$!{server_url}/html_doc_apidoc.action">接口文档</a></li>
+				<li id="api_result"><a href="$!{server_url}/html_doc_apiResultCode.action">返回码说明</a></li>
+			</ul>
+		</li> -->
+		<li class="doc_left_first_nav" id="sdk">SDK接入</li>
+		<li class="dropdown">
+			<ul class="doc_left_second_nav">
+				<li id="sdk_intro"><a href="$!{server_url}/html_doc_sdkintro.action">接入说明</a></li>
+				<li style="border: none" id="sdk_doc"><a href="$!{server_url}/html_doc_sdkdoc.action">接口文档</a></li>
+			</ul>
+		</li>
+<!-- 		<li class="doc_left_first_nav">常见问题</li>
+ -->	</ul>
+</div>

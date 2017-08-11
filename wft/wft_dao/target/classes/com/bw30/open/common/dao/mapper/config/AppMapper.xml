@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.AppMapper">
+	<sql id="table">
+		open_platform_app
+	</sql>
+	<select id="getAppByUserId" resultType="app">
+	select * from <include refid="table"/> where uid=#{uid}
+	</select>
+	
+	<select  id="findByParam" resultType="app">
+		select * from <include refid="table"/>
+		<where>
+			<if test="paramMap.status!=null">
+				and status=#{paramMap.status}
+			</if>
+		</where>
+	</select>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+	insert into <include refid="table"/>(openkey,uid,name,packages,opids,type,website,introduction,status,ctime)
+	
+		values(
+		#{openkey},#{uid},#{name},#{packages},#{opids},#{type},#{website},#{introduction},#{status},#{ctime})
+	</insert>
+	<update id="update">
+	update <include refid="table"/>
+	<set>
+		<if test="opids!=null">
+			opids=#{opids},
+		</if>
+		<if test="type!=null">
+			type=#{type},
+		</if>
+		<if	test="packages!=null">
+			packages=#{packages},
+		</if>
+		<if	test="website!=null">
+			website=#{website},
+		</if>
+		<if	test="introduction!=null">
+			introduction=#{introduction},
+		</if>
+		<if	test="status!=null">
+			status=#{status},
+		</if>
+	</set>
+	where id=#{id}
+	</update>
+	<select id="findById" resultType="app">
+		select * from <include refid="table"/>
+		<where>
+			id=#{id}
+		</where>
+	</select>
+</mapper>

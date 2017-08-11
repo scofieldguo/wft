@@ -1,0 +1,19 @@
+@charset "utf-8";
+#case{width:1002px;height:auto !important;height:200px;min-height:200px;margin:0 auto;margin-top:40px;}
+.case_content{width:210px;height:420px;background-color:#b3b3b3;float:left; }
+.first_case_content,.second_case_content{margin-right:54px;}
+.case_content_com{width:208px;height:388px;padding-top:30px;margin:1px 1px 1px 1px;background-color:#ebebeb;text-align:center;position:relative;}
+.case_content_com h2{font-size:24px;color:#4b4b4b;font-weight:bold;margin-top:20px;}
+.case_content_com h3{font-size:18px;color:#575757;font-weight:bold;margin:15px 0 35px 0;}
+.case_content_com p{font-size:16px;color:#575757;}
+.case_content_com p.learn_us{font-size: 14px;font-weight: bold;color: #575757}
+.case_access_way{position:absolute;bottom:50px;left:0;text-align:center;width:208px;font-size:16px;}
+.case_access_way p{text-align:left;padding-left:20px;}
+.case_access_way span{font-size:18px;color:#575757;font-weight:bold;}
+.case_wait_add{margin:30px 0 65px 0;font-size:24px;color:#4b4b4b;font-weight:bold;}
+p.about_us{font-size: 14px;color: #575757}
+.case_data{margin-left:20px;color: #575757}
+.case_data span{font-size:18px;color:#575757;}
+span.case_data_span{font-size:36px;color:#4b4b4b;font-weight:bold;}
+
+

@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>蜂巢互联卡池管理</title>
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/redmond/jquery-ui-1.8.2.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="style/grid/ui.multiselect.css" />
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.9.1.js" type="text/javascript"></script>
+<script src="js/grid/jquery-ui-custom.min.js" type="text/javascript"></script>
+<script src="js/grid/jquery.layout.js" type="text/javascript"></script>
+<script src="js/grid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script src="js/grid/jquery.jqGrid.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/calendar.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/validate.js"></script>
+<script type="text/javascript" src="js/jqGridExportToExcel.js"></script>
+<script type="text/javascript">
+var queryData;
+function modify(oper,cardNo,cardId,channelId){
+	var operKey;
+	if (oper=="stop"){
+		operKey = "停用";
+	}else{
+		operKey = "启用";
+	}
+	if (confirm("确定"+operKey+"该卡["+cardNo+"]?")){
+		jQuery.ajax({  
+                 type: 'POST',  
+                 url:'card_modify.do',   
+                 data: {oper:oper, id:cardId, channel:channelId},  
+                 success:function(data){      
+					jQuery("#cardtabel").jqGrid('setGridParam',{postData:queryData}).trigger("reloadGrid");
+                }             
+        });
+	}
+}
+
+$("document").ready(function() {
+		var lastsel;
+		var editprm;
+		var channel;
+		var grid = $("#cardtabel").jqGrid({
+			url : 'card_list.do',
+			datatype : "json",
+			colNames : [ '卡号ID', '卡号', '渠道', '运营商', '省份','类型','分配次数','截止日期','金额(元)','时长','剩余时长','调入时间','最后使用时间','使用状态','卡片状态','操作'],
+			colModel : [ {
+				name : 'id',
+				index : 'id int',
+				sortable : false
+			}, {
+				name : 'no',
+				index : 'no',
+				sortable : false
+			}, {
+				name : 'channel',
+				index : 'channel',
+				sortable : false
+			}, {
+				name : 'opid',
+				index : 'opid',
+				sortable : false,
+				formatter: function(cellvalue){
+					var operatorMaps = {};
+					#foreach($key in ${operatorMap.keySet()})
+						operatorMaps[$key] ="${operatorMap.get($key)}" ;
+					#end
+					return operatorMaps[cellvalue];
+				}
+			}, {
+				name : 'prvid',
+				index : 'prvid',
+				sortable : false,
+				formatter: function(cellvalue){
+					var province = {};
+					#foreach($key in ${provinceMap.keySet()})
+						province[$key] ="${provinceMap.get($key)}" ;
+					#end
+					return province[cellvalue];
+				}
+			}, {
+				name : 'ctype',
+				index : 'ctype',
+				sortable : false,
+				formatter: function(cellvalue){
+					var typeName;
+					if (cellvalue == 1){
+						typeName = "包月卡";
+					}else if (cellvalue == 2){
+						typeName = "不可跨月时长卡";
+					}else if (cellvalue == 3){
+						typeName = "可跨月时长卡";
+					}else if (cellvalue == 4){
+						typeName = "电子卡";
+					}else if (cellvalue == 5){
+						typeName = "账期卡";
+					}else{
+						typeName = cellvalue;
+					}
+					return typeName;
+				}
+			}, {
+				name : 'ucount',
+				index : 'ucount',
+				sortable : false
+			}, {
+				name : 'vetime',
+				index : 'vetime',
+				sortable : false,
+				formatter: formatDate
+			}, {
+				name : 'mvalue',
+				index : 'mvalue',
+				sortable : false,
+			}, {
+				name : 'bvalue',
+				index : 'bvalue',
+				sortable : false,
+				formatter: timeFormatter
+			}, {
+				name : 'tvalue',
+				index : 'tvalue',
+				sortable : false,
+				formatter: timeFormatter
+			}, {
+				name : 'intime',
+				index : 'intime',
+				sortable : false,
+				formatter: formatDate
+			}, {
+				name : 'utime',
+				index : 'utime',
+				sortable : false,
+				formatter: formatDate
+			}, {
+				name : 'ustatus',
+				index : 'ustatus',
+				sortable : false,
+				formatter: function(cellvalue){
+					var status;
+					if (cellvalue == 0){
+						status = "正常";
+					}else{
+						status = "异常";
+					}
+					return status;
+				}
+			}, {
+				name : 'cstatus',
+				index : 'cstatus',
+				sortable : false,
+			}, {
+				name : 'act',
+				title : false,
+				sortable : false,
+			}],
+			rowNum : 20,
+			emptyrecords : "无记录",
+			gridview : true,
+			rowList : [ 10, 20, 30 ],
+			pager : '#pjmap1',
+			cellsubmit : 'clientArray',
+			sortname : 'id',
+			viewrecords : true,
+			sortorder : "asc",
+			caption : "卡池卡列表",
+			autowidth : true,
+			jsonReader : {
+				repeatitems : false,
+				id : 0
+			},
+			height : '100%',
+			gridComplete: function(){
+				var ids = grid.jqGrid('getDataIDs');
+				for(var i=0;i < ids.length;i++){
+					var rowId = ids[i];
+					var rowData = grid.jqGrid('getRowData',rowId);
+					var channelMaps = {};
+					#foreach($key in ${channelMap.keySet()})
+						channelMaps[$key] ="${channelMap.get($key)}" ;
+					#end
+					channelHtml = channelMaps[channel];
+					var cstatus = rowData.cstatus;
+					if(cstatus == 2){
+						se = "<input style='height:22px;' type='button' value='停用' onclick=\"modify('stop','"+rowData.no+"','"+rowData.id+"','"+channel+"')\" />";
+						status = "可用";
+					}else if(cstatus == 3){
+						se = "<input style='height:22px;' type='button' value='停用' onclick=\"modify('stop','"+rowData.no+"','"+rowData.id+"','"+channel+"')\" />";
+						status = "占用";
+					}else if(cstatus == 4){
+						se = "<input style='height:22px;' type='button' value='启用' onclick=\"modify('open','"+rowData.no+"','"+rowData.id+"','"+channel+"')\" />";
+						status = "<font color=\"red\">停用</font>";
+					}
+					grid.jqGrid('setRowData',ids[i],{channel:channelHtml,act:se,cstatus:status});
+				}
+			},
+			editurl: "card_modify.do"
+		});
+		grid.jqGrid('navGrid', '#pjmap1', {
+			add : false,
+			edit : false,
+			del : false,
+			search: false
+		}, {}, {}, {}, {});
+		grid.jqGrid('navButtonAdd', '#pjmap1', {
+			caption : "列选择",
+			onClickButton : function() {
+				grid.jqGrid('columnChooser');
+			}
+		});
+		grid.jqGrid('navButtonAdd', '#pjmap1', {
+			caption : "导出本页",
+			buttonicon: "ui-icon-disk",
+			title: "导出到Excel文件",
+			onClickButton : function() {
+				$("#Fall").val(0);
+				$("#Fpage").val(grid.jqGrid('getGridParam', 'page'));
+				$("#Frows").val(grid.jqGrid('getGridParam', 'rowNum'));
+				$("#Fchannel").val(queryData.channel);
+				$("#Fno").val(queryData.no);
+				$("#Fopid").val(queryData.opid);
+				$("#Fcstatus").val(queryData.cstatus);
+				$("#FbegVetime").val(queryData.begVetime);
+				$("#FendVetime").val(queryData.endVetime);
+				var form = $("#pageform");
+				form.submit();
+			}
+		});
+		grid.jqGrid('navButtonAdd', '#pjmap1', {
+			caption : "导出全部",
+			buttonicon: "ui-icon-disk",
+			title: "导出到Excel文件",
+			onClickButton : function() {
+				$("#Fall").val(1);
+				$("#Fpage").val(grid.jqGrid('getGridParam', 'page'));
+				$("#Frows").val(grid.jqGrid('getGridParam', 'rowNum'));
+				$("#Fchannel").val(queryData.channel);
+				$("#Fno").val(queryData.no);
+				$("#Fopid").val(queryData.opid);
+				$("#Fcstatus").val(queryData.cstatus);
+				$("#FbegVetime").val(queryData.begVetime);
+				$("#FendVetime").val(queryData.endVetime);
+				var form = $("#pageform");
+				form.submit();
+			}
+		});
+		$("#btn_search").click(function(){
+			channel = $("#channel option:selected").val();
+			var opid = $("#opid option:selected").val();
+			var no = $("#no").val();
+			var begVetime = $("#begVetime").val();
+			var endVetime = $("#endVetime").val();
+			var cstatus = $("#cstatus option:selected").val();
+			queryData = {'no' : no, 'channel': channel, 'opid' : opid, 'begVetime' : begVetime, 'endVetime' : endVetime, 'cstatus': cstatus};
+			grid.jqGrid('setGridParam',{
+            	url:'card_list.do',//你的搜索程序地址 
+            	postData:queryData, //发送搜索条件 
+            	page:1 
+        	}).trigger("reloadGrid"); //重新载入
+		});
+	
+		function formatDate(cellvalue){
+			var date = new Date(cellvalue).format("yyyy-MM-dd hh:mm:ss");
+			return date;
+		};
+		function timeFormatter(cellvalue){
+			var hour = parseInt(cellvalue /3600);
+			var min = parseInt(cellvalue %3600/60);
+			return hour+"小时"+min+"分";
+		};
+		
+	});
+</script>
+</head>
+<body>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="5"></td>
+			<td>#MENUADDRESS("卡池管理")
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+					<tr>
+						<td background="images/table_top_bg.jpg">#TABLETILE("卡池卡列表")
+						</td>
+					</tr>
+					<tr>
+						<td class="tdw1">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr height="30">
+									<td>卡号</td>
+									<td><input type="text" name="no" value="$!{no}" id="no"/></td>
+									<td>渠道</td>
+									<td>
+									 <select name="channel"  style="width:150px" id="channel"> #foreach($ch in
+											${channelList})
+											<option value="$!{ch.code}" #if($!{channel}==$!{ch.code})
+												selected #end>$!{ch.name}</option> #end
+									</select>
+									</td>
+									<td>运营商</td>
+									<td>
+									<select name="opid" style="width:150px" id="opid">
+											<option value="" selected>全部</option> #foreach($operator in
+											${operatorList})
+											<option value="$!{operator.id}"
+												#if($!{opid}==$!{operator.id}) selected #end>$!{operator.name}</option>
+											#end
+									</select>
+									</td>
+									<td>卡片状态</td>
+									<td>
+									<select id="cstatus" name="cstatus"  style="width:150px">
+											<option value="" selected>全部</option>
+											<option value="0" #if($!{cstatus} == 0) selected #end>未启用</option>
+											<option value="1" #if($!{cstatus} == 1) selected #end>启用</option>
+											<option value="2" #if($!{cstatus} == 2) selected #end>可用</option>
+											<option value="3" #if($!{cstatus} == 3) selected #end>占用</option>
+											<option value="4" #if($!{cstatus} == 4) selected #end>停用</option>
+											<option value="5" #if($!{cstatus} == 5) selected #end>待验证</option>
+									</select>
+									</td>
+									<td>截止日期</td>
+									<td colspan="7">
+										<input type="text" id="begVetime" name="begVetime"
+										class="Wdate" onclick="new Calendar().show(this);"
+										onfocus="this.select()" readonly="readonly"
+										value="$!begVetime" /> &nbsp;&nbsp;至&nbsp;&nbsp; <input
+										type="text" id="endVetime" name="endVetime" class="Wdate"
+										onclick="new Calendar().show(this);" onfocus="this.select()"
+										readonly="readonly" value="$!endVetime" />
+									</td>
+								</tr>
+								<tr height="30">
+									<td colspan="10" align="center">
+									<input type="button" id="btn_search" value="查 询"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table id="cardtabel"></table>
+	<div id="pjmap1"></div>
+	<form id="pageform" style="display:none;" target="_blank" action="card_export.do" method="post" enctype="multipart/form-data">
+			<input type="hidden" id="Fall" name="all"/>
+			<input type="hidden" id="Fpage" name="page"/>
+			<input type="hidden" id="Frows" name="rows"/>
+			<input type="hidden" id="Fchannel" name="channel" value="10002" />
+			<input type="hidden" id="Fno" name="no" />
+			<input type="hidden" id="Fopid" name="opid" />
+			<input type="hidden" id="Fcstatus" name="cstatus" />
+			<input type="hidden" id="FbegVetime" name="begVetime" />
+			<input type="hidden" id="FendVetime" name="endVetime" />
+    </form>
+</body>
+</html>

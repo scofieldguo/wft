@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftHotspotMapper">
+	<sql id="table">
+		wft_hotspot
+	</sql>
+	<sql id="insertColumn" >
+    	id, opid, ssid, ctype, sspwd, mac, lat, lon, prvid, ctime, type, flag, health
+  	</sql>
+	
+	<sql id="insertValues">
+		#{id},#{opid},#{ssid},#{ctype},#{sspwd},#{mac},#{lat},#{lon},#{prvid},#{ctime},#{type},#{flag},#{health}
+	</sql>
+	
+	<sql id="whereById">
+		<where>
+		 	id=#{id}
+		</where>
+	</sql>
+	
+	<sql id="whereByParam">
+		<if test="paramMap != null">
+		<where>
+			<if test="paramMap.opid !=null">
+				and opid = #{paramMap.opid}
+			</if>
+			<if test="paramMap.type !=null">
+				and type = #{paramMap.type}
+			</if>
+			<if test="paramMap.ssid !=null">
+				and ssid = #{paramMap.ssid}
+			</if>
+			<if test="paramMap.prvid !=null">
+				and prvid = #{paramMap.prvid}
+			</if>
+			<if test="paramMap.flag !=null">
+				and flag = #{paramMap.flag}
+			</if>
+			<if test="paramMap.health != null">
+				and <![CDATA[ health >= #{paramMap.health} ]]>
+			</if>
+		</where>
+		</if>
+	</sql>
+	
+	<sql id="updateSet">
+		<set>
+			<if test="opid !=null">
+				opid = #{opid},
+			</if>
+			<if test="ssid !=null">
+				ssid = #{ssid},
+			</if>
+			<if test="ctype !=null">
+				ctype = #{ctype},
+			</if>
+			<if test="sspwd !=null">
+				sspwd = #{sspwd},
+			</if>
+			<if test="mac !=null">
+				mac = #{mac},
+			</if>
+			<if test="lat !=null">
+				lat = #{lat},
+			</if>
+			<if test="lon !=null">
+				lon = #{lon},
+			</if>
+			<if test="prvid !=null">
+				prvid = #{prvid},
+			</if>
+			<if test="ctime !=null">
+				ctime = #{ctime},
+			</if>
+			<if test="type !=null">
+				type = #{type},
+			</if>
+			<if test="flag !=null">
+				flag = #{flag},
+			</if>
+			<if test="health !=null">
+				health = #{health},
+			</if>
+		</set>
+	</sql>
+	
+	<insert id="insert" parameterType="wftHotspot" useGeneratedKeys="true" keyProperty="id">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftHotspot">
+		select * from 
+		<include refid="table"/>
+		<include refid="whereById"/>
+	</select>
+	
+	<update id="delete">
+		delete from 
+		<include refid="table"/>
+		<include refid="whereById"/>
+	</update>
+	
+	<update id="update">
+		update
+		<include refid="table" />
+		<include refid="updateSet"/>
+		<include refid="whereById"/>
+	</update>
+	
+	<select id="findByParam" resultType="wftHotspot">
+		select * from <include refid="table"/>
+		<include refid="whereByParam"/>
+	</select>
+	
+	<select id="findByMac" resultType="wftHotspot">
+		select * from <include refid="table"/>
+		<where>
+			mac = #{mac}
+		</where>
+	</select>
+	
+	<select id="countByParam" resultType="Integer">
+		select count(*) from <include refid="table"/>
+		<include refid="whereByParam"/>
+	</select>
+	
+	<select id="pageFindByParam" resultType="wftHotspot">
+		select * from <include refid="table"/>
+		<include refid="whereByParam"/>
+		order by id desc 
+		<if test="pager != null">
+			limit #{pager.skipNo},#{pager.pageSize}
+		</if>
+	</select>
+	<select id="findBylimit" resultType="wftHotspot">
+		select * from <include refid="table"/>
+		order by id 
+		limit #{count},#{range}
+	</select>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw30.open.common.dao.mapper.WftApTypeMapper">
+	<sql id="table">
+		wft_ap_type
+	</sql>
+	
+	<sql id="insertColumn" >
+    	ssid, opid, cflag
+  	</sql>
+	
+	<sql id="insertValues">
+		#{ssid},#{opid},#{cflag}
+	</sql>
+	
+	<sql id="whereById">
+		<where>
+		 	ssid=#{id}
+		</where>
+	</sql>
+	
+	<sql id="whereByOpid">
+		<where>
+		 	opid=#{opid}
+		</where>
+	</sql>
+	
+	<sql id="updateSet">
+		<set>
+			<if test="opid !=null">
+				opid = #{opid},
+			</if>
+			<if test="cflag !=null">
+				cflag = #{cflag},
+			</if>
+		</set>
+	</sql>
+	
+	<insert id="insert" parameterType="wftApType">
+		insert into <include refid="table"/>(<include refid="insertColumn" />)
+		values(<include refid="insertValues"/>)
+	</insert>
+	
+	<select id="findById" resultType="wftApType">
+		select * from 
+		<include refid="table"/>
+		<include refid="whereById"/>
+	</select>
+	
+	<update id="delete">
+		delete from 
+		<include refid="table"/>
+		<include refid="whereById"/>
+	</update>
+	
+	<update id="update">
+		update
+		<include refid="table" />
+		<include refid="updateSet"/>
+		<include refid="whereById"/>
+	</update>
+	
+	<select id="findByParam" resultType="wftApType">
+		select * from <include refid="table"/>
+		<where>
+			<if test="paramMap.opid !=null">
+				and opid=#{paramMap.opid}
+			</if>
+			<if test="paramMap.cflag !=null">
+				and cflag=#{paramMap.cflag}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByOpid" resultType="wftApType">
+		select * from <include refid="table"/>
+		<include refid="whereByOpid"/>
+	</select>
+	
+</mapper>

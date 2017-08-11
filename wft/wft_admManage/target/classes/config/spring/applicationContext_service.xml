@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName" default-lazy-init="false"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="baseDataService" class="com.bw30.open.wftAdm.service.BaseDataService" />
+	<bean id="cardService" class="com.bw30.open.wftAdm.service.card.CardService" />
+	<bean id="cardUpdateService" class="com.bw30.open.wftAdm.service.card.CardUpdateService" />
+	<bean id="cardExportService" class="com.bw30.open.wftAdm.service.card.CardExportService" />
+	<bean id="wftOpenStatService"
+		class="com.bw30.open.wftAdm.service.impl.WftOpenStatServiceImpl"></bean>
+	<bean id="wftOpenAcessCardStatService"
+		class="com.bw30.open.wftAdm.service.impl.WftOpenAcessCardStatServiceImpl"></bean>
+	<bean id="wftNowCardUseService"
+		class="com.bw30.open.wftAdm.service.impl.WftNowCardUseServiceImpl"></bean>
+	<bean id="wftOpenTopCardUseService" class="com.bw30.open.wftAdm.service.impl.WftOpenTopCardUseServiceImpl"></bean>
+	<bean id="indexService" class="com.bw30.open.wftAdm.service.impl.IndexServiceImpl"></bean>	
+	<bean id="userService" class="com.bw30.open.wftAdm.service.impl.UserServiceImpl"></bean>
+	<bean id="adminMenuService" class="com.bw30.open.wftAdm.service.impl.AdminMenuServiceImpl"></bean>
+	<bean id="wftOpenChannelService" class="com.bw30.open.wftAdm.service.impl.WftOpenChannelServiceImpl"></bean>
+	<bean id="wftOpenHourService" class="com.bw30.open.wftAdm.service.impl.WftOpenHourServiceImpl"></bean>
+	<bean id="wftOpenVersionStatService" class="com.bw30.open.wftAdm.service.impl.WftOpenVersionStatServiceImpl"></bean>
+	<bean id="wftTotalStatService" class="com.bw30.open.wftAdm.service.impl.WftTotalStatServiceImpl"></bean>
+	<bean id="wftHourStatService" class="com.bw30.open.wftAdm.service.impl.WftHourStatServiceImpl"></bean>
+	<bean id="wftOpenStatProSuccessService" class="com.bw30.open.wftAdm.service.impl.WftOpenStatProSuccessServiceImpl"></bean>
+	<bean id="wftOpenUserService" class="com.bw30.open.wftAdm.service.impl.WftOpenUserServiceImpl"></bean>
+	<bean id="cardDeleteService" class="com.bw30.open.wftAdm.service.card.CardDeleteService" ></bean>
+	<!-- 对账管理 -->
+	<bean id="carMatchService" class="com.bw30.open.wftAdm.service.card.CardMatchService" ></bean>
+		<!-- email -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${wifiTong.mail.host}" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="username" value="${wifiTong.mail.username}" />
+		<property name="password" value="${wifiTong.mail.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="mailService" class="com.bw30.open.wftAdm.service.sms.MailService">
+		<property name="sender" ref="mailSender" />
+		<property name="from" value="${wifiTong.mail.from}"></property>
+	</bean>
+</beans>

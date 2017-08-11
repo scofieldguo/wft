@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">		
+#HEARD()
+
+<script type="text/javascript">
+function reloadImage(){
+	document.getElementById('indentity').src='identity.do?t=' + new Date().getTime();
+}
+
+$(function(){
+	$("#form1").validate({
+		event: "blur",
+		rules: {
+			"loginName":{required:true, rangelength:[1,32]},
+			"password":{required:true, rangelength:[1,32]},
+			"code":{required:true, rangelength:[4,4]}
+		},
+		messages:{
+			"loginName":{required:"请输入用户名", rangelength:"请输入正确用户名"},
+			"password":{required:"请输入密码", rangelength:"请输入正确密码"},
+			"code":{required:"请输入正确验证码", rangelength:"请输入正确验证码"}
+		},
+		errorPlacement:function(error, element){
+			error.css({"color":"#FF0000"});
+			element.after(error);
+		}
+	});
+});
+
+</script>
+
+<body style="margin:0;background:#FFF;" onload="document.getElementById('loginName').focus();">
+<form id="form1" action="login.do" method="post">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="480" align="left" background="images/login_bg.jpg">
+	  <table width="830" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="570" rowspan="6">&nbsp; <br /></td>
+        <td width="260" height="180">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="30" class="table_dot">
+		<table width="260" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="80" align="right">登录名:</td>
+            <td width="180"><input type="text" name="loginName" value="$!{loginName}" id="loginName"  maxlength="32" class="dotInput"/></td>
+          </tr>
+        </table>
+		</td>
+      </tr>
+      <tr>
+        <td height="30">
+		<table width="260" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="80" align="right">密    码:</td>
+            <td width="180"><input type="password" name="password" value="" id="password"  maxlength="32" class="dotInput" onfocus=""/></td>
+          </tr>
+        </table>
+		</td>
+      </tr>
+	  <tr>
+        <td height="36" class="table_dot">
+		  <table width="260" border="0" cellspacing="0" cellpadding="0">
+	          <tr>
+	            <td width="80" align="right" class="t3">&nbsp;</td>
+	            <td width="180">
+					<input type="submit" name="Submit" value="登 录"/>&nbsp;&nbsp;
+					<input type="reset" name="reset" value="重 置" /><br/>
+					<font color="red">$!{errMsg}</font>
+	            </td>
+	          </tr>
+	      </table>
+        </td>
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>$!{head_title}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style/jquery.mobile-1.4.5.min.css"/>
+	<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="js/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header" data-theme="b">
+			<h1>用户登录</h1>
+		</div>
+		<h3 style="text-align:center;">电信时长开卡</h3>
+		<div role="main" class="ui-content">
+			<label for="user_name">登录账号:</label>
+			<input type="text" name="loginName" id="user_name">
+			<label for="user_pwd">登录密码:</label>
+			<input type="password" name="password" id="user_pwd">
+			<label for="remember">记住密码</label>
+			<input type="checkbox" id="remember">
+			<button class="ui-shadow ui-btn ui-corner-all ui-btn-b" id="submitBtn">登录</button>
+			<p id="error_msg" style="color:red;"></p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$("#submitBtn").click(function(){
+			if(!checkString("user_name")){
+				$("#error_msg").html("请正确填写登录账号");
+				return false;
+			}else if(!checkString("user_pwd",6,14)){
+				$("#error_msg").html("请正确填写登录密码");
+				return false;
+			}else{
+				jQuery.ajax({
+					url: 'wapLogin.do',
+					data: 'loginName='+jQuery.trim($("#user_name").val())+'&password='+jQuery.trim($("#user_pwd").val()),
+					type: 'POST',
+					dataType: "json",
+					async: false,
+					cache : false,
+					success: function(text){
+						if('1'==text){
+							location.href='wapIndex.do';
+						}else{
+							$("#error_msg").html("账号或密码错误");
+						}
+					}
+				});
+			}
+		})
+		
+		var storage = window.localStorage;
+		$("#remember").change(function(){
+			if($(this).is(":checked")){
+				storage.setItem("n",$("#user_name").val());
+				storage.setItem("p",$("#user_pwd").val());
+			}else{
+				storage.removeItem("n");
+				storage.removeItem("p");
+			}
+		});
+		
+		if(storage.getItem("n")!=null&&storage.getItem("n")!=''){
+			$("#remember").prop("checked",true);
+			$("#user_name").val(storage.getItem("n"));
+			$("#user_pwd").val(storage.getItem("p"));
+		}
+	</script>
+</body>
+</html>
