@@ -40,7 +40,7 @@ public class BaseController {
 	 * 获取整形参数值
 	 * 
 	 * @param param
-	 * @param req
+	 * @param reqd
 	 * @param defValue 默认值
 	 * @return
 	 */
